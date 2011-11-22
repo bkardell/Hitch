@@ -1,0 +1,88 @@
+<html>
+<head>
+	<style type="text/css">
+		div:-moz-any(.x){background-color: blue; }
+	
+
+	</style>
+	
+	<script type="text/javascript" src="cssPlugin2.js"></script>
+	<script type="text/javascript" src="cssPluginCompiler.js"></script>
+	<script type="text/javascript">
+		var r, rules, matches;	
+		var compile = function(){
+			var inpEl = document.getElementById('in');
+			var compiled = cssPluginCompiler(inpEl.value);
+			console.log(JSON.stringify(opts,null,2));
+			document.getElementById('out').value = JSON.stringify(compiled,null,2);
+			inpEl.style.display = 'none';
+		}
+		
+		
+		var addFilters = function(){
+			var scr, url = document.getElementById('filtersUrl').value;
+			scr = document.createElement('script');
+			scr.src = url;
+			document.body.appendChild(scr);
+		}
+	</script>
+	
+	
+</head>
+<body>
+<input id="filtersUrl"></input><button onclick="addFilters()">Add filters</button>
+<button onclick="compile(matches)">Go...</button>
+in<br />  
+<textarea id="in" rows="40" cols="50">
+*{ font-size: 1em; }
+
+	:test-parent
+	{
+		border: 1px solid red;	
+	}
+	
+	div:test-donationover(100)
+	{  
+		text-decoration: underline; 
+	}
+	
+	div[donation]:test-has(span) span
+	{  
+		background-color: blue;
+		color: white;
+	}
+	
+	div:test-donationover(250)
+	{  
+		font-weight: bold;          
+	}
+		
+	div:test-donationover(500)
+	{  
+		font-style:  italic;        
+	}
+	
+	div:test-donationover(1000)
+	{ 
+		color: blue;               
+	}
+	
+	
+	span:test-has(#j) span
+	{
+		background-color: green;
+	}
+	
+	div:test-has(.brian) span#borris
+	{
+		background-color: orange;
+	}
+</textarea>
+
+
+<hr />
+compiled:<br />
+<textarea id="out" rows="40" cols="50"></textarea>
+
+</body>
+</html>
