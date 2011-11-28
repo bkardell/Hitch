@@ -51,9 +51,9 @@ var cssPluginCompiler = function(src){
 							base = "*";
 						}
 						ret = any + "(" + base + ")"; 
-						//if(mapper[m].index){
-							ret += ":-moz-any(" + "._" + mapper[m].index + ")";
-						//}
+						if(mapper[m].index){
+							ret +=  "._" + mapper[m].index;
+						}
 						compiled[compiled.length-1].segments.push({
 							"selector": (s.substring(li,i) + ret).trim(), 
 							"filter":   ":"+ m.split("(")[0],

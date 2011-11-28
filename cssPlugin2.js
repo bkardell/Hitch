@@ -138,7 +138,7 @@ var cssPlugin = (function(){
 							ret.push(r.segments[i].selector.replace(/._\d/,''));
 						}
 					}
-					r.segmentsGroup = ret.join(',').replace("\:-moz-any\(\)","");
+					r.segmentsGroup = ret.join(',').replace("\:-" + vendor + "-any\(\)","");
 				}				
 				return r.segmentsGroup;
 			},
@@ -154,7 +154,7 @@ var cssPlugin = (function(){
 						}
 					}
 				}
-				return ret.join(",").replace("\:\-moz\-any\(\)","");
+				return ret.join(",").replace("\:\-" + vendor + "\-any\(\)","");
 			},
 			
 			// 
@@ -162,7 +162,7 @@ var cssPlugin = (function(){
 			    var sel, args, a = [], f = false, segment;
 				for(var i=0;i<rule.segments.length;i++){
 					segment = rule.segments[i];
-					sel = segment.selector.replace(/\._\d/, "").replace("\:\-moz\-any\(\)","");
+					sel = segment.selector.replace(/\._\d/, "").replace("\:\-" + vendor + "\-any\(\)","");
 					args = segment.filterargs;
 					a.push(sel);
 					if(
@@ -233,8 +233,8 @@ var cssPlugin = (function(){
 						segs = [];
 						for(var x=0;x<rule.segments.length;x++){						
 							segment = rule.segments[x];
-
-							sans = segment.selector.replace(/\:-moz-any\(\._\d\)/, "");
+							sans = segment.selector.replace(/\._\d/, "");
+							
 							segs.push(sans);
 							if(segment.filter){
 								//debugger;
@@ -278,7 +278,7 @@ var cssPlugin = (function(){
 									// check the filters...
 									//if(filters.map[filterName].ancestrallytruthy){
 										// minor potential here for speed boost if the list contains
-										// parent/child which are both true or false
+										// parent/child which are both true or false... turns out no :)
 									//	if(!last || last !== potential[i].parentNode){
 									//		x = filters.map[filterName].fn(t.target,tests[i].args);
 									//	}
@@ -386,15 +386,26 @@ var cssPlugin = (function(){
 				return ret;
 			};
 			
+			var defaultInit=true;
+			
 			var location = window.location.href.split("?")[0].split("/");
 			location.pop();
 			location = location.join('/');
 			
-			document.addEventListener( "DOMContentLoaded", ready, false );
+			document.addEventListener( "DOMContentLoaded", function(){
+				if(defaultInit){
+					ready();
+				};
+			}, false );
 			
 			return { 
+				useManualInit: function(){ defaultInit = false; },
+				init: function(){
+					ready();
+				},
 				addCompiledRules: function(rDescs){
 					compiled_cssplugin_rules = compiled_cssplugin_rules.concat(rDescs);
+					return this;
 				},
 				addFilters: function(fDescs){
 					cssplugin_selectors = cssplugin_selectors.concat(fDescs);
