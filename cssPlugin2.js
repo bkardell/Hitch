@@ -21,7 +21,14 @@ var cssPlugin = (function(){
 			compiled_cssplugin_rules = [], 
 			
 			// basically this is "known plugin configurations"
-			cssplugin_selectors = [],
+			cssplugin_selectors = [{ 
+					/* emulated "super" matches - allows full complex selectors in match */ 
+					name: "-plugin-any",
+					base: '',
+					fn:   function(match,argsString){
+							return match.matchesSelector(argsString);
+					}
+			}],
 			
 			// a ready fn... when things are ready to go, kicks things off
 			ready, 
@@ -239,6 +246,7 @@ var cssPlugin = (function(){
 							if(segment.filter){
 								//debugger;
 								joint = segs.join(' ');
+								if(joint===""){ joint = "*"; }
 								if(!segIndex[joint]){
 									segIndex[joint] = { filters: {} };
 								}
@@ -319,9 +327,14 @@ var cssPlugin = (function(){
 							    real.pop();
 							}
 						}
-						console.log(real.join(','));
-						ss.insertRule(real.join(","),ss.length-1);
-						//ss.insertRule(nativeRules[i].rule,ss.length-1);
+						if(real.join(',')===''){
+							console.log("empty...." + temp);
+							ss.insertRule(temp,ss.length-1);
+						}else{
+						debugger;
+							ss.insertRule(real.join(","),ss.length-1);
+							//ss.insertRule(nativeRules[i].rule,ss.length-1);
+						}
 					}
 					testSubtree(document.body,document.head.webkitMatchesSelector);
 					document.body.addEventListener('DOMAttrModified',testSubtree);

@@ -29,6 +29,13 @@ var cssPluginCompiler = function(src){
 		reHasFn = new RegExp(pluginNames.join(regExpPart + '|') + regExpPart,"g"),
 		inp = src.split("}");
 		
+		try{ // oohhh I hate you mobile webkit!  false, false advertizing!
+			document.head.querySelectorAll(":" + any + "(*)").length;
+			//throw e; // make it work in reg webkit for debugging.
+		}catch(e){
+			any = "-plugin-any";
+		};
+		
 	for(var i=0;i<inp.length;i++){   // for each rule...
 		li = 0;
 		raw = inp[i].trim();
@@ -50,10 +57,20 @@ var cssPluginCompiler = function(src){
 						if(!base || base === ''){
 							base = "*";
 						}
-						ret = any + "(" + base + ")"; 
-						if(mapper[m].index){
+						if(any === '-plugin-any'){
+							ret = '';
+							i=i-1;
+						}else{					
+							ret = any + "(" + base + ")"; 
+						}
+						if(typeof mapper[m].index !== 'undefined'){
 							ret +=  "._" + mapper[m].index;
 						}
+						console.log(JSON.stringify({
+							"selector": (s.substring(li,i) + ret).trim(), 
+							"filter":   ":"+ m.split("(")[0],
+							"filterargs": mapper[m].args
+						}));
 						compiled[compiled.length-1].segments.push({
 							"selector": (s.substring(li,i) + ret).trim(), 
 							"filter":   ":"+ m.split("(")[0],
@@ -61,7 +78,8 @@ var cssPluginCompiler = function(src){
 						});
 						return ret;
 					});
-					
+					rawSelector = rawSelector.trim().replace(/:$/, "").replace(":._","._");
+					console.log("....   " + rawSelector);
 					pluginsFound = rawSelector.match(reHasPlugin);  
 					if(pluginsFound){
 						for(var x=0;x<pluginsFound.length;x++){
@@ -72,6 +90,7 @@ var cssPluginCompiler = function(src){
 							});
 						}
 					}	
+					
 					if(compiled[compiled.length-1].segments.length === 0){
 						delete compiled[compiled.length-1].segments; 
 					}else{
@@ -87,6 +106,7 @@ var cssPluginCompiler = function(src){
 							sans.splice(x,1);  // get rid of these, need a better regex...
 						}
 					};
+					console.log("??" + rawSelector.trim() + "{");
 					compiled[compiled.length-1].rule = rawSelector.trim() + "{" + o[1];
 			}
 			

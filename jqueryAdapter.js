@@ -1,3 +1,4 @@
+cssPlugin.useManualInit();
 $(document).ready(
 	function(){ 
 		var promises = [];
