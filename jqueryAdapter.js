@@ -1,29 +1,59 @@
 cssPlugin.useManualInit();
-$(document).ready(
+ $(document).ready(
 	function(){ 
-		var promises = [];
+		var promises = [],store = window.localStorage,cv = 'plugins-cacheversion';
 		$('head [data-plugins]').each(
 			function(i,el){ 
-				var scripts = el['data-plugins'].split( ','); 
+				var url, cache = el.getAttribute('data-cacheversion'), 
+					scripts = el.getAttribute('data-plugins').split( ',');
 				for(var i=0;i<scripts.length;i++){ 
-					promises.push($.getScript(scripts[i])); 
+					url = scripts[i];
+					if(store[cv] !== cache){ 
+						store[cv] = cache;
+						cache = false;
+					}
+					if(cache && store[url]){
+						eval(store[url]);
+					}else{
+						promises.push($.getScript(url,function(t){
+							if(store[cv]){ store[url] = t; }
+						})); 
+					}
 				} 
 			}
 		); 
-		$('[data-usesplugins]').each( 
-			function(i,el){ 
-				if(el.tagName === 'STYLE'){
-					cssPlugin.addCompiledRules(cssPluginCompiler(el.innerHTML));
-				}else{
-					promises.push($.get(el.href, function(src){ 
-						cssPlugin.addCompiledRules(cssPluginCompiler(src)); 
-						
-					}, 'text'));
-				}
-			}
-		); 
 		$.when.apply($,promises).then(function(){
-			cssPlugin.init();
+			var promises = [], cache;
+			$('[data-usesplugins]').each( 
+				function(i,el){ 
+					var href, cache = el.getAttribute('data-cacheversion');
+					if(store[cv] !== cache){ 
+						store[cv] = cache;
+						cache = false;
+					}
+					if(el.tagName === 'STYLE'){
+						cssPlugin.addCompiledRules(cssPluginCompiler(el.innerHTML));
+					}else{
+						if(cache && store[el.href]){
+							cssPlugin.addCompiledRules(JSON.parse(store[el.href]));
+						}else{
+							href = el.href;
+							promises.push($.get(href, function(src){
+								var compiled = cssPluginCompiler(src);
+								if(cache){
+									setTimeout(function(){
+										store[href] = JSON.stringify(compiled);
+									},10);
+								}
+								cssPlugin.addCompiledRules(compiled); 
+							}, 'text'));
+						}
+					}
+				}
+			);
+			$.when.apply($,promises).then(function(){
+				cssPlugin.init();
+			});
 		});
 	}
 );
