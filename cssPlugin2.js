@@ -10,7 +10,7 @@ var cssPlugin = (function(){
 			 this.dispatchEvent(e);
 			}
 		}
-		
+		var console = window.console || { log: function(){} };
 	    var perf = { checks: 0, queries: 0 };
 	    var	vendor, 
 			
@@ -95,8 +95,6 @@ var cssPlugin = (function(){
 							return;
 						}
 						
-						// compile segment groups...
-						groups = compileSegmentGroups(rulesWeCareAbout);
 						for(var i=0;i<potential.length;i++){
 							// This allows us to detect class name changes
 							potential[i]._oldclasses = potential[i].className;
@@ -134,20 +132,6 @@ var cssPlugin = (function(){
 					    (e[x].target || e[x]).className = (e[x].target || e[x]).className.replace(' _' + i, ''); 
 					}
 				}
-			},
-			
-			// gets a comma seperated list of all segments in a filter (without compiled indexes)
-			getSegmentsGroup = function(r){
-				var ret = [];
-				if(!r.segmentsGroup){
-					for(var i=0;i<r.segments.length;i++){
-						if(r.segments[i].filter){
-							ret.push(r.segments[i].selector.replace(/._\d/,''));
-						}
-					}
-					r.segmentsGroup = ret.join(',').replace("\:-" + vendor + "-any\(\)","");
-				}				
-				return r.segmentsGroup;
 			},
 			
 			// gets the first segments for all rules (without compiled indexes)
@@ -216,19 +200,6 @@ var cssPlugin = (function(){
 					return false;
 				}
 				return { scan: m.join(","), rules: ret };
-			},
-			
-			
-			compileSegmentGroups = function(rules){
-				var ret = [], group, rule;
-				for(var i=0;i<rules.length;i++){
-					rule = rules[i];
-					group = getSegmentsGroup(rule);
-					if(ret.indexOf(group) === -1){
-						ret.push(group);
-					}
-				}
-				return ret;
 			},
 			
 			getSegIndex = function(){
@@ -331,7 +302,6 @@ var cssPlugin = (function(){
 							console.log("empty...." + temp);
 							ss.insertRule(temp,ss.length-1);
 						}else{
-						debugger;
 							ss.insertRule(real.join(","),ss.length-1);
 							//ss.insertRule(nativeRules[i].rule,ss.length-1);
 						}

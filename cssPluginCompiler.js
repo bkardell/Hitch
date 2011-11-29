@@ -17,7 +17,7 @@ var cssPluginCompiler = function(src){
 		mc = 0,
 		opts = { tags: {}, attributes: {}, ids: {}, classes: {} },
 		any = "-" + matcherFn.name.replace("MatchesSelector", "-any"); 
-		src = src.replace(/\@alias[^\;]*\;/g, function(m,i,s){
+		src = src.replace(/\@-plugin-alias[^\;]*\;/g, function(m,i,s){
 			var parts = m.split(/\s|\;/g);
 			cssPlugin.addFilters([{name: parts[1], base: parts[2]}]);
 			return '';
@@ -56,21 +56,16 @@ var cssPluginCompiler = function(src){
 						base = cssPlugin.getBase(m.split("(")[0]);
 						if(!base || base === ''){
 							base = "*";
-						}
+						};
 						if(any === '-plugin-any'){
 							ret = '';
 							i=i-1;
 						}else{					
 							ret = any + "(" + base + ")"; 
-						}
+						};
 						if(typeof mapper[m].index !== 'undefined'){
 							ret +=  "._" + mapper[m].index;
-						}
-						console.log(JSON.stringify({
-							"selector": (s.substring(li,i) + ret).trim(), 
-							"filter":   ":"+ m.split("(")[0],
-							"filterargs": mapper[m].args
-						}));
+						};
 						compiled[compiled.length-1].segments.push({
 							"selector": (s.substring(li,i) + ret).trim(), 
 							"filter":   ":"+ m.split("(")[0],
@@ -79,7 +74,6 @@ var cssPluginCompiler = function(src){
 						return ret;
 					});
 					rawSelector = rawSelector.trim().replace(/:$/, "").replace(":._","._");
-					console.log("....   " + rawSelector);
 					pluginsFound = rawSelector.match(reHasPlugin);  
 					if(pluginsFound){
 						for(var x=0;x<pluginsFound.length;x++){
@@ -106,7 +100,6 @@ var cssPluginCompiler = function(src){
 							sans.splice(x,1);  // get rid of these, need a better regex...
 						}
 					};
-					console.log("??" + rawSelector.trim() + "{");
 					compiled[compiled.length-1].rule = rawSelector.trim() + "{" + o[1];
 			}
 			
