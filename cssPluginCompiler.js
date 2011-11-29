@@ -13,10 +13,9 @@ var cssPluginCompiler = function(src){
 		care =  /(\[|#|\.|:|\w)[A-z|0-9|\-]*/g,
 		compiled = [], 
 		mapper = {},
-		reverse = [];
 		mc = 0,
-		opts = { tags: {}, attributes: {}, ids: {}, classes: {} },
 		any = "-" + matcherFn.name.replace("MatchesSelector", "-any"); 
+		/* We want to add @-plugin-require url; */
 		src = src.replace(/\@-plugin-alias[^\;]*\;/g, function(m,i,s){
 			var parts = m.split(/\s|\;/g);
 			cssPlugin.addFilters([{name: parts[1], base: parts[2]}]);
@@ -27,7 +26,10 @@ var cssPluginCompiler = function(src){
 		pluginNames = cssPlugin.getPluginNames(),
 		reHasPlugin = new RegExp(pluginNames.join('|')),
 		reHasFn = new RegExp(pluginNames.join(regExpPart + '|') + regExpPart,"g"),
-		inp = src.split("}");
+		inp = src.split("}"),
+		lastComp = function(){
+			return compiled[compiled.length-1];
+		};
 		
 		try{ // oohhh I hate you mobile webkit!  false, false advertizing!
 			document.head.querySelectorAll(":" + any + "(*)").length;
@@ -51,7 +53,6 @@ var cssPluginCompiler = function(src){
 						//each unique one gets an index
 						if(typeof mapper[m] === 'undefined'){
 							mapper[m] = { index: mc++, args: m.match(/\((.*)\)/)[1] }; 
-							reverse.push(m);
 						}
 						base = cssPlugin.getBase(m.split("(")[0]);
 						if(!base || base === ''){
@@ -66,7 +67,7 @@ var cssPluginCompiler = function(src){
 						if(typeof mapper[m].index !== 'undefined'){
 							ret +=  "._" + mapper[m].index;
 						};
-						compiled[compiled.length-1].segments.push({
+						lastComp().segments.push({
 							"selector": (s.substring(li,i) + ret).trim(), 
 							"filter":   ":"+ m.split("(")[0],
 							"filterargs": mapper[m].args
@@ -85,13 +86,13 @@ var cssPluginCompiler = function(src){
 						}
 					}	
 					
-					if(compiled[compiled.length-1].segments.length === 0){
-						delete compiled[compiled.length-1].segments; 
+					if(lastComp().segments.length === 0){
+						delete lastComp().segments;  
 					}else{
-						var lastPluginSegment = compiled[compiled.length-1].segments[compiled[compiled.length-1].segments.length-1];
+						var lastPluginSegment = lastComp().segments[lastComp().segments.length-1];
 						var pastLastPluginSegment = rawSelector.substring(rawSelector.indexOf(lastPluginSegment.selector)  + lastPluginSegment.selector.length ).trim();
 						if(pastLastPluginSegment!==''){
-							compiled[compiled.length-1].segments.push({"selector": pastLastPluginSegment});
+							lastComp().segments.push({"selector": pastLastPluginSegment});
 						}
 					}
 					sans = rawSelector.match(care);
@@ -100,7 +101,7 @@ var cssPluginCompiler = function(src){
 							sans.splice(x,1);  // get rid of these, need a better regex...
 						}
 					};
-					compiled[compiled.length-1].rule = rawSelector.trim() + "{" + o[1];
+					lastComp().rule = rawSelector.trim() + "{" + o[1];
 			}
 			
 		}

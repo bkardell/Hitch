@@ -90,7 +90,7 @@ var cssPlugin = (function(){
 						if(maybeRules){
 							// we can do this and short-circuit return;
 							var p = getFirstSegments(maybeRules);
-							el = searchUpward(el,maybeRules) || el;  // || document.body);
+							el = searchUpward(el,maybeRules) || el;
 							return;
 						}
 						
@@ -100,7 +100,6 @@ var cssPlugin = (function(){
 						}	
 						tester(el,(t.type === 'DOMNodeInserted') ? grabAncestralTree(t.relatedNode,[el]) : false);
 					}catch(exc){
-						// uhoh!
 						console.log(exc.message);
 					}finally{
 						perf.duration = new Date().getTime() - start + "ms";
@@ -146,6 +145,7 @@ var cssPlugin = (function(){
 				return ret.join(",").replace("\:\-" + vendor + "\-any\(\)","");
 			},
 			
+			// 
 			findSegments = function(rule, criteria, t){
 			    var sel, args, a = [], f = false, segment;
 				for(var i=0;i<rule.segments.length;i++){
@@ -277,7 +277,7 @@ var cssPlugin = (function(){
 					return compiled_cssplugin_rules;
 				},
 				
-				init: function(){
+				init: function(b){
 					var ss, known, temp, real, ns = document.createElement('style'), vendors = "-moz-|-ms-|-webkit-|-o-";
 					document.getElementsByTagName('head')[0].appendChild(ns);
 					ss = document.styleSheets[document.styleSheets.length-1];
@@ -294,18 +294,16 @@ var cssPlugin = (function(){
 							}
 						}
 						if(real.join(',')===''){
-							console.log("empty...." + temp);
 							ss.insertRule(temp,ss.length-1);
 						}else{
 							ss.insertRule(real.join(","),ss.length-1);
-							//ss.insertRule(nativeRules[i].rule,ss.length-1);
 						}
 					}
-					testSubtree(document.body,document.head.webkitMatchesSelector);
-					document.body.addEventListener('DOMAttrModified',testSubtree);
-					document.body.addEventListener('DOMNodeInserted',testSubtree);
-					document.body.addEventListener('DOMNodeRemoved',testSubtree);
-					document.addEventListener('DOMSubtreeModified',function(t){
+					testSubtree(b,document.head.webkitMatchesSelector);
+					b.addEventListener('DOMAttrModified',testSubtree);
+					b.addEventListener('DOMNodeInserted',testSubtree);
+					b.addEventListener('DOMNodeRemoved',testSubtree);
+					b.addEventListener('DOMSubtreeModified',function(t){
 						if(!t.target._isSetting && t.target._oldclasses !== t.target.className){
 							t.target._isSetting = true;
 							t.target.setAttribute('class',t.target.className);
@@ -326,7 +324,7 @@ var cssPlugin = (function(){
 
 			// Go!
 			ready = function(){
-				var matches;
+				var matches, d = document, b = d.body;
 				if(cssplugin_selectors){
 					for(var i=0;i<cssplugin_selectors.length;i++){
 						filters.registerFilter(
@@ -337,9 +335,9 @@ var cssPlugin = (function(){
 						);
 					};
 				
-					if(document.body.mozMatchesSelector){ vendor = "-moz-"; matches = 'mozMatchesSelector'; }
-					else if(document.body.webkitMatchesSelector){  vendor = "-webkit-"; matches = 'webkitMatchesSelector'; }
-					else if(document.body.oMatchesSelector){  vendor = "-o-"; matches = 'oMatchesSelector'; }
+					if(b.mozMatchesSelector){ vendor = "-moz-"; matches = 'mozMatchesSelector'; }
+					else if(b.webkitMatchesSelector){  vendor = "-webkit-"; matches = 'webkitMatchesSelector'; }
+					else if(b.oMatchesSelector){  vendor = "-o-"; matches = 'oMatchesSelector'; }
 					else{ vendor = "-ms-";  matches = 'msMatchesSelector'; } 
 					if(!document.head.matchesSelector){
 						Element.prototype.matchesSelector = function(s){ 
@@ -352,7 +350,7 @@ var cssPlugin = (function(){
 							rulesWeCareAbout.push(nativeRules[i]);
 						};
 					};
-					filters.init();
+					filters.init(b);
 				};
 			};
 	
@@ -415,10 +413,9 @@ var cssPluginCompiler = function(src){
 		care =  /(\[|#|\.|:|\w)[A-z|0-9|\-]*/g,
 		compiled = [], 
 		mapper = {},
-		reverse = [];
 		mc = 0,
-		opts = { tags: {}, attributes: {}, ids: {}, classes: {} },
 		any = "-" + matcherFn.name.replace("MatchesSelector", "-any"); 
+		// We want to add @-plugin-require url;
 		src = src.replace(/\@-plugin-alias[^\;]*\;/g, function(m,i,s){
 			var parts = m.split(/\s|\;/g);
 			cssPlugin.addFilters([{name: parts[1], base: parts[2]}]);
@@ -429,7 +426,10 @@ var cssPluginCompiler = function(src){
 		pluginNames = cssPlugin.getPluginNames(),
 		reHasPlugin = new RegExp(pluginNames.join('|')),
 		reHasFn = new RegExp(pluginNames.join(regExpPart + '|') + regExpPart,"g"),
-		inp = src.split("}");
+		inp = src.split("}"),
+		lastComp = function(){
+			return compiled[compiled.length-1];
+		};
 		
 		try{ // oohhh I hate you mobile webkit!  false, false advertizing!
 			document.head.querySelectorAll(":" + any + "(*)").length;
@@ -453,7 +453,6 @@ var cssPluginCompiler = function(src){
 						//each unique one gets an index
 						if(typeof mapper[m] === 'undefined'){
 							mapper[m] = { index: mc++, args: m.match(/\((.*)\)/)[1] }; 
-							reverse.push(m);
 						}
 						base = cssPlugin.getBase(m.split("(")[0]);
 						if(!base || base === ''){
@@ -468,7 +467,7 @@ var cssPluginCompiler = function(src){
 						if(typeof mapper[m].index !== 'undefined'){
 							ret +=  "._" + mapper[m].index;
 						};
-						compiled[compiled.length-1].segments.push({
+						lastComp().segments.push({
 							"selector": (s.substring(li,i) + ret).trim(), 
 							"filter":   ":"+ m.split("(")[0],
 							"filterargs": mapper[m].args
@@ -487,13 +486,13 @@ var cssPluginCompiler = function(src){
 						}
 					}	
 					
-					if(compiled[compiled.length-1].segments.length === 0){
-						delete compiled[compiled.length-1].segments; 
+					if(lastComp().segments.length === 0){
+						delete lastComp().segments;  
 					}else{
-						var lastPluginSegment = compiled[compiled.length-1].segments[compiled[compiled.length-1].segments.length-1];
+						var lastPluginSegment = lastComp().segments[lastComp().segments.length-1];
 						var pastLastPluginSegment = rawSelector.substring(rawSelector.indexOf(lastPluginSegment.selector)  + lastPluginSegment.selector.length ).trim();
 						if(pastLastPluginSegment!==''){
-							compiled[compiled.length-1].segments.push({"selector": pastLastPluginSegment});
+							lastComp().segments.push({"selector": pastLastPluginSegment});
 						}
 					}
 					sans = rawSelector.match(care);
@@ -502,7 +501,7 @@ var cssPluginCompiler = function(src){
 							sans.splice(x,1);  // get rid of these, need a better regex...
 						}
 					};
-					compiled[compiled.length-1].rule = rawSelector.trim() + "{" + o[1];
+					lastComp().rule = rawSelector.trim() + "{" + o[1];
 			}
 			
 		}

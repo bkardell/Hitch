@@ -11,6 +11,10 @@ var cssPlugin = (function(){
 			}
 		}
 		var console = window.console || { log: function(){} };
+		var loc = window.location.href.split("?")[0].split("/");
+			loc.pop();
+			loc = loc.join('/');
+			
 	    var perf = { checks: 0, queries: 0 };
 	    var	vendor, 
 			
@@ -48,8 +52,7 @@ var cssPlugin = (function(){
 				if(el.tagName !== 'BODY' && q.scan !== ''){
 					if(el.matchesSelector(q.scan)){
 						for(var i=0;i<q.rules.length;i++){
-							//debugger;
-							x = filters.map[q.rules[i].filter].fn(el,q.rules[i].filterargs)
+							x = filters.map[q.rules[i].filter].fn(el,q.rules[i].filterargs,{siblings: el.parentNode.children, location: loc })
 							d = q.rules[i].rid; //selector.match(/\._(\d)/)[1];
 							(x) ? addMangledClass(el,d) : removeMangledClass(el,d);
 						}
@@ -91,7 +94,7 @@ var cssPlugin = (function(){
 						if(maybeRules){
 							// we can do this and short-circuit return;
 							var p = getFirstSegments(maybeRules);
-							el = searchUpward(el,maybeRules) || el;  // || document.body);
+							el = searchUpward(el,maybeRules) || el;
 							return;
 						}
 						
@@ -101,8 +104,6 @@ var cssPlugin = (function(){
 						}	
 						tester(el,(t.type === 'DOMNodeInserted') ? grabAncestralTree(t.relatedNode,[el]) : false);
 					}catch(exc){
-						// uhoh!
-						debugger;
 						console.log(exc.message);
 					}finally{
 						perf.duration = new Date().getTime() - start + "ms";
@@ -117,20 +118,14 @@ var cssPlugin = (function(){
 			},
 			
 			addMangledClass = function(t,i){
-				var e = (t instanceof NodeList) ? t : [t];
-				for(var x=0;x<e.length;x++){
-					if(!hasMangledClass(e[x],i)){
-						(e[x].target || e[x]).className += " _" + i;
-					}
-				}
+				if(!hasMangledClass(t,i)){
+					(t.target || t).className += " _" + i;
+				}			
 			}, 
 			
 			removeMangledClass = function(t,i){
-				var e = (t instanceof NodeList) ? t : [t];
-				for(var x=0;x<e.length;x++){
-					if(hasMangledClass(e[x],i)){
-					    (e[x].target || e[x]).className = (e[x].target || e[x]).className.replace(' _' + i, ''); 
-					}
+				if(hasMangledClass(t,i)){
+					 (t.target || t).className = (t.target || t).className.replace(' _' + i, ''); 
 				}
 			},
 			
@@ -186,7 +181,6 @@ var cssPlugin = (function(){
 						if(rule.str.indexOf(wrapped) !== -1 || 
 							(wrap === wrappers.attr && rule.str.indexOf(t.attrName) !== -1)){
 							rule.index = i;
-							//debugger;
 							var ttt = findSegments(rule,wrapped,t);
 							if(ttt.a && m.indexOf(ttt.a) === -1){
 								m.push(ttt.a);
@@ -215,7 +209,6 @@ var cssPlugin = (function(){
 							
 							segs.push(sans);
 							if(segment.filter){
-								//debugger;
 								joint = segs.join(' ');
 								if(joint===""){ joint = "*"; }
 								if(!segIndex[joint]){
@@ -263,7 +256,7 @@ var cssPlugin = (function(){
 									//	}
 									//	last = potential[i];
 									//}else{
-										x = filters.map[filterName].fn(n,tests[i].args,{siblings: n.parentNode.children, location: location });
+										x = filters.map[filterName].fn(n,tests[i].args,{siblings: n.parentNode.children, location: loc });
 									//}
 									(x) ? addMangledClass(t,tests[i].rid) : removeMangledClass(t,tests[i].rid);
 									
@@ -282,7 +275,7 @@ var cssPlugin = (function(){
 					return compiled_cssplugin_rules;
 				},
 				
-				init: function(){
+				init: function(b){
 					var ss, known, temp, real, ns = document.createElement('style'), vendors = "-moz-|-ms-|-webkit-|-o-";
 					document.getElementsByTagName('head')[0].appendChild(ns);
 					ss = document.styleSheets[document.styleSheets.length-1];
@@ -299,23 +292,22 @@ var cssPlugin = (function(){
 							}
 						}
 						if(real.join(',')===''){
-							console.log("empty...." + temp);
 							ss.insertRule(temp,ss.length-1);
 						}else{
 							ss.insertRule(real.join(","),ss.length-1);
-							//ss.insertRule(nativeRules[i].rule,ss.length-1);
 						}
 					}
-					testSubtree(document.body,document.head.webkitMatchesSelector);
-					document.body.addEventListener('DOMAttrModified',testSubtree);
-					document.body.addEventListener('DOMNodeInserted',testSubtree);
-					document.body.addEventListener('DOMNodeRemoved',testSubtree);
-					document.addEventListener('DOMSubtreeModified',function(t){
-						if(!t.target._isSetting && t.target._oldclasses !== t.target.className){
-							t.target._isSetting = true;
-							t.target.setAttribute('class',t.target.className);
-							t.target._oldclasses = t.target.className;
-							t.target._isSetting = false;
+					testSubtree(b,document.head.webkitMatchesSelector);
+					b.addEventListener('DOMAttrModified',testSubtree);
+					b.addEventListener('DOMNodeInserted',testSubtree);
+					b.addEventListener('DOMNodeRemoved',testSubtree);
+					b.addEventListener('DOMSubtreeModified',function(t){
+						var targ = t.target;
+						if(!targ._isSetting && targ._oldclasses !== targ.className){
+							targ._isSetting = true;
+							targ.setAttribute('class',targ.className);
+							targ._oldclasses = targ.className;
+							targ._isSetting = false;
 						}
 					});
 					
@@ -331,7 +323,7 @@ var cssPlugin = (function(){
 
 			// Go!
 			ready = function(){
-				var matches;
+				var matches, d = document, b = d.body;
 				if(cssplugin_selectors){
 					for(var i=0;i<cssplugin_selectors.length;i++){
 						filters.registerFilter(
@@ -342,9 +334,9 @@ var cssPlugin = (function(){
 						);
 					};
 				
-					if(document.body.mozMatchesSelector){ vendor = "-moz-"; matches = 'mozMatchesSelector'; }
-					else if(document.body.webkitMatchesSelector){  vendor = "-webkit-"; matches = 'webkitMatchesSelector'; }
-					else if(document.body.oMatchesSelector){  vendor = "-o-"; matches = 'oMatchesSelector'; }
+					if(b.mozMatchesSelector){ vendor = "-moz-"; matches = 'mozMatchesSelector'; }
+					else if(b.webkitMatchesSelector){  vendor = "-webkit-"; matches = 'webkitMatchesSelector'; }
+					else if(b.oMatchesSelector){  vendor = "-o-"; matches = 'oMatchesSelector'; }
 					else{ vendor = "-ms-";  matches = 'msMatchesSelector'; } 
 					if(!document.head.matchesSelector){
 						Element.prototype.matchesSelector = function(s){ 
@@ -357,7 +349,7 @@ var cssPlugin = (function(){
 							rulesWeCareAbout.push(nativeRules[i]);
 						};
 					};
-					filters.init();
+					filters.init(b);
 				};
 			};
 	
@@ -370,10 +362,6 @@ var cssPlugin = (function(){
 			};
 			
 			var defaultInit=true;
-			
-			var location = window.location.href.split("?")[0].split("/");
-			location.pop();
-			location = location.join('/');
 			
 			document.addEventListener( "DOMContentLoaded", function(){
 				if(defaultInit){
