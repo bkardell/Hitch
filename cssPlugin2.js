@@ -93,7 +93,6 @@ var cssPlugin = (function(){
 						var maybeRules  = findPotentiallyRelevantRules(t);
 						if(maybeRules){
 							// we can do this and short-circuit return;
-							var p = getFirstSegments(maybeRules);
 							el = searchUpward(el,maybeRules) || el;
 							return;
 						}
@@ -129,19 +128,6 @@ var cssPlugin = (function(){
 				}
 			},
 			
-			// gets the first segments for all rules (without compiled indexes)
-			getFirstSegments = function(rs){
-				var ret = [],selector;
-				for(var i=0;i<rs.length;i++){
-					if(rs[i].segments){
-						selector = rs[i].segments[0].selector.replace(/._\d/,'');
-						if(ret.indexOf(selector !== -1)){
-							ret.push(selector);
-						}
-					}
-				}
-				return ret.join(",").replace("\:\-" + vendor + "\-any\(\)","");
-			},
 			
 			// 
 			findSegments = function(rule, criteria, t){
@@ -282,6 +268,8 @@ var cssPlugin = (function(){
 					known = getPluginNames();
 					known.push(vendor);
 					known = new RegExp(known.join('|'));
+					
+						var buff = [];
 					for(i=0;i<nativeRules.length;i++){
 						temp =  nativeRules[i].rule.split(",");
 						real = [];
@@ -292,11 +280,14 @@ var cssPlugin = (function(){
 							}
 						}
 						if(real.join(',')===''){
+							buff.push(temp);
 							ss.insertRule(temp,ss.length-1);
 						}else{
+							buff.push(real.join(','));
 							ss.insertRule(real.join(","),ss.length-1);
 						}
 					}
+					//console.log(buff.join('\n\n'));
 					testSubtree(b,document.head.webkitMatchesSelector);
 					b.addEventListener('DOMAttrModified',testSubtree);
 					b.addEventListener('DOMNodeInserted',testSubtree);
