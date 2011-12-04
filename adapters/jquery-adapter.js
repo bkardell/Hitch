@@ -12,17 +12,16 @@ $(document).ready(
 		$('[data-usesplugins]').each( 
 			function(i,el){ 
 				if(el.tagName === 'STYLE'){
-					cssPlugin.addCompiledRules(cssPluginCompiler(el.innerHTML));
+					cssPlugins.addCompiledRules(cssPluginsCompiler(el.innerHTML));
 				}else{
 					promises.push($.get(el.href, function(src){ 
-						cssPlugin.addCompiledRules(cssPluginCompiler(src)); 
-						
+						cssPlugins.addCompiledRules(cssPluginsCompiler(src)); 
 					}, 'text'));
 				}
 			}
 		); 
 		$.when.apply($,promises).then(function(){
-			cssPlugin.init();
+			cssPlugins.init();
 		});
 	}
 );
