@@ -1,26 +1,29 @@
-$(document).ready(
+cssPlugins.useManualInit();
+ $(document).ready(
 	function(){ 
-		var promises = [];
-		$('head [data-plugins]').each(
+		var loads = [], 
+			cache;
+			
+		$('[-plugins-interpret]').each( 
 			function(i,el){ 
-				var scripts = el['data-plugins'].split( ','); 
-				for(var i=0;i<scripts.length;i++){ 
-					promises.push($.getScript(scripts[i])); 
-				} 
-			}
-		); 
-		$('[data-usesplugins]').each( 
-			function(i,el){ 
+				var href, 
+					deferred = $.Deferred(), 
+					initer = function(c){
+						cssPlugins.addCompiledRules(c);
+						deferred.resolve();
+					};
+				loads.push(deferred);
 				if(el.tagName === 'STYLE'){
-					cssPlugins.addCompiledRules(cssPluginsCompiler(el.innerHTML));
+					cssPluginsCompiler(el.innerHTML,initer);
 				}else{
-					promises.push($.get(el.href, function(src){ 
-						cssPlugins.addCompiledRules(cssPluginsCompiler(src)); 
-					}, 'text'));
+					href = el.href;
+					$.get(href, function(src){
+						cssPluginsCompiler(src,initer);
+					}, 'text');
 				}
 			}
-		); 
-		$.when.apply($,promises).then(function(){
+		);
+		$.when.apply($,loads).then(function(){
 			cssPlugins.init();
 		});
 	}
