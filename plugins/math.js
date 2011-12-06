@@ -1,6 +1,6 @@
 cssPlugins.addFilters([	
 {
-	name: 'math-greaterthan',  
+	name: '-math-greaterthan',  
 	fn:   function(match,argsString){
 				var args = argsString.split(",");
 				var value = match.getAttribute(args[0]);
@@ -10,7 +10,7 @@ cssPlugins.addFilters([
 				return false;
    }
 },{
-	name: 'math-lessthan',  
+	name: '-math-lessthan',  
 	fn:   function(match,argsString){
 				var args = argsString.split(",");
 				var value = match.getAttribute(args[0]);
@@ -21,7 +21,7 @@ cssPlugins.addFilters([
    }
 },
 {
-	name: 'math-greatest',  
+	name: '-math-greatest',  
 	fn:   function(match,argsString,c){
 				var value, biggest, args = argsString.split(",");
 				for(var i=0;i<c.siblings.length;i++){
@@ -35,7 +35,7 @@ cssPlugins.addFilters([
 	}
 },
 {
-	name: 'math-least',  
+	name: '-math-least',  
 	fn:   function(match,argsString,c){
 				var value, smallest, args = argsString.split(",");
 				for(var i=0;i<c.siblings.length;i++){
