@@ -74,10 +74,10 @@ cssPlugins.addFilters([
 	{
 		name: '-jquery-even', 
 		base: '', 
-		fn:   function(match,args,o){
+		fn:   function(match,args,ctx){
 				return (
 					Array.prototype.splice(
-						document.body.querySelectorAll(selector),0
+						document.body.querySelectorAll(ctx.selector),0
 					).indexOf(match) % 2
 				) === 0;
 		}
@@ -85,10 +85,10 @@ cssPlugins.addFilters([
 	{
 		name: '-jquery-odd', 
 		base: '', 
-		fn:   function(match,args,o){
+		fn:   function(match,args,ctx){
 				return (
 					Array.prototype.splice(
-						document.body.querySelectorAll(selector),0
+						document.body.querySelectorAll(ctx.selector),0
 					).indexOf(match) % 2
 				) === 0;
 		}
@@ -96,20 +96,20 @@ cssPlugins.addFilters([
 	{
 		name: '-jquery-first', 
 		base: '', 
-		fn:   function(match,args,o){
-				return document.body.querySelector(selector) === match;
+		fn:   function(match,args,ctx){
+				return document.body.querySelector(ctx.selector) === match;
 		}
 	},
 	{
 		name: '-jquery-gt', 
 		base: '', 
-		fn:   function(match,args,o){
+		fn:   function(match,args,ctx){
 				var targ;
 				if(args && !isNaN(args)){	
 					targ = parseInt(args);
 					return (
 						Array.prototype.splice(
-							document.body.querySelectorAll(selector),0
+							document.body.querySelectorAll(ctx.selector),0
 						).indexOf(match) > targ
 					);
 				};
@@ -118,13 +118,13 @@ cssPlugins.addFilters([
 	{
 		name: '-jquery-lt', 
 		base: '', 
-		fn:   function(match,args,o){
+		fn:   function(match,args,ctx){
 				var targ;
 				if(args && !isNaN(args)){	
 					targ = parseInt(args);
 					return (
 						Array.prototype.splice(
-							document.body.querySelectorAll(selector),0
+							document.body.querySelectorAll(ctx.selector),0
 						).indexOf(match) < targ
 					);
 				};
@@ -133,9 +133,9 @@ cssPlugins.addFilters([
 	{
 		name: '-jquery-last', 
 		base: '', 
-		fn:   function(match,args,o){
+		fn:   function(match,args,ctx){
 				var targ = Array.prototype.splice(
-					document.body.querySelectorAll(selector),0
+					document.body.querySelectorAll(ctx.selector),0
 				);
 				return targ[targ.length-1] === match;
 		}
