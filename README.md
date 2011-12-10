@@ -65,7 +65,7 @@ An extension for CSS Plugins has the following form:
 			return value < argsString;
 		}
 	};
-	
+
 The plugin above can be added to the CSS Plugins this way:
 
 	cssPlugins.addFilters([belowPlugin]);
