@@ -3,7 +3,10 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>refactored</title>
-	<script src="../lib/css-plugins.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+	<!-- <script src="../lib/css-plugins.js" type="text/javascript" charset="utf-8"></script> -->
+	<script src="../lib/cssPlugins.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../lib/cssPluginsCompiler.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 		var belowPlugin = {
 			// the name of the pseudo-class  
@@ -18,13 +21,25 @@
 				return value < argsString;
 			}
 		};
-		cssPlugins.add(belowPlugin); 
+		cssPlugins.addFilters([belowPlugin]); 
 	</script>
 	<style data-css-plugins='true' type="text/css" media="screen">
+		@-plugins-const clint div.clint;
+		@-plugins-const brian div.brian;
+		div:clint { color: yellow; }
+		div:brian { color: purple; }
 		div:myplugin-below(100) { color: red; }
 		div:myplugin-below(50) span { color: blue; }
 		div:myplugin-below(20), p:myplugin-below(20) { color: green; }
 	</style>
+	<script type="text/javascript" charset="utf-8">
+		var styles = document.querySelectorAll('[data-css-plugins=true]');
+		for(var i = 0; i < styles.length; i++){ 
+			cssPluginsCompiler(styles[i].innerHTML, function(rules){
+				console.log('Compiled:',rules);
+			}); 
+		}
+	</script>
 </head>
 <body id="refactored">
 	<div below="101">This is above 100</div>
