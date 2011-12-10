@@ -1,30 +1,55 @@
 CSS Plugins
 =========
-A JavaScript library that provides CSS extensions through vendor prefixing and pseudo-classes.
+A JavaScript library that provides CSS extensions with the -plugin-* vendor prefix and framework that allows others to easily develop and use additional extensions.
 
-Usage
-=====
-First include the CSS Plugins JavaScript library into your page:
+Setup (interpreted mode)
+========================
+Interpreted mode currently relies on JQuery 1.5 or greater.  To get started, mark a link or style tag in your page with the -plugins-interpret attribute, include your preferred 
+version of query (we recommend using one of the existing CDNs) and the interpreted version of the library.  It should look something like this:
 
-	<script src="css-plugins.js" type="text/javascript"></script>
+	<link rel="stylesheet" 
+		href="styles.css" type="text/css" -plugins-interpret="true"  />
+
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
 	
-Next include your plugin implementations:
+	<script type="text/javascript" src="plugin-interp-jquery.js"></script>
+	
 
-	<script src="my-plugins.js" type="text/javascript"></script>
+Setup (pre-compiled/production mode)
+====================================
+You can use the rulecompiler tool to create precompiled versions (very fast) for production.  The output of the tool will show you what to include.
+In the end it will look something like this (note there are no dependencies in this version and the engine itself is <2k):
 
-Then you can provide your CSS that uses plugins in two ways:
+	<link rel="stylesheet"  href="styles-compiled.css" type="text/css" />
+	<script type="text/javascript" src="cssPlugins.js"></script>
+	<script type="text/javascript" src="myPlugins.js"></script>
+	<script type="text/javascript" src="styles-compiled.js"></script>
 
-#### As an attribute on a Link element
+Usage (In your CSS)
+===================
+In your CSS you can reference plugins via the @-plugins-require processing instruction, and then just use the extensions provided by that 
+library in your CSS... Below is an example of a simple stylesheet that uses a -math-* library to style elements of the person class 
+which contain a data-score attribute over 10000 and the highest score sibling:
 
-	<link data-css-plugins=true href="/my-plugins.css" rel="stylesheet" type="text/css" />
+	@-plugins-require math.js
 
-#### As an attribute on a Style element
+	.person{
+		padding: 1em;
+		border:  2px solid #F6EDA9;
+	}
 
-	<style data-css-plugins=true type='text/css'>
-		div:myplugin-below(100) {
-			color: red;
-		}
-	</style>
+	.person:-math-greaterthan(data-score,10000){  
+		border-color: blue;
+	}
+
+	.person:-math-greatest(data-score){
+		background-color: blue;
+		color: white;
+	}
+
+
+
+
 	
 Description
 ===========
