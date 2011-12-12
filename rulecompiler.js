@@ -40,6 +40,8 @@ cssPluginsCompiler(src, function(o){
 	}
 	compiledCSSRulesFile = process.argv[2].replace('.css','-compiled.css');
 	compiledJSRulesFile = process.argv[2].replace('.css', '-compiled.js');
+	compiledCSSRulesFile = "dist" +  compiledCSSRulesFile.substring(compiledCSSRulesFile.lastIndexOf("/"));
+	compiledJSRulesFile = "dist" +  compiledJSRulesFile.substring(compiledJSRulesFile.lastIndexOf("/"));
 	
 	console.log('writing compiled css file...' + compiledCSSRulesFile);
 	fs.writeFileSync(
@@ -47,7 +49,7 @@ cssPluginsCompiler(src, function(o){
 		compiledRulesBuff.join("\n\n")
 	);
 	
-	console.log('writing compiled js file...' + process.argv[2].replace('.css','-compiled.js'));
+	console.log('writing compiled js file...' + compiledJSRulesFile);
 	fs.writeFileSync(
 		compiledJSRulesFile,
 		"cssPlugins.addCompiledRules({segIndex: " + JSON.stringify(o.segIndex) + "});"
