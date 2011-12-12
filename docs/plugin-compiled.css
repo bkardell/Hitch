@@ -1,10 +1,53 @@
 
-	body, html{ margin-top: -20px; margin-left: -10px; padding: 0px; }
+	
+	
+	
+	body, html{ 
+		margin-top: -20px; 
+		margin-left: -10px; 
+		padding: 0px; 
+	}
+
+
+	
 	*{ font-size: 1em; }
 
-	#logo{ float: left; margin-right: 4em; padding: 0px; margin-bottom: 0px; padding-top: 0px; }
-	#logo+h1{ font-size: 3em; color: #208dd0; margin-bottom: 0px; padding-top: 40px;  padding-bottom: 0px; }
-	#logo+h1+div{ background-color: #208dd0; margin: 0px; padding: 1em; margin-left: 4em; }
+/* was: .x:not(:-plugins-any(:div .flip .bar, span .flop.bit )) */
+.x:not(._0){
+    	background-color: orange;
+    }
+
+
+    
+	#logo{ 
+		float: left; 
+		margin-right: 4em; 
+		padding: 0px; 
+		margin-bottom: 0px; 
+		padding-top: 0px; 
+	}
+
+
+	
+	#logo+h1{ 
+		font-size: 3em; 
+		color: #208dd0; 
+		margin-bottom: 0px; 
+		padding-top: 40px;  
+		padding-bottom: 0px; 
+	}
+
+
+	
+	#logo+h1+div{ 
+		background-color: #208dd0; 
+		margin: 0px; 
+		padding: 1em; 
+		margin-left: 4em; 
+	}
+
+
+	
 	#logo+h1+div a {
 		width: 110px;
 		height: 30px;
@@ -15,41 +58,58 @@
 		margin: 0px 1em;
 	}
 
+
+
 	#logo+h1+div a:nth-child(1) {
 		background-position: -0px 50%;
 	}
+
+
 	
 	#logo+h1+div a:nth-child(2) {
 		background-position: -520px 50%;
 	}
+
+
 	#logo+h1+div a:nth-child(3) {
 		background-position: -1035px 50%;
 	}
+
+
 	#logo+h1+div a:nth-child(4) {
 		background-position: -260px 50%;
 	}
+
+
 	#logo+h1+div a{ 
 		background-color: #208dd0; 
 	
-		background: url("sprites2.png") no-repeat scroll
+		background: url("images/sprites2.png") no-repeat scroll
 	}
+
+
 	
 	#mainwell {
 		margin-left: 30px;
 	}
 
+
+
 	
 	a[href$=".zip"]:hover{  
 		color: yellow;
 	}
-	
-	a:test-locallink(){
+
+/* was: a:test-locallink() */
+a._1{
 		color: red;
 	}
+
+
 	
 	a[href$=".zip"]:-moz-any(*):-moz-any(*){
 		-moz-transition: color 0.5s ease 0s, -moz-box-shadow 0.85s ease 0s;
-		background: url("sprites2.png") no-repeat scroll -764px 50%, -moz-linear-gradient(#C0D000, #90A000) repeat scroll 0 0 transparent;
+		background: url("images/sprites2.png") no-repeat scroll -764px 50%, -moz-linear-gradient(#C0D000, #90A000) repeat scroll 0 0 transparent;
 		border: 4px solid #809000;
 		border-radius: 10px 10px 10px 10px;
 		box-shadow: 0 2px 5px #000000;
@@ -61,7 +121,19 @@
 		width: 175px;
 		height: 50px;
 		float: right;
-		color: #ffffff;
+		color: #ffffff; 
 	}
+
+
 	
 	a[href$=".zip"] div{ font-size: 0.5em; }
+
+/* was: [x]:-math-greaterthan(x,10) */
+[x]._2{
+	    border: 10px solid blue !important;
+	}
+
+/* was: p:-math-least(y) */
+p._3{
+		background-color: yellow !important;
+	}

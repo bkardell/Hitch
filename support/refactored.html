@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>refactored</title>
+	<script src="../lib/css-plugins.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		var belowPlugin = {
+			// the name of the pseudo-class  
+			name: 'myplugin-below', 
+			// A Selector to determine when to use plugin
+			base: '[below]',
+			// the function executed when the Selector matches 
+			fn:   function(match, argsString){
+				// grab the 'below' attribute from the DOM element
+				var value = match.getAttribute('below');
+				// argsString is the value supplied in the CSS pseduo-class
+				return value < argsString;
+			}
+		};
+		cssPlugins.add(belowPlugin); 
+	</script>
+	<style data-css-plugins='true' type="text/css" media="screen">
+		div:myplugin-below(100) { color: red; }
+		div:myplugin-below(50) span { color: blue; }
+		div:myplugin-below(20), p:myplugin-below(20) { color: green; }
+	</style>
+</head>
+<body id="refactored">
+	<div below="101">This is above 100</div>
+	<div below="99">This is below 100</div>
+	<div below="49"><span>This is below 50 in a span</span></div>
+	<div below="19">This is below 20 (grouped with p)</div>
+	<p below="19">This is below 20 (grouped with div)</p>
+</body>
+</html>

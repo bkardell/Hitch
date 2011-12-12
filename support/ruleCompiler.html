@@ -2,23 +2,21 @@
 <head>
 	<style type="text/css">
 		div:-moz-any(.x){background-color: blue; }
-	
-
 	</style>
 	
-	<script type="text/javascript" src="cssPlugin2.js"></script>
-	<script type="text/javascript" src="cssPluginCompiler.js"></script>
+	<script type="text/javascript" src="../lib/cssPlugins.js"></script>
+	<script type="text/javascript" src="../lib/cssPluginsCompiler.js"></script>
+	
 	<script type="text/javascript">
-		var r, rules, matches;	
+		var r, rules;	
 		var compile = function(){
 			var inpEl = document.getElementById('in');
-			var compiled = cssPluginCompiler(inpEl.value);
+			var compiled = cssPluginsCompiler(inpEl.value);
 			console.log(JSON.stringify(opts,null,2));
 			document.getElementById('out').value = JSON.stringify(compiled,null,2);
 			inpEl.style.display = 'none';
 		}
-		
-		
+
 		var addFilters = function(){
 			var scr, url = document.getElementById('filtersUrl').value;
 			scr = document.createElement('script');
@@ -27,12 +25,11 @@
 		}
 	</script>
 	
-	
 </head>
 <body>
 <input id="filtersUrl"></input><button onclick="addFilters()">Add filters</button>
-<button onclick="compile(matches)">Go...</button>
-in<br />  
+<button onclick="compile()">Compile...</button>
+<br />  
 <textarea id="in" rows="40" cols="50">
 *{ font-size: 1em; }
 

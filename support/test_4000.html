@@ -48,12 +48,12 @@
 	}
 
 	</style>
-	<script type="text/javascript" src="cssPlugin2.js"></script>
-	<script type="text/javascript" src="cssPluginCompiler.js"></script>
+	<script type="text/javascript" src="cssPluginss.js"></script>
+	<script type="text/javascript" src="cssPluginsCompiler.js"></script>
 	
 	<script type="text/javascript" src="myPlugins.js"></script>
 	<script type="text/javascript">
-				cssPlugin.addCompiledRules(cssPluginCompiler(document.getElementsByTagName('style')[0].innerHTML));
+				cssPlugins.addCompiledRules(cssPluginsCompiler(document.getElementsByTagName('style')[0].innerHTML));
 				var tests = [
 					function(){
 						console.log('adding a .brian matching node via innerHTML on #brian');

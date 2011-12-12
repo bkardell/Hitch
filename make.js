@@ -2,9 +2,9 @@ desc('Interpreted With JQuery Adapter... Load/compile on the fly (localStorage c
 task('default',[],function(){
 	var fs = require('fs'),
 		files = [
-			'cssPlugin2.js',
-			'cssPluginCompiler.js',
-			'jqueryAdapter.js'
+			'.\/lib\/cssPlugins.js',
+			'.\/lib\/cssPluginsCompiler.js',
+			'.\/adapters\/jquery-adapter.js'
 		], 
 		buff = [];
 	for(var i=0;i<files.length;i++){
@@ -14,12 +14,13 @@ task('default',[],function(){
 	fs.writeFileSync('plugin-interp-jquery.js',buff.join(";\n"));
 });
 
+/*
 desc('Interpreted Without JQuery Adapter...Load/compile on the fly - it is up to you to feed the compiler and load plugins');
 task('interpreted',[],function(){
 	var fs = require('fs'),
 		files = [
-			'cssPlugin2.js',
-			'cssPluginCompiler.js'
+			'.\/lib\/cssPlugins.js',
+			'.\/lib\/cssPluginsCompiler.js'
 		], 
 		buff = [];
 	for(var i=0;i<files.length;i++){
@@ -33,8 +34,9 @@ desc('Precompiled With JQuery Adapter...Run precompiled rules (localStorage cach
 task('precompiled-jquery',[],function(){
 	var fs = require('fs'),
 		files = [
-			'cssPlugin2.js',
-			'jqueryAdapter.js'
+			'.\/lib\/cssPlugins.js',
+			'.\/lib\/cssPluginsCompiler.js',
+			'.\/adapters\/jquery-adapter.js'
 		], 
 		buff = [];
 	for(var i=0;i<files.length;i++){
@@ -49,8 +51,7 @@ desc('Precompiled...Run precompiled rules - it is up to you to feed it. Smallest
 task('precompiled',[],function(){
 	var fs = require('fs'),
 		files = [
-			'cssPlugin2.js',
-			'jqueryAdapter.js'
+			'.\/lib\/cssPlugins.js'
 		], 
 		buff = [];
 	for(var i=0;i<files.length;i++){
@@ -59,3 +60,4 @@ task('precompiled',[],function(){
 	
 	fs.writeFileSync('plugin.js',buff.join(";\n"));
 });
+*/
