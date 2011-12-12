@@ -7,11 +7,8 @@ Setup (interpreted mode)
 Interpreted mode currently relies on JQuery 1.5 or greater.  To get started, mark a link or style tag in your page with the -plugins-interpret attribute, include your preferred 
 version of query (we recommend using one of the existing CDNs) and the interpreted version of the library.  It should look something like this:
 
-	<link rel="stylesheet" 
-		href="styles.css" type="text/css" -plugins-interpret="true"  />
-
-	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
-	
+	<link rel="stylesheet" href="styles.css" type="text/css" -plugins-interpret="true"  />
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="plugin-interp-jquery.js"></script>
 	
 
