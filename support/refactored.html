@@ -24,13 +24,13 @@
 		cssPlugins.addFilters([belowPlugin]); 
 	</script>
 	<style data-css-plugins='true' type="text/css" media="screen">
-		@-plugins-const clint div.clint;
-		@-plugins-const brian div.brian;
+		@-plugins-const -clint div.clint;
+		@-plugins-const -brian div.brian;
 		div:clint { color: yellow; }
 		div:brian { color: purple; }
 		div:myplugin-below(100) { color: red; }
 		div:myplugin-below(50) span { color: blue; }
-		div:myplugin-below(20), p:myplugin-below(20) { color: green; }
+		div:myplugin-below(20), p:myplugin-below(30) span { color: green; }
 	</style>
 	<script type="text/javascript" charset="utf-8">
 		var styles = document.querySelectorAll('[data-css-plugins=true]');
@@ -42,10 +42,11 @@
 	</script>
 </head>
 <body id="refactored">
-	<div below="101">This is above 100</div>
-	<div below="99">This is below 100</div>
-	<div below="49"><span>This is below 50 in a span</span></div>
-	<div below="19">This is below 20 (grouped with p)</div>
-	<p below="19">This is below 20 (grouped with div)</p>
+	<div below="101">This is above 100 and should be black.</div>
+	<div below="99">This is below 100 and should be red.</div>
+	<div below="49"><span>This is below 50 in a span and should be blue.</span></div>
+	<div below="19">This is below 20 (grouped with p) and should be green.</div>
+	<p below="19">This is below 30 (grouped with div) and should be green.</p>
+	<p below="31">This is above 30 and should be black.</p>
 </body>
 </html>
