@@ -57,7 +57,7 @@ var cssPlugins = (function(){
 							for(f in q.index[i].filters){	// walk through each filter
 								tmp = q.index[i].filters[f];
 								for(a=0;a<tmp.length;a++){
-									x = filters.map[f].fn(el,tmp[a].args,{siblings: el.parentNode.children, location: normalizedUrl(), selector: i })
+									x = filters.map[f].fn(el,tmp[a].args,{siblings: el.parentNode.children, location: normalizedUrl() })
 									d = tmp[a].cid; 
 									(x) ? addMangledClass(el,d) : removeMangledClass(el,d);			
 								}
@@ -201,7 +201,7 @@ var cssPlugins = (function(){
 					for(var filterName in fs){
 						tests = fs[filterName];
 						for(var i=0;i<tests.length;i++){
-							x = filters.map[filterName].fn(n,tests[i].args,{siblings: n.parentNode.children, location: normalizedUrl(), selector: test });
+							x = filters.map[filterName].fn(n,tests[i].args,{siblings: n.parentNode.children, location: normalizedUrl() });
 							(x) ? addMangledClass(t,tests[i].cid) : removeMangledClass(t,tests[i].cid);
 						}
 					}
@@ -329,7 +329,7 @@ var cssPlugins = (function(){
 if(typeof module !== 'undefined' && module.exports){
 	module.exports = cssPlugins;
 };
-var cssPluginsCompiler = function(src,cb){
+var cssPluginsCompiler = function(src,cb,path){
 	var inp, 
 		raw, 
 		rawSelector, 
@@ -361,7 +361,7 @@ var cssPluginsCompiler = function(src,cb){
 		src = src.replace(/\@-plugins-require[^\;]*\;/g, function(m,i,s){
 			var parts = m.split(/\s|\;/g);
 			requires.push(parts[1]);
-			promises.push($.getScript(parts[1]));
+			promises.push(path + $.getScript(parts[1]));
 			return '';
 		}),
 		lastPluginSegment,
@@ -523,11 +523,11 @@ cssPlugins.useManualInit();
 					};
 				loads.push(deferred);
 				if(el.tagName === 'STYLE'){
-					cssPluginsCompiler(el.innerHTML,initer);
+					cssPluginsCompiler(el.innerHTML,initer,window.location.path);
 				}else{
 					href = el.href;
 					$.get(href, function(src){
-						cssPluginsCompiler(src,initer);
+						cssPluginsCompiler(src,initer,href.substring(0,href.lastIndexOf('/'));
 					}, 'text');
 				}
 			}
