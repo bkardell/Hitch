@@ -1,3 +1,6 @@
+// parseUri 1.2.2
+// (c) Steven Levithan <stevenlevithan.com>
+// MIT License
 function parseUri (str) {
 	var	o   = parseUri.options,
 		m   = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
@@ -15,7 +18,7 @@ function parseUri (str) {
 };
 
 parseUri.options = {
-	strictMode: false,
+	strictMode: true,
 	key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
 	q:   {
 		name:   "queryKey",
