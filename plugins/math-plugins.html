@@ -1,0 +1,154 @@
+<html>
+	<head>
+		<style>
+			body{
+				padding: 2em;
+				font-family: sans-serif;
+			}
+						
+			h1, h2, h3, h4, h5, h6 {
+				text-align: left;
+			}
+			h1, h2, h3 {
+				background: none repeat scroll 0 0 white;
+				color: #005A9C;
+			}
+			h1 {
+				font: 170% sans-serif;
+			}
+			h2 {
+				font: 140% sans-serif;
+			}
+			h3 {
+				font: 120% sans-serif;
+			}
+			h4 {
+				font: bold 100% sans-serif;
+			}
+			h5 {
+				font: italic 100% sans-serif;
+			}
+			h6 {
+				font: small-caps 100% sans-serif;
+			}
+			
+			.sig{
+				font-family: monospace;
+				font-size: 110%;
+			}
+			
+			.arg{
+				font-style: italic;
+			}
+			
+			.example{
+				background-color: #DDEEFF;
+				padding: 1em;
+				margin: 1em;
+			}
+			
+			.example p:nth-child(1){
+				font-weight: bold;
+			}
+			
+			.example pre{
+				margin-left: 3em;
+			}
+		</style>
+	</head>
+	<body>
+	<h1>Math Plugins Level 1 (<script type="text/javascript">document.write(window.location.href.replace(/.html/,'.js'));</script>)</h1>
+	<h2>Math pseudo-class filters</h2>
+	<p>Math psudeo-classes provide a mechanism to select elements based on the 
+	numerical qualities of one of their attributes.</p>
+	
+	<h2>Table of Contents</h2>
+	<ol>
+		<li><a href="greaterthan">:-math-greaterthan() filter</a></li>
+		<li><a href="#lessthan">:-math-lessthan() filter</a></li>
+		<li><a href="#greatest">:-math-greatest() filter</a></li>
+		<li><a href="#least">:-math-least() filter</a></li>
+	</ol>
+	
+	
+	<h3 class="sectionnumber"><a name="greaterthan">1.  The -math-greaterthan pseudo-class</a></h3>
+	<p>The greaterthan pseudo class <span class="sig">:-math-greaterthan(<span class="arg">attributeName</span>,<span class="arg">value</span>)</span>,
+	is a funtional notation taking two arguments, the argument name to test and the value to test against.
+	It represents an element whose attribute is greater than the numeric value provided.
+	</p>
+	<div class="example">
+		<p>Examples: </p>
+		<p>
+		The following selector matches all div elements in an HTML document with 
+		a -data-donation attribute with a numeric value less than 100 and makes their
+		font bold:
+		</p>
+		<pre>div:-math-greaterthan(-data-donation, 100){
+	font-weight: bold;
+}</pre>
+	</div>
+	
+	
+	<h3 class="sectionnumber"><a name="lessthan">2.  The -math-lessthan pseudo-class</a></h3>
+	<p>The lessthan pseudo class <span class="sig">:-math-lessthan(<span class="arg">attributeName</span>,<span class="arg">value</span>)</span>,
+	is a funtional notation taking two arguments, the argument name to test and the value to test against.
+	It represents an element whose attribute is less than the numeric value provided.
+	</p>
+	<div class="example">
+		<p>Examples: </p>
+		<p>
+		The following selector matches all div elements in an HTML document with 
+		a -data-highscore attribute with a numeric value less than 10000 and makes their
+		color blue:
+		</p>
+		<pre>div:-math-lessthan(-data-highscore, 10000){
+	color: blue;
+}</pre>
+	</div>
+	
+	
+	<h3 class="sectionnumber"><a name="greatest">3.  The -math-greatest pseudo-class</a></h3>
+	<p>The greatest pseudo class <span class="sig">:-math-greatest(<span class="arg">attributeName</span>)</span>,
+	is a funtional notation taking one argument, the argument name to test.
+	It represents a an element whose attribute is greater than those of all of its siblings.
+	</p>
+	<div class="example">
+		<p>Examples: </p>
+		<p>
+		The following selector matches the div element whose -data-score attribute has the greatest 
+		value among its siblings makes its background yellow:
+		</p>
+		<pre>div:-math-greatest(-data-score){
+	background-color: yellow;
+}</pre>
+		<p>Given the following html, the rule above would make background of the third div yellow:
+		<pre>&lt;div -data-score="10000"&gt;Clint&lt;/div&gt;
+&lt;div -data-score="8000"&gt;Shekhar&lt;/div&gt;
+&lt;div -data-score="12000"&gt;Brian&lt;/div&gt;
+&lt;div -data-score="7450"&gt;Joe&lt;/div&gt;
+		</pre>
+	</div>
+
+	<h3 class="sectionnumber"><a name="least">3.  The -math-least pseudo-class</a></h3>
+	<p>The least pseudo class <span class="sig">:-math-least(<span class="arg">attributeName</span>)</span>,
+	is a funtional notation taking one argument, the argument name to test.
+	It represents a an element whose attribute is lesser than those of all of its siblings.
+	</p>
+	<div class="example">
+		<p>Examples: </p>
+		<p>
+		The following selector matches the div element whose -data-score attribute has the least 
+		value among its siblings makes its background red:
+		</p>
+		<pre>div:-math-least(-data-score){
+	background-color: yellow;
+}</pre>
+		<p>Given the following html, the rule above would make background of the fourth div red:
+		<pre>&lt;div -data-score="10000"&gt;Clint&lt;/div&gt;
+&lt;div -data-score="8000"&gt;Shekhar&lt;/div&gt;
+&lt;div -data-score="12000"&gt;Brian&lt;/div&gt;
+&lt;div -data-score="7450"&gt;Joe&lt;/div&gt;
+		</pre>
+	</div>		
+	</body>
+</html>
