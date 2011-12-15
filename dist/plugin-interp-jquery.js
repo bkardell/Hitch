@@ -7,11 +7,23 @@ var cssPlugins = (function(){
 	if(document.head && document.head.webkitMatchesSelector || emulate){
 		Element.prototype._setAttribute = Element.prototype.setAttribute;
 		Element.prototype.setAttribute = function(name, val) { 
-			 var e = document.createEvent("MutationEvents"); 
-			 var prev = this.getAttribute(name); 
-			 this._setAttribute(name, val);
-			 e.initMutationEvent("DOMAttrModified", true, true, null, prev, val, name, 2);
-			 this.dispatchEvent(e);
+			var e, prev, temp;
+			prev = this.getAttribute(name); 
+			if(document.createEvent){
+				e = document.createEvent("MutationEvents"); 
+				this._setAttribute(name, val);
+				e.initMutationEvent("DOMAttrModified", true, true, null, prev, val, name, 2);
+				this.dispatchEvent(e);
+			}else{
+				e = $.Event('DomAttrModified', {
+						"prevValue": prev, 
+						"attrName": name, 
+						"newValue": val
+					});
+				this[name] = val;
+				temp = $(this);
+				temp.trigger(e);
+			}
 		}
 	};
 	var query = function(el,q){
@@ -67,8 +79,8 @@ var cssPlugins = (function(){
 		searchUpward = function(el,q,last){
 			var x, d, tmp, f, a;
 			if(el.tagName !== 'BODY' && q.scan !== ''){
-				if(matchFn(el,q.scan)){ // quick out if we match none
-					for(var i in q.index){ 		// walk through each one in the index
+				for(var i in q.index){ 		// walk through each one in the index
+					try{
 						if(matchFn(el,i)){  // Do we match this one?
 							for(f in q.index[i].filters){	// walk through each filter
 								tmp = q.index[i].filters[f];
@@ -79,10 +91,12 @@ var cssPlugins = (function(){
 								}
 							}
 						}
-						
+					}catch(e){
+						console.log('shit');
 					}
-					last = el;
+					
 				}
+				last = el;			
 				return searchUpward(el.parentNode,q,last);
 			}
 			return last;
@@ -248,8 +262,6 @@ var cssPlugins = (function(){
 			
 			init: function(){
 				var head = document.getElementsByTagName('head')[0],
-					listen = 'addEventListener', 
-					prefix = '', 
 					buff = [], 
 					ns = document.createElement('style'), 
 					vendors = "-moz-|-ms-|-webkit-|-o-";
@@ -269,19 +281,21 @@ var cssPlugins = (function(){
 				};
 				
 				testSubtree(document.body,head.webkitMatchesSelector);
-				if(!document.body.addEventListener){ prefix = 'on'; listen = 'attachEvent'; }
-				document.body[listen](prefix + 'DOMAttrModified',testSubtree);
-				document.body[listen](prefix + 'DOMNodeInserted',testSubtree);
-				document.body[listen](prefix + 'DOMNodeRemoved',testSubtree);
-				document[listen](prefix + 'DOMSubtreeModified',function(t){
-					if(!t.target._isSetting && t.target._oldclasses !== t.target.className){
-						t.target._isSetting = true;
-						t.target.setAttribute('class',t.target.className);
-						t.target._oldclasses = t.target.className;
-						t.target._isSetting = false;
-					}
-				});
-				
+				if(!document.body.addEventListener){
+					$(document.body).on('DomAttrModified', testSubtree);
+				}else{
+					document.body.addEventListener('DOMAttrModified',testSubtree);
+					document.body.addEventListener('DOMNodeInserted',testSubtree);
+					document.body.addEventListener('DOMNodeRemoved',testSubtree);
+					document.addEventListener('DOMSubtreeModified',function(t){
+						if(!t.target._isSetting && t.target._oldclasses !== t.target.className){
+							t.target._isSetting = true;
+							t.target.setAttribute('class',t.target.className);
+							t.target._oldclasses = t.target.className;
+							t.target._isSetting = false;
+						}
+					});
+				}				
 			},
 			
 			registerFilter: function(alias, base, filter, ancestrallytruthy){
@@ -430,7 +444,6 @@ var cssPluginsCompiler = function(src, finished){
 			joint, 
 			// return object 
 			segIndex = {};
-
 		for(var i = 0; i < rulez.length; i++){
 			// new set of segments to process
 			segments = [];
@@ -460,7 +473,8 @@ var cssPluginsCompiler = function(src, finished){
 						sid: x, 
 						rid: i, 
 						cid: segment.cid, 
-						args: segment.filterargs
+						args: segment.filterargs, 
+						base: segment.base
 					});
 				}
 			}
@@ -560,7 +574,8 @@ var cssPluginsCompiler = function(src, finished){
 				"selector": segmentSelector.replace(":._","._"),
 				"filter":   ":"+ mapper[m].filter,
 				"filterargs": mapper[m].args, 
-				"cid": mapper[m].index
+				"cid": mapper[m].index, 
+				"base": base
 			});
 			
 			return nativeSelector;
