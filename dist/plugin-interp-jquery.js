@@ -1,17 +1,33 @@
 var cssPlugins = (function(){
-
-	// If it's webkit - we have to shim this....
-	if(document.head.webkitMatchesSelector){
-		Element.prototype._setAttribute = Element.prototype.setAttribute
+	var matchFn, emulate = (
+		$ && $.browser.msie && $.browser.version.indexOf('8')===0
+	);
+	
+	// If it's webkit or IE - we have to shim this....
+	if(document.head && document.head.webkitMatchesSelector || emulate){
+		Element.prototype._setAttribute = Element.prototype.setAttribute;
 		Element.prototype.setAttribute = function(name, val) { 
-		 var e = document.createEvent("MutationEvents"); 
-		 var prev = this.getAttribute(name); 
-		 this._setAttribute(name, val);
-		 e.initMutationEvent("DOMAttrModified", true, true, null, prev, val, name, 2);
-		 this.dispatchEvent(e);
+			 var e = document.createEvent("MutationEvents"); 
+			 var prev = this.getAttribute(name); 
+			 this._setAttribute(name, val);
+			 e.initMutationEvent("DOMAttrModified", true, true, null, prev, val, name, 2);
+			 this.dispatchEvent(e);
 		}
+	};
+	var query = function(el,q){
+		if(!emulate){
+			return el.querySelectorAll(q);
+		}
+		return $((el.nodeName==='BODY') ? document : el).find(q);
 	}
 	
+	var toArray = function(nl){
+		try{
+			return Array.prototype.slice.call(nl, 0);
+		}catch(e){
+			return $.makeArray(nl);
+		}
+	}
     var perf = { checks: 0, queries: 0 };
 
     var	vendor,
@@ -51,9 +67,9 @@ var cssPlugins = (function(){
 		searchUpward = function(el,q,last){
 			var x, d, tmp, f, a;
 			if(el.tagName !== 'BODY' && q.scan !== ''){
-				if(el.matchesSelector(q.scan)){ // quick out if we match none
+				if(matchFn(el,q.scan)){ // quick out if we match none
 					for(var i in q.index){ 		// walk through each one in the index
-						if(el.matchesSelector(i)){  // Do we match this one?
+						if(matchFn(el,i)){  // Do we match this one?
 							for(f in q.index[i].filters){	// walk through each filter
 								tmp = q.index[i].filters[f];
 								for(a=0;a<tmp.length;a++){
@@ -117,7 +133,7 @@ var cssPlugins = (function(){
 					console.log(exc.message);
 				}finally{
 					perf.duration = new Date().getTime() - start + "ms";
-					console.log(JSON.stringify(perf));
+					//console.log(JSON.stringify(perf));
 					subtreesemaphor = false;
 				}
 			}
@@ -188,23 +204,29 @@ var cssPlugins = (function(){
 				
 			// We have to see if this matches any of the rules we care about....
 			for(var test in segIndex){
-				potential = list;
-				if(list){ // inserts
-					potential = list.concat(Array.prototype.slice.call(el.querySelectorAll(test),0));
-				}else if(el.querySelectorAll){
-					potential = Array.prototype.slice.call(el.querySelectorAll(test),0);
-				}
-				for(var c=0;c<potential.length;c++){
-					n = potential[c];
-					t = {target: n};
-					fs = segIndex[test].filters;
-					for(var filterName in fs){
-						tests = fs[filterName];
-						for(var i=0;i<tests.length;i++){
-							x = filters.map[filterName].fn(n,tests[i].args,{siblings: n.parentNode.children, location: normalizedUrl() });
-							(x) ? addMangledClass(t,tests[i].cid) : removeMangledClass(t,tests[i].cid);
+				try{
+					potential = list;
+					if(list){ // inserts
+						potential = list.concat(toArray(query(el,test)));
+					}else if(el.querySelectorAll){
+						potential = toArray(query(el,test));
+					}
+					for(var c=0;c<potential.length;c++){
+						n = potential[c];
+						t = {target: n};
+						fs = segIndex[test].filters;
+						for(var filterName in fs){
+							tests = fs[filterName];
+							for(var i=0;i<tests.length;i++){
+								x = filters.map[filterName].fn(n,tests[i].args,{siblings: n.parentNode.children, location: normalizedUrl() });
+								(x) ? addMangledClass(t,tests[i].cid) : removeMangledClass(t,tests[i].cid);
+							}
 						}
 					}
+				}catch(e){
+					console.log(e.message);
+					// one invalid rule doesnt spoil the bunch... Example:
+					// :not(.x,.y) will be valid someday, but it throws now... 
 				}
 			}
 		},
@@ -225,20 +247,33 @@ var cssPlugins = (function(){
 			},
 			
 			init: function(){
-				var ss, buff = [], known, temp, real, ns = document.createElement('style'), vendors = "-moz-|-ms-|-webkit-|-o-";
+				var head = document.getElementsByTagName('head')[0],
+					listen = 'addEventListener', 
+					prefix = '', 
+					buff = [], 
+					ns = document.createElement('style'), 
+					vendors = "-moz-|-ms-|-webkit-|-o-";
+					
 				if(nativeRules){
 					for(i=0;i<nativeRules.length;i++){
 						buff.push(nativeRules[i]);
 					}
+					try{
+						console.log(buff.join("\n\n"));
+						ns.innerHTML = buff.join("\n\n");
+						head.appendChild(ns);
+					}catch(e){
+						head.appendChild(ns);
+						document.styleSheets[document.styleSheets.length-1].cssText = buff.join('\n\n');
+					}
 				};
-				ns.innerHTML = buff.join("\n\n");
 				
-				document.getElementsByTagName('head')[0].appendChild(ns);
-				testSubtree(document.body,document.head.webkitMatchesSelector);
-				document.body.addEventListener('DOMAttrModified',testSubtree);
-				document.body.addEventListener('DOMNodeInserted',testSubtree);
-				document.body.addEventListener('DOMNodeRemoved',testSubtree);
-				document.addEventListener('DOMSubtreeModified',function(t){
+				testSubtree(document.body,head.webkitMatchesSelector);
+				if(!document.body.addEventListener){ prefix = 'on'; listen = 'attachEvent'; }
+				document.body[listen](prefix + 'DOMAttrModified',testSubtree);
+				document.body[listen](prefix + 'DOMNodeInserted',testSubtree);
+				document.body[listen](prefix + 'DOMNodeRemoved',testSubtree);
+				document[listen](prefix + 'DOMSubtreeModified',function(t){
 					if(!t.target._isSetting && t.target._oldclasses !== t.target.className){
 						t.target._isSetting = true;
 						t.target.setAttribute('class',t.target.className);
@@ -268,14 +303,20 @@ var cssPlugins = (function(){
 					cssplugin_selectors[i].ancestrallytruthy
 				);
 			};
-		
-			if(document.body.mozMatchesSelector){ vendor = "-moz-"; matches = 'mozMatchesSelector'; }
+			if(document.body.matchesSelector){ vendor = "", matches = 'matchesSelector'; }
+			else if(document.body.mozMatchesSelector){ vendor = "-moz-"; matches = 'mozMatchesSelector'; }
 			else if(document.body.webkitMatchesSelector){  vendor = "-webkit-"; matches = 'webkitMatchesSelector'; }
 			else if(document.body.oMatchesSelector){  vendor = "-o-"; matches = 'oMatchesSelector'; }
-			else{ vendor = "-ms-";  matches = 'msMatchesSelector'; } 
-			if(!document.head.matchesSelector){
-				Element.prototype.matchesSelector = function(s){ 
-					return this[matches](s); 
+			else if(document.body.msMatchesSelector){ vendor = "-ms-";  matches = 'msMatchesSelector'; } 
+			else{
+				vendor = '-plugins-'; matches = 'pluginsMatchesSelector';
+				matchFn = function(e,sel){
+					return $(e).is(sel);
+				}
+			}
+			if(!matchFn){
+				matchFn = function(e,s){ 
+					return e[matches](s); 
 				}
 			}
 			compiledForm = filters.parseFilters()[0]; // do we need more than 1?
@@ -286,12 +327,19 @@ var cssPlugins = (function(){
 	};
 		
 	//TODO: All browsers cool with addEventListener?
-	document.addEventListener( "DOMContentLoaded", function(){
-		if(defaultInit){
-			ready();
-		};
-	}, false );
-		
+	try{
+		document.addEventListener( "DOMContentLoaded", function(){
+			if(defaultInit){
+				ready();
+			};
+		}, false );
+	}catch(e){
+		document.onload = function(){
+			if(defaultInit){
+				ready();
+			}
+		}
+	}		
 	return { 
 		useManualInit: function(){ defaultInit = false; },
 		
@@ -329,178 +377,313 @@ var cssPlugins = (function(){
 if(typeof module !== 'undefined' && module.exports){
 	module.exports = cssPlugins;
 };
-var cssPluginsCompiler = function(src,cb,path){
-	var inp, 
+var cssPluginsCompiler = function(src, finished){
+	var 
+		// placeholder for the full CSS rule during processing
 		raw, 
-		rawSelector, 
+		// selector portion of CSS rule during processing
+		ruleSelector, 
+		// body portion of CSS rule during processing
+		ruleBody,
+		// array of CSS rule part for use during processing
+		ruleParts,
+		// full CSS rule during processing
 		nativeRule, 
-		pluginsFound, 
+		// regex match of filters found in rule during processing
+		filtersFound, 
+		// a comment created and added to each rule processed
+		comment,
+		// collection of compiled rules
+		compiled = [],
+		// base selector for a plugin  
 		base,  
-		li,
-		sans,
-		promises = [],
-		h = document.head,
-		matcherFn = h.mozMatchesSelector || h.webkitMatchesSelector || h.msMatchesSelector || h.oMatchesSelector,
-		regExpPart = '\\([^\\)]*\\)', 
-		care =  /(\[|#|\.|:|\w)[A-z|0-9|\-]*/g,
-		compiled = [], 
+		// place holder for the any pseduo-class
+		any,
+		// object to store rule information during compilation - see transformToNative
 		mapper = {},
-		mc = 0,
+		// index counter for mapped rules - see transformToNative
+		mapperCount = 0,
+		// collection of require statements
 		requires = [],
-		consts = [],
-		any = "-" + matcherFn.name.replace("MatchesSelector", "-any"), 
-		src = src.replace(/\@-plugins-const[^\;]*\;/g, function(m,i,s){
-			var parts = m.split(/\s|\;/g), name;
-			parts.shift();
-			name = parts.shift();
-			consts[name] = parts.join(' ');
-			console.log('defined const ' + name + ' as ' + parts.join(' '));
-			cssPlugins.addFilters([{name: name, base: parts.join(' ')}]);
-			return '';
-		}),
-		src = src.replace(/\@-plugins-require[^\;]*\;/g, function(m,i,s){
-			var parts = m.split(/\s|\;/g);
-			requires.push(parts[1]);
-			promises.push(path + $.getScript(parts[1]));
-			return '';
-		}),
-		lastPluginSegment,
-		pastLastPluginSegment,
-		pluginNames, 
-		reHasPlugin, 
-		reHasFn, 
-		lastComp, 
-		doneCb = cb, 
-		getSegIndex = function(rulez){
-			var ret = [], segs, rule, segment, lastSeg = 0, sans, joint;
-				segIndex = {};
-				for(var i=0;i<rulez.length;i++){
-					rule = rulez[i];
-					segs = [];
-					if(rule.segments){
-						for(var x=0;x<rule.segments.length;x++){						
-							segment = rule.segments[x];
-							sans = segment.selector.replace(/\._\d/, "").replace(":not()","");
-							
-							segs.push(sans);
-							if(segment.filter){
-								joint = segs.join(' ');
-								if(joint===""){ joint = "*"; }
-								if(!segIndex[joint]){
-									segIndex[joint] = { filters: {} };
-								}
-								if(!segIndex[joint].filters[segment.filter]){
-									segIndex[joint].filters[segment.filter] = [];
-								}
-								segIndex[joint].filters[segment.filter].push({sid: x, rid: i, cid: segment.cid, args: segment.filterargs});
-							};
-						};
-					};
+		// collection of JS source files requested for plugins
+		pluginSources = [],
+		// collection of constants defined
+		constants = [];
+
+	if(!String.prototype.trim) {  
+	  String.prototype.trim = function () {  
+		return this.replace(/^\s+|\s+$/g,'');  
+	  };  
+	}  
+
+	var getSegIndex = function(rulez){
+		var 
+			// segments of all the rules
+			segments = [], 
+			// rule being processed
+			rule, 
+			// segment of rule being indexed
+			segment, 
+			// placeholder for selector cleaned of our suffixes
+			sans, 
+			// placeholder for segments being joined 
+			joint, 
+			// return object 
+			segIndex = {};
+
+		for(var i = 0; i < rulez.length; i++){
+			// new set of segments to process
+			segments = [];
+			// rule to process
+			rule = rulez[i];
+			// don't index non-segmented rules
+			if(!rule.segments || rule.segments.length === 0) { continue; }
+			for(var x = 0; x < rule.segments.length; x++){
+				segment = rule.segments[x];
+				// drop our classes to create the native CSS for indexing
+				sans = segment.selector.replace(/\._\d/, "").replace(":not()","");
+				// add the cleaned selector to the segments
+				segments.push(sans);
+				// if there is a filter add meta-data for easy lookup later
+				if(segment.filter){
+					joint = (segments.length > 0) ? segments.join(' ') : "*";
+					// assure there is an index for the joined segments
+					if(!segIndex[joint]){
+						segIndex[joint] = { filters: {} };
+					}
+					// assure there are filters for the joined segments
+					if(!segIndex[joint].filters[segment.filter]){
+						segIndex[joint].filters[segment.filter] = [];
+					}
+					
+					segIndex[joint].filters[segment.filter].push({
+						sid: x, 
+						rid: i, 
+						cid: segment.cid, 
+						args: segment.filterargs
+					});
+				}
+			}
+		}
+		return segIndex;
+	};
+
+	// Returns the documents vendor matcher Function
+	var vendorMatcher = function(){
+		var h = document.getElementsByTagName('head')[0],
+			fn = h.mozMatchesSelector || h.webkitMatchesSelector || h.msMatchesSelector || h.oMatchesSelector;
+		return (fn) ? fn.name.replace("MatchesSelector", "-any") : '-plugins-any';
+	};
+
+	// Returns a string with no comments or whitespace and trimmed
+	var trimmedString = function(str){
+		return str.replace(/\/\*.*\*\//g, '').replace(/\n|\t/g,'').trim();
+	}
+	
+	// Returns a comment for a selector that comes from the compiler
+	var buildComment = function(selector){
+		return "/* was: " + trimmedString(selector) + " */\n";
+	};
+
+	// Take a selector and replace the filter, considering grouping
+	var unGroupSelector = function(match, index, selector){
+		var scanned = 0, temp = selector.split(/\,/), unGrouped=[];		
+		for(var i = 0; i < temp.length; i++){
+			// yuck... if there is a mismatched paren we need to fix it...
+			if((temp[i] + "(").match(/\(/g).length < (temp[i] + ")").match(/\)/g).length){
+				unGrouped[unGrouped.length-1] = unGrouped[unGrouped.length-1] + "," + temp[i]; 
+			}else{
+				unGrouped.push(temp[i]);
+			}
+		}
+		// if there is no grouping - return normally
+		if(unGrouped.length === 1) { 
+			return selector.substring(0, index); 
+		} else {
+			for(var i = 0; i < unGrouped.length; i++){
+				// position to cut based on real index and scanned
+				// minus the loop index because of the dropped commas
+				var cut = index - scanned - i; 
+				// aggregate scanned based on next group length
+				scanned += unGrouped[i].length;
+				// if the index from original match is less than scanned
+				// meaning we've scanned far enough return a substring from this group
+				if(index < scanned){
+					return unGrouped[i].substring(0,unGrouped[i].length - match.length - 1);
+				}
+			}
+		}
+	};
+	
+	// Returns a selector transformed for native CSS use
+	var transformToNative = function(reHasFn, selector, compiledRule){
+		return trimmedString(selector).replace(reHasFn, function(m,i,s){
+			var 
+				// selector returned for use by CSS
+				nativeSelector,
+				// selector used in compiledRule segment
+				segmentSelector;
+
+			// if matched filter isn't in the mapper, initialize it
+			//TODO: Test that args overloading might change this logic
+			if(typeof mapper[m] === 'undefined'){
+				mapper[m] = { 
+					//TODO: maybe try to create a symbolic name as well for easier reading
+					index: mapperCount++, 
+					filter: m.split("(")[0],
+					args: m.match(/\((.*)\)/)[1] 
+				}; 
+			}
+
+			//TODO: re-map this to just getBase within cssPlugins
+			base = cssPlugins.getBase(m.split("(")[0]);
+
+			// if not defined set to wildcard so rule is complete
+			// TODO: Determine if this a 'safe' default for performance concerns
+			if(!base || base === ''){ base = "*"; }
+
+			// if the any matcher is ours - use nothing, otherwise use vendors
+			nativeSelector = (any === '-plugin-any') ? '' : any + "(" + base + ")";
+			
+			// If there was a filter for this then suffix the native class
+			if(typeof mapper[m].index !== 'undefined'){
+				nativeSelector +=  "._" + mapper[m].index;
+			}
+			
+			// ungroup the selector based on the match, trim it and add native 
+			segmentSelector = trimmedString(unGroupSelector(m, i, s)) + nativeSelector.replace(any+"(*)","");
+			
+			// match unmatched right parens that can get whacked when inside a native filter
+			segmentSelector += (("(" + segmentSelector).match(/\(/g).length !== (")" + segmentSelector).match(/\)/g).length) ? ')' : '';
+								
+			compiledRule.segments.push({
+				"selector": segmentSelector.replace(":._","._"),
+				"filter":   ":"+ mapper[m].filter,
+				"filterargs": mapper[m].args, 
+				"cid": mapper[m].index
+			});
+			
+			return nativeSelector;
+		});
+	};
+	
+	// Process source rules for constants
+	src = src.replace(/\@-plugins-const[^\;]*\;/g, function(m,i,s){
+		var parts = m.split(/\s|\;/g), name;
+		parts.shift();
+		name = parts.shift();
+		constants[name] = parts.join(' ');
+		cssPlugins.addFilters([{name: name, base: parts.join(' ')}]);
+		return '';
+	});
+	
+	// Process source rules for plugins to require
+	src = src.replace(/\@-plugins-require[^\;]*\;/g, function(m,i,s){
+		var parts = m.split(/\s|\;/g);
+		requires.push(parts[1]);
+		// TODO: drop jQuery dependency
+		pluginSources.push($.getScript(parts[1]));
+		//pluginSources.push('/* some js comment */');
+		return '';
+	});
+	
+	// Process source rules to replace constant names with selectors
+	for(var constname in constants){
+		src = src.replace(":" + constname, constants[constname]);
+	};
+	
+	// Set the any pseudo-class for use in compiling rules
+	any = "-" + vendorMatcher();
+
+	// oohhh I hate you mobile webkit!  false, false advertizing!
+	try{ document.head.querySelectorAll(":" + any + "(*)").length; }
+	catch(e) { any = "-plugin-any"; };
+
+	$.when.apply($,pluginSources).then(function(pluginSource){
+		var 
+			pluginNames = cssPlugins.getPluginNames(),
+			// Regex string for testing parens --- params declaration
+			regExpPart = '\\([^\\)]*\\)', 
+			// Regex of Plugins and parens for testing filter has arguments
+			reHasFilter,
+			// placeholder array of source rules
+			input = src.split("}"), 
+			// the compiled rule we build in the processing
+			compiledRule,
+			// placeholder for the last segment of the selector (before filter)
+			lastSegmentSelector,
+			// placeholder for the segment of the selector (past filter)
+			pastFilterSelector;
+
+		// iterate over each CSS rule and process
+		for(var i = 0; i < input.length; i++){
+			// You cannot re-use this or you will have problems in some browsers...
+			reHasFilter = new RegExp(pluginNames.join(regExpPart + '|') + regExpPart,"g")
+			
+			// initialize a rule to push on stack with a rule id
+			compiledRule = { rid: i };
+			
+			// the raw CSS rule
+			raw = input[i].trim();
+			
+			
+			// guard against processing emptiness
+			if(raw === '') { continue; }
+			
+			
+			// normalize rule again
+			raw = input[i] + "}";
+			
+			// placeholder raw rule for use later
+			nativeRule = raw;
+			
+			// split out rule for parts to use later
+			ruleParts = raw.split('{');
+			
+			// get just the selector
+			ruleSelector = ruleParts[0]; 
+			
+			
+			// get the body only (normalized with open brace)
+			ruleBody = ' {' + ruleParts[1];
+			
+			// if the rule has a plugin reference (filter) and isn't 'all' wildcard
+			if(ruleSelector !== '*' && reHasFilter.test(ruleSelector)){
+				
+				// this compiledRule might have segments
+				compiledRule.segments = [];
+				
+				// get a comment
+				comment = buildComment(ruleSelector);
+				
+				// push the selector into a native form
+				ruleSelector = transformToNative(reHasFilter, ruleSelector, compiledRule);
+
+				if(compiledRule.segments.length > 0){
+					lastSegmentSelector = compiledRule.segments[compiledRule.segments.length-1].selector;
+					pastFilterSelector = ruleSelector.substring(ruleSelector.indexOf(lastSegmentSelector)  + lastSegmentSelector.length);
+					if(pastFilterSelector !== '' && pastFilterSelector !== ')'){
+						compiledRule.segments.push({ "selector": trimmedString(pastFilterSelector) });
+					}
 				}
 				
-			return segIndex;
-		};
-		for(var constname in consts){
-			src = src.replace(constname, consts[constname]);
-		};
-		$.when.apply($,promises).then(function(){
-			var comm;
-			pluginNames = cssPlugins.getPluginNames(),
-			reHasPlugin = new RegExp(pluginNames.join('|')),
-			reHasFn = new RegExp(pluginNames.join(regExpPart + '|') + regExpPart,"g"),
-			inp = src.split("}"),
-			lastComp = function(){
-				return compiled[compiled.length-1];
-			};
-			
-			try{ // oohhh I hate you mobile webkit!  false, false advertizing!
-				document.head.querySelectorAll(":" + any + "(*)").length;
-				//throw e; // make it work in reg webkit for debugging.
-			}catch(e){
-				any = "-plugin-any";
-			};
-			
-			for(var i=0;i<inp.length;i++){   // for each rule...
-				li = 0;
-				raw = inp[i].trim();
-				if(raw !== ''){
-					raw = inp[i] + "}";
-					nativeRule = raw;
-					o = raw.split("{");
-					rawSelector = o[0]; 
-					if(rawSelector !== '*' && reHasPlugin.test(rawSelector)){   // if the rule has a plugin reference									
-							comm = "/* was: " + rawSelector.replace(/\/\*.*\*\//g,'').replace(/\n|\t/g,'').trim() + " */\n";
-							compiled.push({segments:[],rid: i});
-							rawSelector = rawSelector.replace(/\/\*.*\*\//g,'').replace(reHasFn, function(m,i,s){
-								var ret, sel;
-								//each unique one gets an index
-								if(typeof mapper[m] === 'undefined'){
-									mapper[m] = { index: mc++, args: m.match(/\((.*)\)/)[1] }; 
-								}
-								base = cssPlugins.getBase(m.split("(")[0]);
-								if(!base || base === ''){
-									base = "*";
-								};
-								if(any === '-plugin-any'){
-									ret = '';
-									i=i-1;
-								}else{					
-									ret = any + "(" + base + ")"; 
-								};
-								if(typeof mapper[m].index !== 'undefined'){
-									ret +=  "._" + mapper[m].index;
-								};
-								sel = (s.substring(li,i) + ret).replace(/\/\*.*\*\//g,'').replace(/[\t|\n]/g,"").trim();
-								sel += (/\(\.\_\d$/.test(sel) )  ? ')' : '';
-								lastComp().segments.push({
-									"selector": sel, 
-									"filter":   ":"+ m.split("(")[0],
-									"filterargs": mapper[m].args, 
-									"cid": mapper[m].index
-								});
-								return ret;
-							});
-							rawSelector = rawSelector.trim().replace(/:$/, "").replace(":._","._");
-							pluginsFound = rawSelector.match(reHasPlugin);  
-							if(pluginsFound){
-								for(var x=0;x<pluginsFound.length;x++){
-									base = cssPlugins.getBase(pluginsFound[x]);
-									//stragglers...
-									rawSelector = rawSelector.replace(new RegExp(":" + pluginsFound[x],"g"),function(){
-										return base || '';
-									});
-								};
-							};	
-							
-							if(lastComp().segments.length === 0){
-								delete lastComp().segments;  
-							}else{
-								var lastPluginSegment = lastComp().segments[lastComp().segments.length-1];
-								var pastLastPluginSegment = rawSelector.substring(rawSelector.indexOf(lastPluginSegment.selector)  + lastPluginSegment.selector.length ).trim();
-								if(pastLastPluginSegment!=='' && pastLastPluginSegment!==')'){
-									lastComp().segments.push({"selector": pastLastPluginSegment});
-								}
-							};
-							sans = rawSelector.match(care);
-							for(var x=sans.length-1;x>=0;x--){
-								if(sans[x][0]===':'){
-									sans.splice(x,1);  // get rid of these, need a better regex...
-								}
-							};
-							lastComp().rule = comm + rawSelector.trim() + "{" + o[1];
-					}else{
-						compiled.push({rule:  raw, rid: i });
-					};
-					
-				};
-			};
-			
-			/* TODO: temporarily doing extra work to fix the model contract */
-			var outModel = { rules: [], segIndex: getSegIndex(compiled), plugins: requires };			
-			for(var ccc=0; ccc < compiled.length; ccc++){
-				outModel.rules.push(compiled[ccc].rule);
+				// set the rule to the processed rule
+				compiledRule.rule = comment + ruleSelector.replace(new RegExp(":" + any + "\\(\\*\\)","g"),"").replace(/:\._/g,"._") + ruleBody;
+			}else{
+				// set the rule to the raw (unprocessed) because there are no filters
+				compiledRule.rule = raw;
 			}
-			doneCb(outModel);
+			
+			// push the compiled rule into the stack
+			compiled.push(compiledRule);
+		}
+		//console.log(JSON.stringify(compiled,null,4));
+		/* TODO: temporarily doing extra work to fix the model contract */
+		var outModel = { rules: [], segIndex: getSegIndex(compiled), plugins: requires };
+		for(var ccc=0; ccc < compiled.length; ccc++){
+			outModel.rules.push(compiled[ccc].rule);
+		}
+		finished(outModel);
 	});
 }
 
@@ -527,7 +710,7 @@ cssPlugins.useManualInit();
 				}else{
 					href = el.href;
 					$.get(href, function(src){
-						cssPluginsCompiler(src,initer,href.substring(0,href.lastIndexOf('/'));
+						cssPluginsCompiler(src,initer,href.substring(0,href.lastIndexOf('/')));
 					}, 'text');
 				}
 			}
