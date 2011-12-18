@@ -4,13 +4,15 @@ var fs = require('fs'),
 	color = require('colors'), // provides nice CLI coloring
 	rimraf = require('rimraf'), // provides recursive dir deleting
 	srcFiles = [
-		'./lib/cssPlugins.js', 
-		'./lib/cssPluginsCompiler.js'
+		'./lib/engine.js', 
+		'./lib/compiler.js'
 	],
 	testFiles = [
-		'./test/cssPlugins.js',
-		'./test/cssPluginsCompiler.js'
-	];
+		'./test/engine.js',
+		'./test/compiler.js'
+	],
+	hitchJS = 'dist/hitch.js', // final path/name of uncompressed hitch
+	hitchJSmin = 'dist/hitch-min.js'; // final path/name of compressed hitch
 
 desc("Removes the distribution folder");
 task("clean", [], function(){
@@ -37,14 +39,32 @@ task("compile", ["dist"], function(){
 	for(var i = 0; i < srcFiles.length; i++){
 		buffer.push(fs.readFileSync(srcFiles[i], "utf-8"));
 	}
-	fs.writeFile('dist/css-plugins.js', buffer.join('\n'), function(err){
-		if(err){ util.log(err.red); }
-	});
+	fs.writeFileSync(hitchJS, buffer.join('\n'), "utf-8");
 });
 
-desc('Lint check, compile, test');
-task('default',['lint', 'compile', 'test'],function(){
+desc('Lint check, compile, min, test');
+task('default',['lint', 'compile', 'min', 'test'],function(){
 	util.log("Finished building CssPlugins!".green);
+});
+
+desc("Minification of source files");
+task('min', ['compile'], function(){
+	var jsp = require("uglify-js").parser,
+		pro = require("uglify-js").uglify,
+		orig_code = fs.readFileSync(hitchJS, "utf-8"),
+		ast = jsp.parse(orig_code), // parse code and get the initial AST
+		final_code; 
+	
+	ast = pro.ast_mangle(ast), // get a new AST with mangled names
+	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+	final_code = pro.gen_code(ast); // compressed code here
+	fs.writeFile(hitchJSmin, final_code, function(err){
+		if(err){ 
+			util.log(err.red); 
+		} else {
+			util.log("Compressed ".green + hitchJSmin.green + " ...".green);
+		}
+	});
 });
 
 desc("JSHint source");

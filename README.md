@@ -1,6 +1,6 @@
 Hitch
 =========
-A lightweight JavaScript library that provides a mechnism that allows others to easily develop and use additional extensions.
+A lightweight JavaScript library that provides a mechanism that allows others to easily develop and use additional extensions.
 
 Setup (interpreted mode)
 ========================
