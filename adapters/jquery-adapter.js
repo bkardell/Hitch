@@ -1,30 +1,45 @@
 cssPlugins.useManualInit();
+Hitch = { 
+	ajax: { 
+		load : function(url,callback,type,errCallback,allDone){
+			var i, promises = [], deferred;
+			for(i=0;i<url.length;i++){
+				if(type==='script'){
+					promises.push($.getScript(url[i]));
+				}else{ 
+					deferred = $.Deferred();
+					$.get(url[i], function(cssText){
+						cssPluginsCompiler(cssText, function(compiled){
+							callback(compiled);
+							deferred.resolve();
+						});
+					});
+					promises.push(deferred);
+				};
+			};
+			$.when.apply($,promises).then(allDone);
+		}
+	}
+};
+
  $(document).ready(
 	function(){ 
 		var loads = [], 
-			cache;
+			initer = function(c){
+				cssPlugins.addCompiledRules(c);
+			};
 			
 		$('[-plugins-interpret]').each( 
 			function(i,el){ 
-				var href, 
-					deferred = $.Deferred(), 
-					initer = function(c){
-						cssPlugins.addCompiledRules(c);
-						deferred.resolve();
-					};
-				loads.push(deferred);
 				if(el.tagName === 'STYLE'){
-					cssPluginsCompiler(el.innerHTML,initer,window.location.path);
+					cssPluginsCompiler(el.innerHTML, initer, window.location.path
+					);
 				}else{
-					href = el.href;
-					$.get(href, function(src){
-						cssPluginsCompiler(src,initer,href.substring(0,href.lastIndexOf('/'));
-					}, 'text');
+					console.log(el.href);
+					loads.push(el.href);
 				}
 			}
 		);
-		$.when.apply($,loads).then(function(){
-			cssPlugins.init();
-		});
+		Hitch.ajax.load(loads,initer,'css',null,cssPlugins.init);
 	}
 );
