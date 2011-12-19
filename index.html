@@ -3,86 +3,129 @@
 <head>
   <meta charset='utf-8'>
 
-  <title>bkardell/CssPlugin @ GitHub</title>
+  <title>bkardell/Hitch @ GitHub</title>
 
   <style type="text/css">
     body {
       margin-top: 1.0em;
-      background-color: #ffffff;
+      background-color: black;
       font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
+      color: white;
     }
-    #container {
+    
+    #container, #containerA {
       margin: 0 auto;
-      width: 700px;
+      padding-left: 2em;
+      padding-right: 2em;
+      text-decoration: none;
+   }
+   
+   #container{
+      background-image: url('http://69.54.28.122/plugin/docs/images/hitch.png');
+      background-repeat: no-repeat;
+   	  border: 1px solid black;
+	  border-radius: 15px;
+	  padding-left: 330px;
+	  background-position: 1em 1em;
+	  background-color: #aeafcf;
+	  min-height: 350px;
     }
-    h1 { font-size: 3.8em; color: #000000; margin-bottom: 3px; }
+    
+    #container h3{
+    	text-align: left;
+    	background-color: silver;
+    	padding: 5px;
+    	padding-left: 1em;
+    	padding-top: 7px;
+    	margin-bottom: 0px;
+    	border: 1px solid black;
+    	border-right: 0px;
+    	border-left-width: 5px;
+    }
+    
+    
+    #forUsers, #forDevelopers{
+    	float: left;
+    	width: 40%;
+    	margin-left: 2em;
+    }
+    
+    #forDevelopers{
+    	margin-left: 2em;
+    }
+    
+    #container li{
+    	padding-bottom: 0.5em;
+    }
+    
+    #container p{
+		clear: both;
+    }
+    
+    #container pre{
+		
+    }
+    h1 { font-size: 3.8em;  margin-bottom: 3px; }
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #000000; }
-    h3 { text-align: center; color: #000000; }
-    a { color: #000000; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
+    h2 { font-size: 1.5em;  }
+    h3 { text-align: center; }
+    a { color: blue; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; }
     pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    hr { border: 0; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
   </style>
 </head>
 
 <body>
-  <a href="https://github.com/bkardell/CssPlugin"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  <a href="https://github.com/bkardell/Hitch"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
   <div id="container">
 
-    <div class="download">
-      <a href="https://github.com/bkardell/CssPlugin/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/bkardell/CssPlugin/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="https://github.com/bkardell/CssPlugin">CssPlugin</a>
-      <span class="small">by <a href="https://github.com/bkardell">bkardell</a></span></h1>
-
-    <div class="description">
-      Allows you to add pseudo-class selectors to CSS.  A JS emulated version of a proposal for native CSS feature.
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-      <h2>Authors</h2>
-      <p>Brian (bkardell@gmail.com)<br/>Clint Hill (clint.hill@gmail.com)<br/>      </p>
-    
-
-    
-      <h2>Contact</h2>
-      <p> (bkardell@gmail.com)<br/>      </p>
-    
-
-    <h2>Download</h2>
+    <h3 id="resources">Resources</h3>
+   	<div id="forUsers">
+		<h4>Getting Started with Hitch</h4>
+		<ul>
+			<li><a href="">Quick Setup</a></li>
+			<li><a href="">Quick Tutorial</a></li>
+			<li><a href="">Finding Hitches</a></li>
+			<li><a href="">Tutorials / Documentation</a></li>
+		</ul>
+	</div>
+	<div id="forDevelopers">
+		<h4>Developer Resources</h4>
+		<ul>
+			<li><a href="">Source Code / Git</a></li>
+			<li><a href="">Developing Selector Hitches</a></li>
+			<li><a href="">Developing HTML Hitches</a></li>
+			<li><a href="">Submit a Bug</a></li>
+		</ul>
+	</div>
     <p>
+    
       You can download this project in either
-      <a href="https://github.com/bkardell/CssPlugin/zipball/master">zip</a> or
-      <a href="https://github.com/bkardell/CssPlugin/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      <a href="https://github.com/bkardell/Hitch/zipball/master">zip</a> or
+      <a href="https://github.com/bkardell/Hitch/tarball/master">tar</a> formats. <br />
+      You can clone the project with <a href="http://git-scm.com">Git</a>
       by running:
-      <pre>$ git clone git://github.com/bkardell/CssPlugin</pre>
+      <pre>    $ git clone git://github.com/bkardell/Hitch</pre>
     </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/bkardell/CssPlugin">bkardell/CssPlugin</a>
-    </div>
 
   </div>
 
+ <div id="containerA">
+    <div class="description">
+      Hitch is a thin layer that sits in the browser and provides an "opt-in" extension model which allows you to use (or even define) additional selectors or html capabilities which are not currently a part of a standard. The hitch engine essentially turns uses selector hitches in your CSS into standard CSS which includes a hashed class name in place of your use and gives it back to CSS - it then simply manages the toggling on and off of those class names. The same underlying ideas are used internally to create a hitch mechanism for html components.
+    </div>
+
+    
+      <h2>Authors</h2>
+      <p>
+      	Brian (bkardell@gmail.com)
+		<br/>Clint Hill (clint.hill@gmail.com)
+      </p>
+
+  </div>
 </body>
 </html>
