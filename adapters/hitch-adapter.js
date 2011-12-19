@@ -2,22 +2,17 @@
 var Hitch = (function(){  // temporary until we get Hitch created elsewhere...
 	var loaded = {};
 	var scriptTag =  function (src, callback) {
-
         var s = document.createElement('script');
         s.type = 'text/' + (src.type || 'javascript');
         s.src = src.src || src;
         s.async = false;
-
         s.onreadystatechange = s.onload = function() {
-
             var state = s.readyState;
-
             if (!callback.done && (!state || /loaded|complete/.test(state))) {
                 callback.done = true;
                 callback();
             }
         };
-
         (document.body || document.getElementsByTagName('head')[0]).appendChild(s);
     };
     
