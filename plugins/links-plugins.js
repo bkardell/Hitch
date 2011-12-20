@@ -31,7 +31,7 @@
 		}
 	};
 	
-	cssPlugins.addFilters([
+	Hitch.addFilters([
 		{
 			name: '-links-local',
 			base: 'a[href]',

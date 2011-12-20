@@ -31,7 +31,7 @@
 		}
 	};
 	
-	cssPlugins.addFilters([
+	Hitch.addFilters([
 		{  /* emulated "super" matches - allows full complex selectors in match */ 
 			name: 'test-matches', 
 			base: '',

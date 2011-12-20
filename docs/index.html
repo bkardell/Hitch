@@ -1,24 +1,24 @@
 <html>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    
     <!-- run with live interpreted version... -->
 	<link rel="stylesheet" 
 		href="plugin.css" type="text/css" -plugins-interpret="true"  />
 
-	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="../dist/plugin-interp-jquery.js"></script>
+	<script type="text/javascript" src="../dist/hitch.js"></script>
 	
-	
-	<!-- run with compiled version 
+	<!-- run with compiled version
 	<link rel="stylesheet"  href="plugin-compiled.css" type="text/css" />
-	<script type="text/javascript" src="cssPlugins.js"></script>
-	<script type="text/javascript" src="myPlugins.js"></script>
+	<script type="text/javascript" src="../lib/cssPlugins.js"></script>
+	<script type="text/javascript" src="../plugins/myPlugins.js"></script>
 	<script type="text/javascript" src="plugin-compiled.js"></script>
 	-->
 </head>
 <body>
-	<img id="logo" src="images/plug.png" x="100">
+	<img id="logo" src="images/hitch.png" x="100">
 	<h1>CSS Plug-in</h1>
-	<div><a href="file:///Users/brian/Desktop/plugin/">Follow</a> <a href="#foo">Help!</a> <a href="">Contribute</a> <a href="">Donate</a></div>
+	<div><a href="file:///Users/brian/Desktop/plugin/">Follow</a> <a href="plugins/else/entirely">Help!</a> <a href="">Contribute</a> <a href="">Donate</a></div>
 	<div id="mainwell">
 		<h1>Selector Plugins</h1>
 		<h2>Vendor Prefixed Pseudo Classes</h2>
@@ -74,7 +74,7 @@
 		
 		<p y="10">Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
 		Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
-		Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
+		Yadda <a name="a1">yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda</a>
 		</p>
 		<p y="20">Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
 		Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
@@ -88,6 +88,24 @@
 		Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
 		Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda Yadda yadda yadda
 		</p>
+ 		<div style="position: absolute;top: 300px;" -plugin-require="http://69.54.28.122/tagCloud.js"  
+ 		     -goat-tagCloud -goat-freezeActive >
+ 			<a href="" -goat-weight="40">One</a>
+ 			<a href="" -goat-weight="10">Two</a>
+ 			<a href="" -goat-weight="18">Three</a>
+ 			<a href="" -goat-weight="25">Four</a>
+ 			<a href="" -goat-weight="18">Five</a>
+ 			<a href="" -goat-weight="25">Six</a>
+ 			<a href="" -goat-weight="25">Seven</a>
+ 			<a href="" -goat-weight="54">Eight</a>
+ 			<a href="" -goat-weight="19">Nine</a>
+ 			<a href="" -goat-weight="22">Ten</a>
+ 			<a href="" -goat-weight="29">Eleven</a>
+ 			<a href="" -goat-weight="55">Twelve</a>
+ 			<a href="" -goat-weight="46">Thirteen</a>
+ 			<a href="" -goat-weight="32">Fourteen</a>
+ 			<a href="" -goat-weight="37">Fifteen</a>
+ 		</div>
 	</div>
 	
 </body>

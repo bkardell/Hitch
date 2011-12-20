@@ -1,4 +1,4 @@
-cssPlugins.addFilters([	
+Hitch.addFilters([	
 	{
 		name: '-math-greaterthan',  
 		fn:   function(match,argsString){

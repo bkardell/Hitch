@@ -1,5 +1,5 @@
-QUnit.module("cssPlugins");
+QUnit.module("Hitch");
 
 test("engine is global", function(){
-	ok(cssPlugins, "Just checkin");
+	ok(Hitch, "Just checkin");
 });

@@ -74,14 +74,16 @@ task('lint', [], function(){
 		found = 0, 
 		w;
 	
+	util.log('Beginning lint...');
 	for(var i = 0; i < srcFiles.length; i++){
 		var file = srcFiles[i], src = fs.readFileSync(file, "utf8");
-
+		util.log(file);
 		jshint(src, { evil: true });
 		
-		for ( var i = 0; i < jshint.errors.length; i++ ) {
-			w = jshint.errors[i];
+		for ( var x = 0; i < jshint.errors.length; i++ ) {
+			w = jshint.errors[x];
 			found++;
+			
 			if(w){
 				util.print( "--------------------\n");
 				util.print( "Problem in file " + file + " at line " + w.line + " character " + w.character + ": " + w.reason  + "\n\n");
@@ -91,7 +93,7 @@ task('lint', [], function(){
 		}
 		
 	}
-	
+	util.log('done lint');
 	if ( found > 0 ) {
 		util.log( found.toString().red + " JSHint Error(s) found.".red );
 	} else {

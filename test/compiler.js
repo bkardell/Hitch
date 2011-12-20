@@ -1,5 +1,5 @@
-QUnit.module("cssPluginsCompiler");
+QUnit.module("HitchCompiler");
 
 test("compiler is global", function(){
-	ok(cssPluginsCompiler, "Just checkin");
+	ok(HitchCompiler, "Just checkin");
 });

@@ -1,4 +1,4 @@
-cssPlugins.addFilters([	
+Hitch.addFilters([	
 	{
 		name: '-jquery-animated',  
 		fn:   function(match,argsString){
