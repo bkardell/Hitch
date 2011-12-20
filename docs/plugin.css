@@ -1,5 +1,9 @@
-
-	@-plugins-require ../plugins/myPlugins.js;
+	@-plugins-require https://raw.github.com/bkardell/Hitch/master/plugins/links-plugins.js;
+	@-plugins-require https://raw.github.com/bkardell/Hitch/master/plugins/math-plugins.js;
+	@-plugins-require https://raw.github.com/gist/1482763/dumb-plugins.js;
+	@-plugins-require http://69.54.28.122/tagCloud.js;
+	
+	
 	@-plugins-const -const-floob div .flip .bar, span .flop.bit;
 	
 	body, html{ 
@@ -13,6 +17,11 @@
 	/* what happens now? */
     .x:not(:-plugins-any(:-const-floob)){
     	background-color: orange;
+    }
+    
+    /* what happens with groups? */
+    div:not(.x,.y):-math-least(.y), p:-math-least(.z){
+    	color: green;
     }
     
 	#logo{ 
@@ -76,7 +85,12 @@
 		color: yellow;
 	}
 	
-	a:test-locallink(){
+	a:-link-target(){
+		color: blue;
+		font-weight: bold;
+	}
+	
+	a:-links-local(2){
 		color: red;
 	}
 	
@@ -103,6 +117,31 @@
 	    border: 10px solid blue !important;
 	}
 	
-	p:-math-least(y){
+	div:-math-least(y), p:-math-least(y){
 		background-color: yellow !important;
 	}
+	
+	p:-dumb-random(){
+	    border: 1px solid green !important;
+	}
+
+	div[-goat-tagCloud]{ width: 1000px; height: 1000px; color: black; }
+	div:-goat-tagCloud(){ /* needed for now... */ }
+	
+	
+	.list>div{ margin: 2em 1em 1em 3em; padding: 0.5em; border: 1px solid blue; width: 600px; }
+	.list>div .name{ font-weight: bold; }
+	.list>div .url{ test-decoration: italic; font-size: 0.8em }
+	.tag{
+	    font-size: 0.7em;
+	    background-color: yellow;
+	    margin: 0px;
+	    margin-left: 5em;
+	    padding: 0.25em 1em;
+	    vertical-align: top;
+	    float: right;
+	    font-weight: bold;
+	    border: 1px solid blue;
+	}
+	
+	

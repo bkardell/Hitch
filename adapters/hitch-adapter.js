@@ -4,17 +4,19 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 	var loaded = {};
 	var scriptTag =  function (src, callback) {
         var s = document.createElement('script');
-        s.type = 'text/' + (src.type || 'javascript');
-        s.src = src.src || src;
-        s.async = false;
-        s.onreadystatechange = s.onload = function() {
-            var state = s.readyState;
-            if (!callback.done && (!state || /loaded|complete/.test(state))) {
-                callback.done = true;
-                callback();
-            }
-        };
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(s);
+        setTimeout(function(){
+			s.type = 'text/' + (src.type || 'javascript');
+			s.src = src.src || src;
+			s.async = false;
+			s.onreadystatechange = s.onload = function() {
+				var state = s.readyState;
+				if (!s.done && (!state || /loaded|complete/.test(state))) {
+					s.done = true;
+					callback();
+				}
+			};
+			(document.body || document.getElementsByTagName('head')[0]).appendChild(s);
+		},1);
     };
 	return {
 		getHTTPObject: function() {
@@ -50,7 +52,7 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 			}else{
 				// for loading CSS
 				checkDone = function(c){
-					callback(c);
+					try{callback(c);}catch(e){ /* one bad apple doesn't spoil the bunch... */ }
 					open--;
 					if(open===0){
 						allDone();
@@ -65,7 +67,7 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 							HitchCompiler(result,checkDone);
 						} else {
 							open--;
-							if(errCallback) errCallback(http.status);
+							if(open===0){ allDone(); }
 						}
 					}
 				};
