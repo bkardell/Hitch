@@ -5,11 +5,13 @@ var fs = require('fs'),
 	rimraf = require('rimraf'), // provides recursive dir deleting
 	srcFiles = [
 		'./lib/engine.js', 
-		'./lib/compiler.js'
+		'./lib/compiler.js', 
+		'./adapters/hitch-adapter.js'
 	],
 	testFiles = [
 		'./test/engine.js',
-		'./test/compiler.js'
+		'./test/compiler.js', 
+		'./test/hitch-adapter.js'
 	],
 	hitchJS = 'dist/hitch.js', // final path/name of uncompressed hitch
 	hitchJSmin = 'dist/hitch-min.js'; // final path/name of compressed hitch
@@ -102,7 +104,7 @@ task('lint', [], function(){
 });
 
 desc("Run QUnit tests");
-task("test", ['lint'], function(){
+task("test", ['lint','compile'], function(){
 	var qunit = require('qunit'), 
 		source, 
 		test,
@@ -113,11 +115,14 @@ task("test", ['lint'], function(){
 		// TODO: Maybe change QUnit to support dynamic src and test discovery
 		source = srcFiles[i];
 		test = testFiles[i];
+		console.log("--->" + source);
 		context.push({
 			deps: ['./support/libs/test-context.js','./support/libs/jquery-1.7.1.js'], 
 			code: source, 
 			tests: test
 		});
 	}
+	
+	console.log("............." + JSON.stringify(context,null,4));
 	qunit.run(context);
 });

@@ -1,3 +1,4 @@
+Hitch = window.Hitch || { useManualInit: function(){}}; // for unit testing..
 // queue some files and call a callback with the result for each
 Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 	var loaded = {};
@@ -15,7 +16,6 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
         };
         (document.body || document.getElementsByTagName('head')[0]).appendChild(s);
     };
-    
 	return {
 		getHTTPObject: function() {
 			var http = false;
@@ -32,49 +32,49 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 			return http;
 		}, 
 		load : function(url,callback,type,errCallback,allDone) {
-			var http, i, open = url.length, tag;
+			var http, i, open = url.length, tag, checkDone, changeHandler;
+			
 			Hitch.scriptsReady = allDone;
 			if(!url) return;	
 			if(type === 'script'){
 				// for loading scripts
-				//var frag = document.createDocumentFragment();
+				checkDone = function(){
+					open--;
+					if(open===0){ 
+						allDone();
+					}
+				};
 				for(i=0;i<url.length;i++){
-					scriptTag(url[i],function(){
-						open--;
-						if(open===0){ 
-							allDone();
-						}
-					});
-				}; 
+					scriptTag(url[i],checkDone);
+				} 
 			}else{
 				// for loading CSS
+				checkDone = function(c){
+					callback(c);
+					open--;
+					if(open===0){
+						allDone();
+					}
+				};
+				changeHandler = function () {
+					var result = '';
+					if (http.readyState == 4) {
+						if(http.status == 200) {
+							result = "";
+							if(http.responseText) result = http.responseText;
+							HitchCompiler(result,checkDone);
+						} else {
+							open--;
+							if(errCallback) errCallback(http.status);
+						}
+					}
+				};
 				for(i=0;i<url.length;i++){
 					http = this.init(); 
 					if(!http) return;
-					
 					url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")  + "h_id=" + new Date().getTime();
 					http.open("GET", url[i], true);
-			
-					http.onreadystatechange = function () {
-						var result = '';
-						if (http.readyState == 4) {
-							if(http.status == 200) {
-								var result = "";
-								if(http.responseText) result = http.responseText;
-								HitchCompiler(result, function(c){
-									callback(c);
-									open--;
-									if(open===0){
-										allDone();
-									}
-								});
-							} else {
-								open--;
-								if(errCallback) errCallback(http.status);
-							};
-							
-						};
-					};
+					http.onreadystatechange = changeHandler;
 					http.send(null);
 				}
 			};
