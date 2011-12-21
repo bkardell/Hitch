@@ -76,10 +76,8 @@ task('lint', [], function(){
 		found = 0, 
 		w;
 	
-	util.log('Beginning lint...');
 	for(var i = 0; i < srcFiles.length; i++){
 		var file = srcFiles[i], src = fs.readFileSync(file, "utf8");
-		util.log(file);
 		jshint(src, { evil: true });
 		
 		for ( var x = 0; i < jshint.errors.length; i++ ) {
@@ -95,7 +93,6 @@ task('lint', [], function(){
 		}
 		
 	}
-	util.log('done lint');
 	if ( found > 0 ) {
 		util.log( found.toString().red + " JSHint Error(s) found.".red );
 	} else {
@@ -115,14 +112,11 @@ task("test", ['lint','compile'], function(){
 		// TODO: Maybe change QUnit to support dynamic src and test discovery
 		source = srcFiles[i];
 		test = testFiles[i];
-		console.log("--->" + source);
 		context.push({
 			deps: ['./support/libs/test-context.js','./support/libs/jquery-1.7.1.js'], 
 			code: source, 
 			tests: test
 		});
 	}
-	
-	console.log("............." + JSON.stringify(context,null,4));
 	qunit.run(context);
 });
