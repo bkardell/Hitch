@@ -106,7 +106,7 @@ task("test", ['lint','compile'], function(){
 		source, 
 		test,
 		context = [];
-	for(var i = 0; i < 1; i++){
+	for(var i = 0; i < srcFiles.length; i++){
 		// this is junky - QUnit forces a 1-1 match on source and test
 		// TODO: Look at libs like Jasmine for spec style testing
 		// TODO: Maybe change QUnit to support dynamic src and test discovery
@@ -118,7 +118,5 @@ task("test", ['lint','compile'], function(){
 			tests: test
 		});
 	}
-	qunit.run(context, function( report ) {
-		console.dir(report);
-	});
+	qunit.run(context);
 });

@@ -31,12 +31,12 @@ var g, jsdom = require('jsdom').jsdom,
 				path = path.substring(0,path.lastIndexOf('/'));
 				this.readyState = 4;
 				this.status = '200';
-				console.log(path);
-				try{console.log("->" + fs.realpathSync(path));
-				
-				this.responseText = fs.readFileSync(fs.realpathSync(path) + file,'UTF-8');
-				}catch(e){console.log(e.message);}
-				console.log(this.responseText);
+
+				try{
+					this.responseText = fs.readFileSync(fs.realpathSync(path) + file,'UTF-8');
+				}catch(e){
+					console.log(e.message);
+				}
 				this.onreadystatechange();
 			}
 		};
