@@ -28,16 +28,16 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					catch (E) {http = false;}
 				}
 			} else if (window.XMLHttpRequest) {
-				try {http = new XMLHttpRequest();}
+				
+				try { http = new XMLHttpRequest();}
 				catch (ex) {http = false;}
 			}
 			return http;
 		}, 
 		load : function(url,callback,type,errCallback,allDone) {
 			var http, i, open = url.length, tag, checkDone, changeHandler;
-			
 			Hitch.scriptsReady = allDone;
-			if(!url) return;	
+			if(!url || url.length===0){ allDone(); }
 			if(type === 'script'){
 				// for loading scripts
 				checkDone = function(){
@@ -52,7 +52,11 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 			}else{
 				// for loading CSS
 				checkDone = function(c){
-					try{callback(c);}catch(e){ /* one bad apple doesn't spoil the bunch... */ }
+					try{
+						callback(c);
+					}catch(e){ 
+						/* one bad apple doesn't spoil the bunch... */
+					}
 					open--;
 					if(open===0){
 						allDone();
@@ -85,7 +89,6 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 	};
 }());
 
-
 Hitch.useManualInit();
 window.onload = function(){
 	var loads = [], 
@@ -96,13 +99,15 @@ window.onload = function(){
 		initer = function(c){
 			Hitch.addCompiledRules(c);
 		};
-		
+	
+	
 	toProc = document.querySelectorAll('[-plugins-interpret]');
+	
 	for(i=0;i<toProc.length;i++){
 		if(toProc[i].tagName === 'STYLE'){
 			HitchCompiler(toProc[i].innerHTML,initer,window.location.path);
 		}else{
-			href = toProc[i].href;
+			href = toProc[i].getAttribute('href');
 			loads.push(href);
 		}
 	};

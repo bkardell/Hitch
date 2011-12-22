@@ -1,0 +1,5 @@
+@-plugins-require fake-hitch.js;
+
+div:-false-return(){
+  background-color: blue;
+}
