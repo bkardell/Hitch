@@ -1,4 +1,4 @@
-@-plugins-require fake-hitch.js;
+@-hitch-requires fake-hitch.js;
 
 div:-false-return(){
   background-color: blue;

@@ -2,7 +2,7 @@ var g, jsdom = require('jsdom').jsdom,
 	Url = require("url"),
   	spawn = require("child_process").spawn,
   	fs = require('fs'),
-    helper = function(headStuffPreHitch,headStuffPostHitch){
+    helper = function(headStuffPreHitch,fixtureCode,headStuffPostHitch){
 		var document, window; // mask these
 		document = jsdom("<html><head>" 
 							+ (headStuffPreHitch || '') 
@@ -10,7 +10,9 @@ var g, jsdom = require('jsdom').jsdom,
 							+ (headStuffPostHitch || '')
 							+ '<title>Hitch Test Fixture</title>'
 							+ '</head>'
-							+ '<body><div id="test-fixture"> </div></body> </html>', 
+							+ '<body><div id="test-fixture">'
+							+ (fixtureCode || '')
+							+ '</div></body> </html>', 
 						null, 
 						{ 
 							features: {

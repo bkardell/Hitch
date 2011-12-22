@@ -101,7 +101,7 @@ window.onload = function(){
 		};
 	
 	
-	toProc = document.querySelectorAll('[-plugins-interpret]');
+	toProc = document.querySelectorAll('[-hitch-interpret]');
 	
 	for(i=0;i<toProc.length;i++){
 		if(toProc[i].tagName === 'STYLE'){
