@@ -31,18 +31,18 @@
 		}
 	};
 	
-	Hitch.addFilters([
+	Hitch.add([
 		{  /* emulated "super" matches - allows full complex selectors in match */ 
 			name: 'test-matches', 
 			base: '',
-			fn:   function(match,argsString){
+			filter:   function(match,argsString){
 				return match.matchesSelector(argsString);
 			}
 		},
 		{ 
 			name: 'test-donationover', 
 			base: '[donation]', 
-			fn:   function(match,argsString){
+			filter:   function(match,argsString){
 						var value = match.getAttribute('donation');
 						if(!isNaN(value) && !isNaN(argsString)){
 						   return (value > parseInt(argsString,10));
@@ -53,7 +53,7 @@
 		{
 			name: 'test-has', 
 			base: '', 
-			fn:   function(match,args){
+			filter:   function(match,args){
 						return match.querySelector(args) !== null;
 			},
 			selectorargs: [0],
@@ -62,7 +62,7 @@
 		{
 			name: 'test-locallink',
 			base: 'a[href]',
-			fn:    function(match,argsString,o){
+			filter:    function(match,argsString,o){
 				var a, i, wp, lp, 
 					w = parseUri(o.location),
 					l = parseUri(match.href);
@@ -84,14 +84,14 @@
 		{
 			name: 'test-target',
 			base: 'a[name]',
-			fn:    function(match,argsString,o){
+			filter:    function(match,argsString,o){
 				console.log(window.location.hash && ("#" + match.name === window.location.hash));
 				return (window.location.hash && ("#" + match.name === window.location.hash));
 			}
 		},
 		{
 			name: '-math-greaterthan',  
-			fn:   function(match,argsString){
+			filter:   function(match,argsString){
 						var args = argsString.split(",");
 						var value = match.getAttribute(args[0]);
 						if(!isNaN(value) && !isNaN(args[1])){
@@ -101,7 +101,7 @@
 		   }
 		},{
 			name: '-math-lessthan',  
-			fn:   function(match,argsString){
+			filter:   function(match,argsString){
 						var args = argsString.split(",");
 						var value = match.getAttribute(args[0]);
 						if(!isNaN(value) && !isNaN(args[1])){
@@ -112,7 +112,7 @@
 		},
 		{
 			name: '-math-greatest',  
-			fn:   function(match,argsString,c){
+			filter:   function(match,argsString,c){
 						var v1, vTemp, temp, biggest, el, args = argsString.split(",");
 						v1 = match.getAttribute(args[0]);
 						if(v1 && !isNaN(v1)){	
@@ -134,7 +134,7 @@
 		},
 		{
 			name: '-math-least',  
-			fn:   function(match,argsString,c){
+			filter:   function(match,argsString,c){
 						var v1, vTemp, temp, smallest, el, args = argsString.split(",");
 						v1 = match.getAttribute(args[0]);
 						if(v1 && !isNaN(v1)){	

@@ -1,10 +1,10 @@
-	@-plugins-require https://raw.github.com/bkardell/Hitch/master/plugins/links-plugins.js;
-	@-plugins-require https://raw.github.com/bkardell/Hitch/master/plugins/math-plugins.js;
-	@-plugins-require https://raw.github.com/gist/1482763/dumb-plugins.js;
-	@-plugins-require http://69.54.28.122/tagCloud.js;
+	@-hitch-requires https://raw.github.com/bkardell/Hitch/master/plugins/links-plugins.js;
+	@-hitch-requires https://raw.github.com/bkardell/Hitch/master/plugins/math-plugins.js;
+	@-hitch-requires https://raw.github.com/gist/1482763/dumb-plugins.js;
+	@-hitch-requires https://raw.github.com/gist/1487991/tagCloud.js;
 	
 	
-	@-plugins-const -const-floob div .flip .bar, span .flop.bit;
+	@-hitch-const -const-floob div .flip .bar, span .flop.bit;
 	
 	body, html{ 
 		margin-top: -20px; 
