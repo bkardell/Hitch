@@ -101,8 +101,6 @@ window.onload = function(){
 			Hitch.addCompiledRules(c);
 		};
 	
-	var x = new Date().getTime();
-	
 	toProc = document.querySelectorAll('[-hitch-requires]');
 	for(i=0;i<toProc.length;i++){
 		requires.push(toProc[i].getAttribute('-hitch-requires'));
