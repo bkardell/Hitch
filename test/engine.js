@@ -42,7 +42,7 @@ test("plugins addition", function(){
 		var testPlugin = {
 			name: 'testPlugin',
 			base: '',
-			fn: function(){ return false; }
+			filter: function(){ return false; }
 		},
 		badPlugin = { name: '' },
 		pluginsCount = g.window.Hitch.getPlugins().length;
@@ -78,7 +78,7 @@ QUnit.module("mods registered ok with inline style and JS API");
 asyncTest("false-return registered with JS API", function(){
 	var g = helper(
 		'<style -hitch-interpret="true"> div:-false-return() { color: red; } </style>',
-		'<script type="text/javascript">  window.added=true; Hitch.add({name: "-false-return",base: "",fn: function(match, args){ '
+		'<script type="text/javascript">  window.added=true; Hitch.add({name: "-false-return",base: "",filter: function(match, args){ '
 			 + 'window["false-return"] = true; return true;}});  </script>'
 	);
 	setTimeout(function(){

@@ -1,7 +1,7 @@
-Hitch.addFilters([	
+Hitch.add([	
 	{
 		name: '-jquery-animated',  
-		fn:   function(match,argsString){
+		filter:   function(match,argsString){
 				return $(match).is(':animated');
 	   }
 	},{
@@ -60,21 +60,21 @@ Hitch.addFilters([
 	{
 		name: '-jquery-has', 
 		base: '', 
-		fn:   function(match,args){
+		filter:   function(match,args){
 					return match.querySelector(args) !== null;
 		}
 	},
 	{
 		name: '-jquery-eq', 
 		base: '', 
-		fn:   function(match,args,o){
+		filter:   function(match,args,o){
 				return match === $(o.selector).eq(args);
 		}
 	},
 	{
 		name: '-jquery-even', 
 		base: '', 
-		fn:   function(match,args,ctx){
+		filter:   function(match,args,ctx){
 				return (
 					Array.prototype.splice(
 						document.body.querySelectorAll(ctx.selector),0
@@ -85,7 +85,7 @@ Hitch.addFilters([
 	{
 		name: '-jquery-odd', 
 		base: '', 
-		fn:   function(match,args,ctx){
+		filter:   function(match,args,ctx){
 				return (
 					Array.prototype.splice(
 						document.body.querySelectorAll(ctx.selector),0
@@ -96,14 +96,14 @@ Hitch.addFilters([
 	{
 		name: '-jquery-first', 
 		base: '', 
-		fn:   function(match,args,ctx){
+		filter:   function(match,args,ctx){
 				return document.body.querySelector(ctx.selector) === match;
 		}
 	},
 	{
 		name: '-jquery-gt', 
 		base: '', 
-		fn:   function(match,args,ctx){
+		filter:   function(match,args,ctx){
 				var targ;
 				if(args && !isNaN(args)){	
 					targ = parseInt(args);
@@ -118,7 +118,7 @@ Hitch.addFilters([
 	{
 		name: '-jquery-lt', 
 		base: '', 
-		fn:   function(match,args,ctx){
+		filter:   function(match,args,ctx){
 				var targ;
 				if(args && !isNaN(args)){	
 					targ = parseInt(args);
@@ -133,7 +133,7 @@ Hitch.addFilters([
 	{
 		name: '-jquery-last', 
 		base: '', 
-		fn:   function(match,args,ctx){
+		filter:   function(match,args,ctx){
 				var targ = Array.prototype.splice(
 					document.body.querySelectorAll(ctx.selector),0
 				);

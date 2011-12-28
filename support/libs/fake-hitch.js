@@ -4,7 +4,7 @@ Hitch.add({
 	init: function(){
 		window['false-return-inited'] = true;
 	},
-	fn: function(match, args) { 
+	filter: function(match, args) { 
 		window['false-return'] = true; 
 		return false; 
 	}

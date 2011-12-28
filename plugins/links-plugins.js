@@ -31,11 +31,11 @@
 		}
 	};
 	
-	Hitch.addFilters([
+	Hitch.add([
 		{
 			name: '-links-local',
 			base: 'a[href]',
-			fn:    function(match,argsString,o){
+			filter:    function(match,argsString,o){
 				var a, i, wp, lp, 
 					w = parseUri(o.location),
 					l = parseUri(match.href);
@@ -57,7 +57,7 @@
 		{
 			name: '-links-target',
 			base: 'a[name]',
-			fn:    function(match,argsString,o){
+			filter:    function(match,argsString,o){
 				console.log(window.location.hash && ("#" + match.name === window.location.hash));
 				return (window.location.hash && ("#" + match.name === window.location.hash));
 			}

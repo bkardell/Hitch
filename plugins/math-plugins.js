@@ -1,7 +1,7 @@
-Hitch.addFilters([	
+Hitch.add([	
 	{
 		name: '-math-greaterthan',  
-		fn:   function(match,argsString){
+		filter:   function(match,argsString){
 					var args = argsString.split(",");
 					var value = match.getAttribute(args[0]);
 					if(!isNaN(value) && !isNaN(args[1])){
@@ -11,7 +11,7 @@ Hitch.addFilters([
 	   }
 	},{
 		name: '-math-lessthan',  
-		fn:   function(match,argsString){
+		filter:   function(match,argsString){
 					var args = argsString.split(",");
 					var value = match.getAttribute(args[0]);
 					if(!isNaN(value) && !isNaN(args[1])){
@@ -22,7 +22,7 @@ Hitch.addFilters([
 	},
 	{
 		name: '-math-greatest',  
-		fn:   function(match,argsString,c){
+		filter:   function(match,argsString,c){
 					var v1, vTemp, temp, biggest, el, args = argsString.split(",");
 					v1 = match.getAttribute(args[0]);
 					if(v1 && !isNaN(v1)){	
@@ -44,7 +44,7 @@ Hitch.addFilters([
 	},
 	{
 		name: '-math-least',  
-		fn:   function(match,argsString,c){
+		filter:   function(match,argsString,c){
 					var v1, vTemp, temp, smallest, el, args = argsString.split(",");
 					v1 = match.getAttribute(args[0]);
 					if(v1 && !isNaN(v1)){	
