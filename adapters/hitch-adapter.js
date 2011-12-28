@@ -95,23 +95,33 @@ window.onload = function(){
 		cache, 
 		toProc, 
 		i,
+		requires = [],
 		href,
 		initer = function(c){
 			Hitch.addCompiledRules(c);
 		};
 	
+	var x = new Date().getTime();
 	
-	toProc = document.querySelectorAll('[-hitch-interpret]');
-	
+	toProc = document.querySelectorAll('[-hitch-requires]');
 	for(i=0;i<toProc.length;i++){
-		if(toProc[i].tagName === 'STYLE'){
-			HitchCompiler(toProc[i].innerHTML,initer,window.location.path);
-		}else{
-			href = toProc[i].getAttribute('href');
-			loads.push(href);
-		}
-	};
-	Hitch.ajax.load(loads,initer,'css',null,function(){
-		Hitch.init();
+		requires.push(toProc[i].getAttribute('-hitch-requires'));
+	}
+	
+	Hitch.ajax.load(requires,null,'script',null,function(){
+		toProc = document.querySelectorAll('[-hitch-interpret]');
+		for(i=0;i<toProc.length;i++){
+			if(toProc[i].tagName === 'STYLE'){
+				HitchCompiler(toProc[i].innerHTML,initer,window.location.path);
+			}else{
+				href = toProc[i].getAttribute('href');
+				loads.push(href);
+			}
+		};
+		Hitch.ajax.load(loads,initer,'css',null,function(){
+			Hitch.init();
+		});	
 	});
+	
+	
 };

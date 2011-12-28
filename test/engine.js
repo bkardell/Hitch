@@ -78,7 +78,6 @@ QUnit.module("mods registered ok with inline style and JS API");
 asyncTest("false-return registered with JS API", function(){
 	var g = helper(
 		'<style -hitch-interpret="true"> div:-false-return() { color: red; } </style>',
-		'',
 		'<script type="text/javascript">  window.added=true; Hitch.add({name: "-false-return",base: "",fn: function(match, args){ '
 			 + 'window["false-return"] = true; return true;}});  </script>'
 	);
@@ -99,8 +98,26 @@ asyncTest("false-return unregistered no breaking", function(){
 		ok(g.window.Hitch.getPluginNames().indexOf('-false-return')===-1,'no module should be defined');
 		ok(!g.window['false-return'], "false-plugin global should be set");
 		ok(!g.window['false-return-inited'], "init should have been called");
-		ok(g.document.querySelectorAll('._0').length===0, 'No filter so should not affect the test-fixture node');
+		ok(g.document.querySelectorAll('._0').length===0, 'Filter should not affect the test-fixture node');
 		start();
 	},200);
 	
 });
+
+
+QUnit.module("Hitch HTML attribute plugin registers correctly...");
+asyncTest("false-return unregistered no breaking", function(){
+	var g = helper(
+		'<style -hitch-interpret="true"> div:-false-return() { color: red; } </style>',
+		'<span -hitch-requires="fake-hitch.js"> </span>',
+		''
+	);	
+	setTimeout(function(){		
+		ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
+		ok(g.window['false-return'], "false-plugin global should be set");
+		ok(g.document.querySelectorAll('._0').length===0, 'Filter should not affect the test-fixture node');
+		start();
+	},200);
+	
+});
+

@@ -2,7 +2,7 @@ var g, jsdom = require('jsdom').jsdom,
 	Url = require("url"),
   	spawn = require("child_process").spawn,
   	fs = require('fs'),
-    helper = function(headStuffPreHitch,fixtureCode,headStuffPostHitch){
+    helper = function(headStuffPreHitch,headStuffPostHitch,fixtureCode){
 		var document, window; // mask these
 		document = jsdom("<html><head>" 
 							+ (headStuffPreHitch || '') 
