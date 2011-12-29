@@ -14,16 +14,7 @@
 	
 	*{ font-size: 1em; }
 
-	/* what happens now? */
-    .x:not(:-plugins-any(:-const-floob)){
-    	background-color: orange;
-    }
-    
-    /* what happens with groups? */
-    div:not(.x,.y):-math-least(.y), p:-math-least(.z){
-    	color: green;
-    }
-    
+
 	#logo{ 
 		float: left; 
 		margin-right: 4em; 
@@ -125,13 +116,14 @@
 	    border: 1px solid green !important;
 	}
 
-	div[-goat-tagCloud]{ width: 1000px; height: 1000px; color: black; }
+	div[data-goat-tagCloud]{ width: 1000px; height: 1000px; color: black; }
 	div:-goat-tagCloud(){ /* needed for now... */ }
 	
 	
 	.list>div{ margin: 2em 1em 1em 3em; padding: 0.5em; border: 1px solid blue; width: 600px; }
 	.list>div .name{ font-weight: bold; }
 	.list>div .url{ test-decoration: italic; font-size: 0.8em }
+	
 	.tag{
 	    font-size: 0.7em;
 	    background-color: yellow;
