@@ -101,13 +101,13 @@ window.onload = function(){
 			Hitch.addCompiledRules(c);
 		};
 	
-	toProc = document.querySelectorAll('[-hitch-requires]');
+	toProc = document.querySelectorAll('[x-hitch-requires]');
 	for(i=0;i<toProc.length;i++){
-		requires.push(toProc[i].getAttribute('-hitch-requires'));
+		requires.push(toProc[i].getAttribute('x-hitch-requires'));
 	}
 	
 	Hitch.ajax.load(requires,null,'script',null,function(){
-		toProc = document.querySelectorAll('[-hitch-interpret]');
+		toProc = document.querySelectorAll('[x-hitch-interpret]');
 		for(i=0;i<toProc.length;i++){
 			if(toProc[i].tagName === 'STYLE'){
 				HitchCompiler(toProc[i].innerHTML,initer,window.location.path);
