@@ -78,6 +78,7 @@ task('lint', [], function(){
 	
 	for(var i = 0; i < srcFiles.length; i++){
 		var file = srcFiles[i], src = fs.readFileSync(file, "utf8");
+		util.log("JSHint checking " + file);
 		jshint(src, { evil: true });
 		
 		for ( var x = 0; i < jshint.errors.length; i++ ) {
