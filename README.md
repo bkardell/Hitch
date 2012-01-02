@@ -2,13 +2,13 @@ Hitch
 =========
 A lightweight JavaScript library that provides a mechanism that allows others to easily develop and use additional extensions.
 
-* [Getting Started](wiki/Getting-Started)
-* [Using Hitches](wiki/Using-Hitches)
-* [Writing Hitches](wiki/Writing-Hitches)
-* [Hitch Constants](wiki/Hitch-Constants)
-* [Hitch "Out of the box"](wiki/Out-of-the-Box)
-* [Why](wiki/Why-Hitch)
-* [FAQ](wiki/FAQ)
+* [Getting Started](Hitch/wiki/Getting-Started)
+* [Using Hitches](Hitch/wiki/Using-Hitches)
+* [Writing Hitches](Hitch/wiki/Writing-Hitches)
+* [Hitch Constants](Hitch/wiki/Hitch-Constants)
+* [Hitch "Out of the box"](Hitch/wiki/Out-of-the-Box)
+* [Why](Hitch/wiki/Why-Hitch)
+* [FAQ](Hitch/wiki/FAQ)
 
 ### Authors
 * [Brian Kardell](mailto:bkardell@gmail.com?subject=Hitch)
