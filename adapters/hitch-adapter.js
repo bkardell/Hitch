@@ -76,12 +76,16 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					}
 				};
 				for(i=0;i<url.length;i++){
-					http = this.init(); 
-					if(!http) return;
-					url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")  + "h_id=" + new Date().getTime();
-					http.open("GET", url[i], true);
-					http.onreadystatechange = changeHandler;
-					http.send(null);
+					if(url[i].inline){
+						HitchCompiler(url[i].inline, checkDone);
+					}else{
+						http = this.init(); 
+						if(!http) return;
+						url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")  + "h_id=" + new Date().getTime();
+						http.open("GET", url[i], true);
+						http.onreadystatechange = changeHandler;
+						http.send(null);
+					}
 				}
 			}
 		},
@@ -124,7 +128,7 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 			addLoadListener(__onReady);
 		}
 		callbacks.push(func);
-	}
+	};
 	Hitch.ready = ready;
 })();
 
@@ -149,7 +153,7 @@ Hitch.ready(function(){
 		toProc = document.querySelectorAll('[x-hitch-interpret]');
 		for(i=0;i<toProc.length;i++){
 			if(toProc[i].tagName === 'STYLE'){
-				HitchCompiler(toProc[i].innerHTML,initer,window.location.path);
+				loads.push({"inline": toProc[i].innerHTML});
 			}else{
 				href = toProc[i].getAttribute('href');
 				loads.push(href);
