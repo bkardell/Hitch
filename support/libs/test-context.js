@@ -6,7 +6,7 @@ var g, jsdom = require('jsdom').jsdom,
 		var document, window; // mask these
 		document = jsdom("<html><head>" 
 							+ (headStuffPreHitch || '') 
-							+ '<script type="text/javascript" src="../../dist/hitch.js"></script>'
+							+ '<script type="text/javascript" src="../../dist/hitch-interpret.js"></script>'
 							+ (headStuffPostHitch || '')
 							+ '<title>Hitch Test Fixture</title>'
 							+ '</head>'
