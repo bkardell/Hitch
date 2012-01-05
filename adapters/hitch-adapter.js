@@ -83,14 +83,53 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					http.onreadystatechange = changeHandler;
 					http.send(null);
 				}
-			};
+			}
 		},
 		init: function(){ return this.getHTTPObject(); }
 	};
 }());
 
+(function(){
+	var conf = { 
+		o:{ s: window, a: 'addEventListener', e: 'DOMContentLoaded', r: 'removeEventListener' },
+		n:{ s: document, a: 'attachEvent',e: 'onreadystatechange',r: 'detachEvent'}
+	},
+	o = (document.addEventListener) ? conf.o : conf.n,
+	addLoadListener = function(func){
+		o.s[o.a](o.e, func, false);
+		o.s[o.a]('load', func, false);
+	},
+	removeLoadListener = function(func){
+		o.s[o.r](o.e, func, false);
+		o.s[o.r]('load', func, false);
+	},
+	callbacks = null,
+	done = false,
+	__onReady = function(){
+		done = true;
+		removeLoadListener(__onReady);
+		if (!callbacks) return;
+		for (var i = 0; i < callbacks.length; i++){
+			callbacks[i]();
+		}
+		callbacks = null;
+	},
+	ready = function(func){
+		if (done){
+			func();
+			return;
+		}
+		if (!callbacks){
+			callbacks = [];
+			addLoadListener(__onReady);
+		}
+		callbacks.push(func);
+	}
+	Hitch.ready = ready;
+})();
+
 Hitch.useManualInit();
-window.onload = function(){
+Hitch.ready(function(){
 	var loads = [], 
 		cache, 
 		toProc, 
@@ -122,4 +161,4 @@ window.onload = function(){
 	});
 	
 	
-};
+});
