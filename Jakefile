@@ -13,8 +13,8 @@ var fs = require('fs'),
 		'./test/compiler.js', 
 		'./test/hitch-adapter.js'
 	],
-	hitchJS = 'dist/hitch.js', // final path/name of uncompressed hitch
-	hitchJSmin = 'dist/hitch-min.js'; // final path/name of compressed hitch
+	hitchJS = 'dist/hitch-interpret.js', // final path/name of uncompressed hitch
+	hitchJSmin = 'dist/hitch-interpret-min.js'; // final path/name of compressed hitch
 
 desc("Removes the distribution folder");
 task("clean", [], function(){
@@ -45,7 +45,7 @@ task("compile", ["dist"], function(){
 });
 
 desc('Lint check, compile, min, test');
-task('default',['lint', 'compile', 'min', 'test'],function(){
+task('default',['lint', 'compile', 'min', 'min-engine', 'test'],function(){
 	util.log("Finished building CssPlugins!".green);
 });
 
@@ -65,6 +65,26 @@ task('min', ['compile'], function(){
 			util.log(err.red); 
 		} else {
 			util.log("Compressed ".green + hitchJSmin.green + " ...".green);
+		}
+	});
+});
+
+desc("Minification of engine file");
+task('min-engine', ['compile'], function(){
+	var jsp = require("uglify-js").parser,
+		pro = require("uglify-js").uglify,
+		orig_code = fs.readFileSync('./lib/engine.js', "utf-8"),
+		ast = jsp.parse(orig_code), // parse code and get the initial AST
+		final_code; 
+	
+	ast = pro.ast_mangle(ast), // get a new AST with mangled names
+	ast = pro.ast_squeeze(ast); // get an AST with compression optimizations
+	final_code = pro.gen_code(ast); // compressed code here
+	fs.writeFile('./dist/hitch-min.js', final_code, function(err){
+		if(err){ 
+			util.log(err.red); 
+		} else {
+			util.log("Compressed ".green + './lib/engine.js'.green + " ...".green);
 		}
 	});
 });
