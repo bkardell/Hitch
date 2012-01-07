@@ -2,7 +2,7 @@ Hitch.add([
 	{
 		name: '-jquery-animated',  
 		filter:   function(match,argsString){
-				return $(match).is(':animated');
+				return window.$ && $(match).is(':animated');
 	   }
 	},{
 		name: '-jquery-button',  
@@ -52,7 +52,6 @@ Hitch.add([
 		name: '-jquery-text',  
 		base: 'input[type=text]'
 	},
-	,
 	{
 		name: '-jquery-parent',  
 		base: ':not(:empty)'

@@ -27,10 +27,13 @@ var g, jsdom = require('jsdom').jsdom,
 		window.console = console;
 		window.XMLHttpRequest = function(){
 			var url;
-			this.open = function(m,u){ url = u; };
+			this.open = function(m,u){ url = u; 
+						console.log("open: " + url);
+			};
 			this.send = function(m,u){
 				var path = url.split('?')[0], file = url.substring(url.lastIndexOf('/'),url.indexOf('?'));
 				path = path.substring(0,path.lastIndexOf('/'));
+				console.log("open: " + fs.realpathSync(path) + file );
 				this.readyState = 4;
 				this.status = '200';
 

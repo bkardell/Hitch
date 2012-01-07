@@ -148,7 +148,6 @@ Hitch.ready(function(){
 	for(i=0;i<toProc.length;i++){
 		requires.push(toProc[i].getAttribute('x-hitch-requires'));
 	}
-	
 	Hitch.ajax.load(requires,null,'script',null,function(){
 		toProc = document.querySelectorAll('[x-hitch-interpret]');
 		for(i=0;i<toProc.length;i++){
@@ -159,6 +158,9 @@ Hitch.ready(function(){
 				loads.push(href);
 			}
 		};
+		for(i=0;i<toProc.length;i++){
+			toProc[i].parentNode.removeChild(toProc[i]);
+		}
 		Hitch.ajax.load(loads,initer,'css',null,function(){
 			Hitch.init();
 		});	
