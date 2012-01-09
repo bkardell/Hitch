@@ -1,0 +1,43 @@
+@-hitch-requires https://raw.github.com/bkardell/Hitch/master/plugins/math-plugins.js;
+
+
+.player{ 
+	border: 1px solid black; 
+	width: 20em; padding: 1em; 
+	display: inline-block; 
+	margin: 0.5em;
+}
+.player div:before{
+	font-weight: bold;
+}
+
+
+[data-score]:after, [data-level]:after{
+	content: url('images/sprites2.png');
+	background-color: blue;
+	height: 40px;
+	width: 40px;
+	display: block;
+	overflow: hidden;
+}
+
+*:-math-greaterthan(data-score,10){
+	border: 10px solid blue !important;
+}
+
+[data-score]:after{}
+
+[data-level]:after{}
+
+[data-name]:before{
+	content: "Character: ";
+}
+[data-score]:before{
+	content: "Score: ";
+}
+[data-race]:before{
+	content: "Race: ";
+}
+[data-level]:before{
+	content: "Level: ";
+}

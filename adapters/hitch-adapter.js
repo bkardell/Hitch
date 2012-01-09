@@ -158,9 +158,9 @@ Hitch.ready(function(){
 				loads.push(href);
 			}
 		};
-		for(i=0;i<toProc.length;i++){
-			toProc[i].parentNode.removeChild(toProc[i]);
-		}
+		//for(i=0;i<toProc.length;i++){
+		//	toProc[i].parentNode.removeChild(toProc[i]);
+		//}
 		Hitch.ajax.load(loads,initer,'css',null,function(){
 			Hitch.init();
 		});	
