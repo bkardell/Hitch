@@ -1,6 +1,7 @@
 Hitch.add([{
 	name: '-false-return',
 	base: '',
+	type: 'selector',
 	init: function(){
 		window['false-return-inited'] = true;
 	},
@@ -12,6 +13,7 @@ Hitch.add([{
 {	
 	name: '-true-return',
 	base: '',
+	type: 'selector',
 	init: function(){
 		window['true-return-inited'] = true;
 	},
