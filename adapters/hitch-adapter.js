@@ -15,7 +15,7 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					callback();
 				}
 			};
-			(document.body || document.getElementsByTagName('head')[0]).appendChild(s);
+			(document.head || document.getElementsByTagName('head')[0]).appendChild(s);
 		},1);
     };
 	return {
@@ -142,11 +142,17 @@ Hitch.ready(function(){
 		href,
 		initer = function(c){
 			Hitch.addCompiledRules(c);
-		};
+		}, 
+		url;
 	
-	toProc = document.querySelectorAll('[x-hitch-requires]');
+	toProc = document.querySelectorAll('[x-hitch-widget]');
 	for(i=0;i<toProc.length;i++){
-		requires.push(toProc[i].getAttribute('x-hitch-requires'));
+		url = toProc[i].getAttribute('x-hitch-widget');
+		if(url.indexOf('package:')===0){
+			requires.push("http://www.hitchjs.com/use/" + url.substring(8) + ".js");
+		}else{
+			requires.push(url);
+		}
 	}
 	Hitch.ajax.load(requires,null,'script',null,function(){
 		toProc = document.querySelectorAll('[x-hitch-interpret]');
@@ -157,7 +163,7 @@ Hitch.ready(function(){
 				href = toProc[i].getAttribute('href');
 				loads.push(href);
 			}
-		};
+		}
 		//for(i=0;i<toProc.length;i++){
 		//	toProc[i].parentNode.removeChild(toProc[i]);
 		//}

@@ -7,6 +7,7 @@ asyncTest("compiler is global", function(){
 	},200);
 });
 
+// Test simple const functionality in trivial case
 asyncTest("const check", function(){
 	var g = helper();
 	setTimeout(function(){
