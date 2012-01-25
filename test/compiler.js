@@ -50,6 +50,17 @@ asyncTest("const check substring problem", function(){
 	},200);
 });
 
+asyncTest("const check with definition from requires", function(){
+	var g = helper();
+	expect(2);
+	setTimeout(function(){
+		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n\n:-apple:-false-return(1){ color: green; } \n',function(comp){
+			start();
+			ok(comp.rules.length===1, 'there should be 1 rule');
+			equals(comp.rules[0].trim(), '/* was: div span.apple:-false-return(1) */\ndiv span.apple._0 { color: green; }','the rule should contain swapped constant values');
+		})
+	},200);
+});
 
 asyncTest("simple rule compiler test", function(){
 	var g = helper();
@@ -153,7 +164,6 @@ asyncTest("a inside b", function(){
 		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n\ndiv:-false-return(span:-true-return(2)){ color: green; } \n',function(comp){
 			start();
 			expect(25);
-			console.log(JSON.stringify(comp,null,4));
 			
 			ok(comp.rules.length===1, 'there should be 1 rule');
 		

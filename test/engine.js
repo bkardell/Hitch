@@ -16,7 +16,7 @@ asyncTest("rules and plugins exposed", function(){
 		ok(g.window.Hitch.getRules(), "Rules are exposed");
 		equals(g.window.Hitch.getRules().length, 0, "Rule count is 0 on initialization");
 		ok(g.window.Hitch.getHitches(), "Plugins are exposed");
-		equals(g.window.Hitch.getHitches().length, 1, "Plugin count is 1 on initialization");
+		equals(g.window.Hitch.getHitches().length, 2, "Plugin count is 2 on initialization");
 		start();
 	},200);
 });
@@ -25,12 +25,15 @@ asyncTest("plugins contain default set", function(){
 	// TODO: Maybe the data structure should be a hash instead of array 
 	// to allow for named indexing?
 	var g = helper();
+	expect(4);
 	setTimeout(function(){
-		var pluginsAny = g.window.Hitch.getHitches()[0];
-		equals(pluginsAny.name, "-hitch-any", "-hitch-any name");
-		equals(pluginsAny.base, '', "-hitch-any has an empty base");
-		// TODO: Work up a fixture for this test
-		// ok(pluginsAny.fn(match, '#test-fixture'), "-hitch-any fn works");
+		var any = g.window.Hitch.getHitches()[0],
+	        has = g.window.Hitch.getHitches()[1];
+		equals(any.name, "-hitch-any", "-hitch-any name");
+		equals(any.base, '', "-hitch-any has an empty base");
+		// TODO: Work up fixtures for these and make sure they really work...
+		equals(has.name, "-hitch-has", "-hitch-has name");
+		equals(has.base, '', "-hitch-has has an empty base");
 		start();
 	},200);
 });
@@ -46,7 +49,7 @@ asyncTest("plugins addition", function(){
 		badPlugin = { name: '' },
 		pluginsCount = g.window.Hitch.list().length;
 		g.window.Hitch.add(testPlugin);
-		equals(pluginsCount + 1, 2, "test plugin added");
+		equals(pluginsCount + 1, 3, "test plugin added");
 		raises(function(){
 			Hitch.add(badPlugin);
 		},"must not allow plugins without names");
@@ -161,6 +164,26 @@ asyncTest("precompiled rules can be added", function(){
 		ok(g.window['false-return-inited'], "false-return-inited global should be set");
 		ok(g.window['false-return'], "false-return global should be set");
 		ok(g.document.querySelectorAll('._0').length===0, 'Filter should not affect the test-fixture node');
+		start();
+	},200);
+	
+});
+
+
+
+QUnit.module("Hitch Defined Constants...");
+asyncTest("make sure hitch defined constants are added and recallable", function(){
+	// Note the fact that \n's in the object create a problem for our test...
+	var g = helper(
+		'',
+		'<script type="text/javascript" src="fake-hitch.js"></script>'
+	);	
+	expect(4);
+	setTimeout(function(){		
+		ok(g.window.Hitch.getConsts(), "there should be defined consts");
+		equals(g.window.Hitch.getConsts().length, 1, "there should be 1 defined consts");
+		equals(g.window.Hitch.getConsts()[0].name, "-apple", "the const name should be -apple");
+		equals(g.window.Hitch.getConsts()[0].replaceWith, "div span.apple", "the const replaceWith should be 'div span.apple'");		
 		start();
 	},200);
 	
