@@ -1,24 +1,27 @@
-Hitch = window.Hitch || { useManualInit: function(){}}; // for unit testing..
-// queue some files and call a callback with the result for each
-Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
-	var loaded = {};
-	var scriptTag =  function (src, callback) {
-        var s = document.createElement('script');
-        setTimeout(function(){
-			s.type = 'text/' + (src.type || 'javascript');
-			s.src = src.src || src;
-			s.async = false;
-			s.onreadystatechange = s.onload = function() {
-				var state = s.readyState;
-				if (!s.done && (!state || /loaded|complete/.test(state))) {
-					s.done = true;
-					callback();
-				}
-			};
-			(document.head || document.getElementsByTagName('head')[0]).appendChild(s);
-		},1);
-    };
-	return {
+/**
+	Hitch resources
+	Helper to retrieve plugin sources and process them.
+*/
+(function(hitch){
+	var 
+		loaded = {},
+		scriptTag = function (src, callback) {
+			var s = document.createElement('script');
+			setTimeout(function(){
+				s.type = 'text/' + (src.type || 'javascript');
+				s.src = src.src || src;
+				s.async = false;
+				s.onreadystatechange = s.onload = function() {
+					var state = s.readyState;
+					if (!s.done && (!state || /loaded|complete/.test(state))) {
+						s.done = true;
+						callback();
+					}
+				};
+				(document.head || document.getElementsByTagName('head')[0]).appendChild(s);
+			},1);
+		};
+	hitch.resources = {
 		getHTTPObject: function() {
 			var http = false;
 			if(typeof ActiveXObject != 'undefined') {
@@ -28,22 +31,22 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					catch (E) {http = false;}
 				}
 			} else if (window.XMLHttpRequest) {
-				
 				try { http = new XMLHttpRequest();}
 				catch (ex) {http = false;}
 			}
 			return http;
 		}, 
-		load : function(url,callback,type,errCallback,allDone) {
+		//				loads, initer, 'css', null, Hitch.init
+		load : function(url, callback, type, errCallback, allDone) {
+			// TODO: Might have issues if this is mistaken for a 'single' URL
 			var http, i, open = url.length, tag, checkDone, changeHandler;
-			Hitch.scriptsReady = allDone;
 			if(!url || url.length===0){ allDone(); }
 			if(type === 'script'){
 				// for loading scripts
 				checkDone = function(){
 					open--;
-					if(open===0){ 
-						allDone();
+					if(open===0){
+						allDone(); 
 					}
 				};
 				for(i=0;i<url.length;i++){
@@ -52,14 +55,11 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 			}else{
 				// for loading CSS
 				checkDone = function(c){
-					try{
-						callback(c);
-					}catch(e){ 
-						/* one bad apple doesn't spoil the bunch... */
-					}
+					try{ callback(c); }
+					catch(e){ /* one bad apple doesn't spoil the bunch... */ }
 					open--;
-					if(open===0){
-						allDone();
+					if(open===0){ 
+						allDone(); 
 					}
 				};
 				changeHandler = function () {
@@ -67,11 +67,13 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					if (http.readyState == 4) {
 						if(http.status == 200) {
 							result = "";
-							if(http.responseText) result = http.responseText;
-							HitchCompiler(result,checkDone);
+							if(http.responseText) { result = http.responseText; }
+							HitchCompiler(result, checkDone);
 						} else {
 							open--;
-							if(open===0){ allDone(); }
+							if(open===0){ 
+								allDone(); 
+							}
 						}
 					}
 				};
@@ -79,21 +81,25 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					if(url[i].inline){
 						HitchCompiler(url[i].inline, checkDone);
 					}else{
-						http = this.init(); 
+						http = this.getHTTPObject(); 
 						if(!http) return;
-						url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")  + "h_id=" + new Date().getTime();
+						// TODO: Do we always want to cache-bust?
+						url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")	 + "h_id=" + new Date().getTime();
 						http.open("GET", url[i], true);
 						http.onreadystatechange = changeHandler;
 						http.send(null);
 					}
 				}
 			}
-		},
-		init: function(){ return this.getHTTPObject(); }
+		}
 	};
-}());
+})(Hitch);
 
-(function(){
+/**
+	Hitch Ready
+	Utility to create a Hitch event hook
+*/
+(function(hitch){
 	var conf = { 
 		o:{ s: window, a: 'addEventListener', e: 'DOMContentLoaded', r: 'removeEventListener' },
 		n:{ s: document, a: 'attachEvent',e: 'onreadystatechange',r: 'detachEvent'}
@@ -129,48 +135,49 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 		}
 		callbacks.push(func);
 	};
-	Hitch.ready = ready;
-})();
+	hitch.ready = ready;
+})(Hitch);
 
-Hitch.useManualInit();
 Hitch.ready(function(){
 	var loads = [], 
-		cache, 
+		requires = [],
 		toProc, 
 		i,
-		requires = [],
-		href,
 		initer = function(c){
 			Hitch.addCompiledRules(c);
 		}, 
-		url;
+		url,
+		widgetSelector = '[x-hitch-widget]',
+		interpretSelector = '[x-hitch-interpret]';
 	
-	toProc = document.querySelectorAll('[x-hitch-widget]');
+	toProc = document.querySelectorAll(widgetSelector);
+	
 	for(i=0;i<toProc.length;i++){
 		url = toProc[i].getAttribute('x-hitch-widget');
+		// TODO: This is in 2 places (here and compiler)
 		if(url.indexOf('package:')===0){
 			requires.push("http://www.hitchjs.com/use/" + url.substring(8) + ".js");
 		}else{
 			requires.push(url);
 		}
 	}
-	Hitch.ajax.load(requires,null,'script',null,function(){
-		toProc = document.querySelectorAll('[x-hitch-interpret]');
-		for(i=0;i<toProc.length;i++){
-			if(toProc[i].tagName === 'STYLE'){
-				loads.push({"inline": toProc[i].innerHTML});
-			}else{
-				href = toProc[i].getAttribute('href');
-				loads.push(href);
-			}
+	
+	// TODO: This is in 2 places (here and compiler)
+	if(requires.length > 0){
+		Hitch.resources.load(requires, null, 'script', null, function(){ /* do nothing */ });
+	}
+	
+	toProc = document.querySelectorAll(interpretSelector);
+	
+	for(i=0;i<toProc.length;i++){
+		if(toProc[i].tagName === 'STYLE'){
+			loads.push({"inline": toProc[i].innerHTML});
+		}else{
+			loads.push(toProc[i].getAttribute('href'));
 		}
-		//for(i=0;i<toProc.length;i++){
-		//	toProc[i].parentNode.removeChild(toProc[i]);
-		//}
-		Hitch.ajax.load(loads,initer,'css',null,function(){
-			Hitch.init();
-		});	
-	});
+	}
 	
-	
+	if(loads.length > 0){
+		Hitch.resources.load(loads, initer, 'css', null, Hitch.init);
+	}
 });

@@ -4,10 +4,10 @@ Hitch.add([{
 	type: 'selector',
 	"const": {name: "-apple", replaceWith: "div span.apple"},
 	init: function(){
-		window['false-return-inited'] = true;
+		window['false-return-link-inited'] = true;
 	},
 	filter: function(match, args) { 
-		window['false-return'] = true; 
+		window['false-return-link'] = true; 
 		return false; 
 	}
 },

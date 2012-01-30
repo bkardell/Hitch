@@ -1,4 +1,4 @@
-QUnit.module("HitchCompiler");
+QUnit.module("Hitch Compiler");
 asyncTest("compiler is global", function(){
 	var g = helper();
 	setTimeout(function(){
@@ -80,7 +80,6 @@ asyncTest("simple rule compiler test", function(){
 		})
 	},200);
 });
-
 
 asyncTest("simple rule compiler test trailing irrelevant segment", function(){
 	var g = helper();

@@ -5,6 +5,8 @@ var fs = require('fs'),
 	rimraf = require('rimraf'), // provides recursive dir deleting
 	srcFiles = [
 		'./lib/engine.js', 
+		'./lib/dom.js',
+		'./lib/plugins.js',
 		'./lib/compiler.js', 
 		'./adapters/hitch-adapter.js'
 	],
@@ -50,7 +52,7 @@ task('default',['lint', 'compile', 'min', 'min-engine', 'test'],function(){
 });
 
 desc("Minification of source files");
-task('min', ['compile'], function(){
+task('min', [], function(){
 	var jsp = require("uglify-js").parser,
 		pro = require("uglify-js").uglify,
 		orig_code = fs.readFileSync(hitchJS, "utf-8"),
@@ -70,7 +72,7 @@ task('min', ['compile'], function(){
 });
 
 desc("Minification of engine file");
-task('min-engine', ['compile'], function(){
+task('min-engine', [], function(){
 	var jsp = require("uglify-js").parser,
 		pro = require("uglify-js").uglify,
 		orig_code = fs.readFileSync('./lib/engine.js', "utf-8"),
@@ -122,16 +124,12 @@ task('lint', [], function(){
 });
 
 desc("Run QUnit tests");
-task("test", ['lint','compile'], function(){
+task("test", ['lint', 'compile'], function(){
 	var qunit = require('qunit'), 
-		source, 
 		test,
-		context = [];
-	for(var i = 0; i < srcFiles.length; i++){
-		// this is junky - QUnit forces a 1-1 match on source and test
-		// TODO: Look at libs like Jasmine for spec style testing
-		// TODO: Maybe change QUnit to support dynamic src and test discovery
-		source = srcFiles[i];
+		context = [],
+		i;
+	for(i = 0; i < testFiles.length; i++){
 		test = testFiles[i];
 		context.push({
 			deps: [], 
