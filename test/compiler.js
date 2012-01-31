@@ -14,7 +14,7 @@ asyncTest("const check", function(){
 		g.window.HitchCompiler('@-hitch-const -foo-bar div, .x; \n h1{ color: green; } \n:-foo-bar{ color: red; } \nspan{ color: green; } \n',function(comp){
 			start();
 			ok(comp.rules.length===3, 'there should be 3 rules');
-			equals(comp.rules[1].trim(), 'div, .x { color: red; }');
+			equals(comp.rules[1].trim(), 'div, .x { color: red; }', 'should be div, .x { color: red; }');
 		})
 	},200);
 });
@@ -198,4 +198,170 @@ asyncTest("a inside b", function(){
 		})
 	},200);
 });
+
+
+asyncTest("a inside b - single line comment outside rule", function(){
+	var g = helper();
+	setTimeout(function(){
+		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n/* You suck */\ndiv:-false-return(span:-true-return(2)){ color: green; } \n',function(comp){
+			start();
+			expect(25);
+			
+			ok(comp.rules.length===1, 'there should be 1 rule');
+		
+			ok(comp.segIndex.span, 'there should be a span entry in segIndex');
+			ok(comp.segIndex.span.hitches[":-true-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.span.hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.span.hitches[":-true-return"][0].sid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].rid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].cid,"1");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].args,"2");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex.div, 'there should be a div entry in segIndex');
+			ok(comp.segIndex.div.hitches[":-false-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.div.hitches[":-false-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.div.hitches[":-false-return"][0].sid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].rid,"1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].cid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].args,"span._1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');
+			ok(comp.segIndex['div span'].hitches[":-true-return"], "true return hitch should be in the segIndex");
+			ok(comp.segIndex['div span'].hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].sid,"1", "the sid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].rid,"1", "the rid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].cid,"1", "the cid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].args,"2", "the args should be '2'");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].base,"*", "the base should be *");
+		})
+	},200);
+});
+
+asyncTest("a inside b - multi line comment outside rule", function(){
+	var g = helper();
+	setTimeout(function(){
+		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n/* \n You suck \n */\ndiv:-false-return(span:-true-return(2)){ color: green; } \n',function(comp){
+			start();
+			expect(25);
+			ok(comp.rules.length===1, 'there should be 1 rule');
+		
+			ok(comp.segIndex.span, 'there should be a span entry in segIndex');
+			ok(comp.segIndex.span.hitches[":-true-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.span.hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.span.hitches[":-true-return"][0].sid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].rid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].cid,"1");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].args,"2");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex.div, 'there should be a div entry in segIndex');
+			ok(comp.segIndex.div.hitches[":-false-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.div.hitches[":-false-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.div.hitches[":-false-return"][0].sid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].rid,"1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].cid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].args,"span._1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');
+			ok(comp.segIndex['div span'].hitches[":-true-return"], "true return hitch should be in the segIndex");
+			ok(comp.segIndex['div span'].hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].sid,"1", "the sid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].rid,"1", "the rid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].cid,"1", "the cid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].args,"2", "the args should be '2'");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].base,"*", "the base should be *");
+		})
+	},200);
+});
+
+
+asyncTest("a inside b - @import", function(){
+	var g = helper();
+	setTimeout(function(){
+		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n@import url("poop.css");\n\ndiv:-false-return(span:-true-return(2)){ color: green; } \n',function(comp){
+			start();
+			expect(25);
+			ok(comp.rules.length===1, 'there should be 1 rule');
+		
+			ok(comp.segIndex.span, 'there should be a span entry in segIndex');
+			ok(comp.segIndex.span.hitches[":-true-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.span.hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.span.hitches[":-true-return"][0].sid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].rid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].cid,"1");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].args,"2");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex.div, 'there should be a div entry in segIndex');
+			ok(comp.segIndex.div.hitches[":-false-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.div.hitches[":-false-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.div.hitches[":-false-return"][0].sid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].rid,"1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].cid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].args,"span._1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');
+			ok(comp.segIndex['div span'].hitches[":-true-return"], "true return hitch should be in the segIndex");
+			ok(comp.segIndex['div span'].hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].sid,"1", "the sid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].rid,"1", "the rid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].cid,"1", "the cid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].args,"2", "the args should be '2'");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].base,"*", "the base should be *");
+		})
+	},200);
+});
+
+
+
+asyncTest("a inside b - @page", function(){
+	var g = helper();
+	setTimeout(function(){
+		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n@page :right { \nmargin: 1em; \n}\n\ndiv:-false-return(span:-true-return(2)){ color: green; } \n',function(comp){
+			start();
+			expect(25);
+			ok(comp.rules.length===1, 'there should be 1 rule');
+		
+			ok(comp.segIndex.span, 'there should be a span entry in segIndex');
+			ok(comp.segIndex.span.hitches[":-true-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.span.hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.span.hitches[":-true-return"][0].sid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].rid,"0");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].cid,"1");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].args,"2");
+			equals(comp.segIndex.span.hitches[":-true-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex.div, 'there should be a div entry in segIndex');
+			ok(comp.segIndex.div.hitches[":-false-return"], "false return hitch should be in the segIndex");
+			ok(comp.segIndex.div.hitches[":-false-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex.div.hitches[":-false-return"][0].sid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].rid,"1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].cid,"0");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].args,"span._1");
+			equals(comp.segIndex.div.hitches[":-false-return"][0].base,"*");
+			
+		
+			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');
+			ok(comp.segIndex['div span'].hitches[":-true-return"], "true return hitch should be in the segIndex");
+			ok(comp.segIndex['div span'].hitches[":-true-return"].length===1,'There should be only 1 applicable hitch');
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].sid,"1", "the sid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].rid,"1", "the rid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].cid,"1", "the cid should be 1");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].args,"2", "the args should be '2'");
+			equals(comp.segIndex['div span'].hitches[":-true-return"][0].base,"*", "the base should be *");
+		})
+	},200);
+});
+
 
