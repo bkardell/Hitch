@@ -47,7 +47,11 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					}
 				};
 				for(i=0;i<url.length;i++){
-					scriptTag(url[i],checkDone);
+					if(!loaded[url[i]]){ 
+						loaded[url[i]] = true; 
+						scriptTag(url[i],checkDone);
+					}
+					
 				} 
 			}else{
 				// for loading CSS
@@ -79,12 +83,15 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 					if(url[i].inline){
 						HitchCompiler(url[i].inline, checkDone);
 					}else{
-						http = this.init(); 
-						if(!http) return;
-						url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")  + "h_id=" + new Date().getTime();
-						http.open("GET", url[i], true);
-						http.onreadystatechange = changeHandler;
-						http.send(null);
+						if(!loaded[url[i]]){ 
+							loaded[url[i]] = true; 
+							http = this.init(); 
+							if(!http) return;
+							url[i] += ((url[i].indexOf("?")+1) ? "&" : "?")  + "h_id=" + new Date().getTime();
+							http.open("GET", url[i], true);
+							http.onreadystatechange = changeHandler;
+							http.send(null);
+						}
 					}
 				}
 			}
@@ -132,6 +139,17 @@ Hitch.ajax = (function(){  // temporary until we get Hitch created elsewhere...
 	Hitch.ready = ready;
 })();
 
+(function(){
+	var h = document.getElementsByTagName('head')[0];
+	var compiled = h.querySelectorAll('link[x-hitch-compiled]');
+	var linktag, precompileds = [];
+	for(var i=0;i<compiled.length;i++){
+		linktag = compiled[i];
+		precompileds.push(linktag.getAttribute('href').replace('.css', '-compiled.js'));
+	}
+	Hitch.ajax.load(precompileds,null,'script',null,function(){});
+}());
+
 Hitch.useManualInit();
 Hitch.ready(function(){
 	var loads = [], 
@@ -144,7 +162,6 @@ Hitch.ready(function(){
 			Hitch.addCompiledRules(c);
 		}, 
 		url;
-	
 	toProc = document.querySelectorAll('[x-hitch-widget]');
 	for(i=0;i<toProc.length;i++){
 		url = toProc[i].getAttribute('x-hitch-widget');
