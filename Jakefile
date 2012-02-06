@@ -5,6 +5,10 @@ var fs = require('fs'),
 	rimraf = require('rimraf'), // provides recursive dir deleting
 	srcFiles = [
 		'./lib/engine.js', 
+		'./lib/dom.js',
+		'./lib/plugins.js',
+		'./lib/resource.js',
+		'./lib/events.js',
 		'./lib/compiler.js', 
 		'./adapters/hitch-adapter.js'
 	],
@@ -127,11 +131,8 @@ task("test", ['lint','compile'], function(){
 		source, 
 		test,
 		context = [];
-	for(var i = 0; i < srcFiles.length; i++){
-		// this is junky - QUnit forces a 1-1 match on source and test
-		// TODO: Look at libs like Jasmine for spec style testing
-		// TODO: Maybe change QUnit to support dynamic src and test discovery
-		source = srcFiles[i];
+	qunit.options.assertions = false;
+	for(var i = 0; i < testFiles.length; i++){
 		test = testFiles[i];
 		context.push({
 			deps: [], 

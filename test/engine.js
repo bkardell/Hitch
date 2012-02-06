@@ -159,7 +159,7 @@ asyncTest("precompiled rules can be added", function(){
 	expect(5);
 	setTimeout(function(){		
 		ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
-		g.window.console.log("rulez: " + JSON.stringify(g.window.Hitch.getRules(),null,4));
+		//g.window.console.log("rulez: " + JSON.stringify(g.window.Hitch.getRules(),null,4));
 		equals(g.window.Hitch.getRules().length, 1, g.window.Hitch.getRules().length + " expected 1");
 		ok(g.window['false-return-inited'], "false-return-inited global should be set");
 		ok(g.window['false-return'], "false-return global should be set");

@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>dev-fixture</title>
+		<script src="../dist/hitch-interpret.js" type="text/javascript" charset="utf-8"></script>
+		<!-- Example with JavaScript API -->
+		<script type="text/javascript">
+			Hitch.add(
+				{
+					name: '-dev-js-api',
+					base: '.dev-js-api',
+					filter: function(match, args){
+						return true;
+					}
+				}
+			);
+		</script>
+		
+		<!-- Example with STYLE tag interpreted -->
+		<style x-hitch-interpret="true">
+			span:-hitch-has(span.has){
+				color: red;
+			}
+			span:-hitch-any(.any){
+				color: purple;
+			}
+			:-dev-js-api(){
+				color: green;
+			}
+		</style>
+		
+		<!-- Example with STYLE tag interpreted with @ rule -->
+		<style x-hitch-interpret="true">
+			@-hitch-requires dev-css-require.js;
+			
+			:-dev-css-require(){
+				color:  blue;
+			}
+		</style>
+		
+		<!-- Example with LINK tag interpreted -->
+		<link href="dev-css.css" x-hitch-interpret="true" type="text/css" rel="stylesheet"></link>
+		
+	</head>
+	<body id="dev-fixture">
+		<h1 id="development_fixture">Development Fixture</h1>
+		
+		<h4>Built-in Demo</h4>
+		<div>
+			<p><b>-hitch-has:</b>&nbsp;<span><span class="has"></span>Should be Red</span></p>
+			<p><b>-hitch-any:</b>&nbsp;<span class="any">Should be Purple</span></p>
+		</div>
+		<h4>JS API Demo</h4>
+		<div>
+			<p class="dev-js-api">Should be Green</p>
+		</div>
+		
+		<h4>CSS at-rule Demo</h4>
+		<div>
+			<p class="dev-css-require">Should be Blue</p>
+		</div>
+		
+		<h4>Widget Demo</h4>
+		<!-- Example with "widget" -->
+		<div x-hitch-widget="dev-widget.js">
+			<span class="dev-widget"></span>
+		</div>
+	</body>
+</html>

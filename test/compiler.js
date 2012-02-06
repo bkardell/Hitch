@@ -373,7 +373,7 @@ asyncTest("a inside b - @media", function(){
 		g.window.HitchCompiler('@-hitch-requires ./fake-hitch.js;\n@media print{\nBODY {\nfont-size: 10pt;\n }\n\nspan {\nfont-size: 20pt;\n }\n}\n\ndiv:-false-return(span:-true-return(2)){ color: green; } \n',function(comp){
 			start();
 			expect(25);
-			g.window.console.log("RULES: " + comp.rules);
+			//g.window.console.log("RULES: " + comp.rules);
 			ok(comp.rules.length===1, 'there should be 1 rule');
 		
 			ok(comp.segIndex.span, 'there should be a span entry in segIndex');
