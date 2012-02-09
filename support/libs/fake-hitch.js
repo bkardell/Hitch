@@ -2,7 +2,7 @@ Hitch.add([{
 	name: '-false-return',
 	base: '',
 	type: 'selector',
-	"const": {name: "-apple", replaceWith: "div span.apple"},
+	"const": {name: ":-apple", replaceWith: "div span.apple"},
 	init: function(){
 		window['false-return-inited'] = true;
 	},

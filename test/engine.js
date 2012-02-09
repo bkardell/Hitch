@@ -182,7 +182,7 @@ asyncTest("make sure hitch defined constants are added and recallable", function
 	setTimeout(function(){		
 		ok(g.window.Hitch.getConsts(), "there should be defined consts");
 		equals(g.window.Hitch.getConsts().length, 1, "there should be 1 defined consts");
-		equals(g.window.Hitch.getConsts()[0].name, "-apple", "the const name should be -apple");
+		equals(g.window.Hitch.getConsts()[0].name, ":-apple", "the const name should be :-apple");
 		equals(g.window.Hitch.getConsts()[0].replaceWith, "div span.apple", "the const replaceWith should be 'div span.apple'");		
 		start();
 	},200);

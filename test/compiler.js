@@ -11,7 +11,7 @@ asyncTest("compiler is global", function(){
 asyncTest("const check", function(){
 	var g = helper();
 	setTimeout(function(){
-		g.window.HitchCompiler('@-hitch-const -foo-bar div, .x; \n h1{ color: green; } \n:-foo-bar{ color: red; } \nspan{ color: green; } \n',function(comp){
+		g.window.HitchCompiler('@-hitch-const :-foo-bar div, .x; \n h1{ color: green; } \n:-foo-bar{ color: red; } \nspan{ color: green; } \n',function(comp){
 			start();
 			ok(comp.rules.length===3, 'there should be 3 rules');
 			equals(comp.rules[1].trim(), 'div, .x { color: red; }', 'should be div, .x { color: red; }');
@@ -23,7 +23,7 @@ asyncTest("const check", function(){
 asyncTest("const check - all replaced", function(){
 	var g = helper();
 	setTimeout(function(){
-		g.window.HitchCompiler('@-hitch-const -foo-bar div, .x; \n h1{ color: green; } \n:-foo-bar{ color: red; } \nspan :-foo-bar{ color: green; } \n',function(comp){
+		g.window.HitchCompiler('@-hitch-const :-foo-bar div, .x; \n h1{ color: green; } \n:-foo-bar{ color: red; } \nspan :-foo-bar{ color: green; } \n',function(comp){
 			start();
 			ok(comp.rules.length===3, 'there should be 3 rules');
 			equals(comp.rules[1].trim(), 'div, .x { color: red; }','the rule should contain swapped constant values');
@@ -33,15 +33,15 @@ asyncTest("const check - all replaced", function(){
 });
 
 // Make sure that shorter consts defined earlier don't incorrectly swap out longer ones... As in:
-// @-hitch-const -foo-bar div;
-// @-hitch-const -foo-bar2 span;
+// @-hitch-const :-foo-bar div;
+// @-hitch-const :-foo-bar2 span;
 // :foo-bar2{ color: blue; }
 // You don't want that to become:
 // div2{ color: blue; }
 asyncTest("const check substring problem", function(){
 	var g = helper();
 	setTimeout(function(){
-		g.window.HitchCompiler('@-hitch-const -foo-bar div, .x; \n @-hitch-const -foo-bar2 span, .y; \n h1{ color: green; } \n:-foo-bar{ color: red; } \n:-foo-bar2{ color: green; } \n',function(comp){
+		g.window.HitchCompiler('@-hitch-const :-foo-bar div, .x; \n @-hitch-const :-foo-bar2 span, .y; \n h1{ color: green; } \n:-foo-bar{ color: red; } \n:-foo-bar2{ color: green; } \n',function(comp){
 			start();
 			ok(comp.rules.length===3, 'there should be 3 rules');
 			equals(comp.rules[1].trim(), 'div, .x { color: red; }','the rule should contain swapped constant values');
