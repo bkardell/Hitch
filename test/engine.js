@@ -27,6 +27,7 @@ asyncTest("plugins contain default set", function(){
 	var g = helper();
 	expect(4);
 	setTimeout(function(){
+		
 		var any = g.window.Hitch.getHitches()[0],
 	        has = g.window.Hitch.getHitches()[1];
 		equals(any.name, "-hitch-any", "-hitch-any name");
@@ -181,9 +182,11 @@ asyncTest("make sure hitch defined constants are added and recallable", function
 	expect(4);
 	setTimeout(function(){		
 		ok(g.window.Hitch.getConsts(), "there should be defined consts");
-		equals(g.window.Hitch.getConsts().length, 1, "there should be 1 defined consts");
-		equals(g.window.Hitch.getConsts()[0].name, ":-apple", "the const name should be :-apple");
-		equals(g.window.Hitch.getConsts()[0].replaceWith, "div span.apple", "the const replaceWith should be 'div span.apple'");		
+		
+		// Should be two because we predefine one currently -hitch-experimental-
+		equals(g.window.Hitch.getConsts().length, 2, "there should be 2 defined consts");
+		equals(g.window.Hitch.getConsts()[1].name, ":-apple", "the const name should be :-apple");
+		equals(g.window.Hitch.getConsts()[1].replaceWith, "div span.apple", "the const replaceWith should be 'div span.apple'");		
 		start();
 	},200);
 	
