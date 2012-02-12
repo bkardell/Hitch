@@ -4,7 +4,7 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>dev-fixture</title>
-		<script src="../dist/hitch-interpret.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../dist/hitch.js" type="text/javascript" charset="utf-8"></script>
 		<!-- Example with JavaScript API -->
 		<script type="text/javascript">
 			Hitch.add(
@@ -23,7 +23,7 @@
 			span:-hitch-has(span.has){
 				color: red;
 			}
-			span:-hitch-any(.any){
+			span:-hitch-anyof(.any){
 				color: purple;
 			}
 			:-dev-js-api(){
@@ -43,6 +43,11 @@
 		<!-- Example with LINK tag interpreted -->
 		<link href="dev-css.css" x-hitch-interpret="true" type="text/css" rel="stylesheet"></link>
 		
+		<style x-hitch-interpret="true">
+			.cars div:-hitch-oneof(.used, .cheap){
+				color: green;
+			}
+		</style>
 	</head>
 	<body id="dev-fixture">
 		<h1 id="development_fixture">Development Fixture</h1>
@@ -66,6 +71,34 @@
 		<!-- Example with "widget" -->
 		<div x-hitch-widget="dev-widget.js">
 			<span class="dev-widget"></span>
+		</div>
+
+		<h4>Wiki Demo</h4>
+
+		<div class="cars">
+			<div class="domestic">
+				<div class="new">
+					<div class="cheap"><p class="car">2012 Ford Fiesta</p></div>
+					<div class="quality"><p class="car">2012 Chrysler 300</p></div>
+					<div class="quality"><p class="car">2012 Dodge Charger</p></div>
+				</div>
+				<div class="used">
+					<div class="cheap"><p class="car">2009 Ford Fiesta</p></div>
+					<div class="cheap"><p class="car">2004 Chevy Malibu</p></div>
+					<div class="quality"><p class="car">2010 Dodge Charger</p></div>
+				</div>
+			</div>
+			<div class="foreign">
+				<div class="new">
+					<div class="cheap"><p class="car">2012 Kia Forte</p></div>
+					<div class="quality"><p class="car">2012 BMW 525i</p></div>
+				</div>
+				<div class="used">
+					<div class="cheap"><p class="car">2009 Kia Forte</p></div>
+					<div class="cheap"><p class="car">2005 Toyota Camry</p></div>
+					<div class="quality"><p class="car">2009 Audi R5</p></div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
