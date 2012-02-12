@@ -17,8 +17,8 @@ var fs = require('fs'),
 		'./test/compiler.js', 
 		'./test/hitch-adapter.js'
 	],
-	hitchJS = 'dist/hitch-interpret.js', // final path/name of uncompressed hitch
-	hitchJSmin = 'dist/hitch-interpret-min.js'; // final path/name of compressed hitch
+	hitchJS = 'dist/hitch.js', // final path/name of uncompressed hitch
+	hitchJSmin = 'dist/hitch-min.js'; // final path/name of compressed hitch
 
 desc("Removes the distribution folder");
 task("clean", [], function(){

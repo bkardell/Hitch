@@ -4,7 +4,7 @@ spawn = require("child_process").spawn,
 fs = require('fs'),
 helper = function(headStuffPreHitch, headStuffPostHitch, fixtureCode) {
 	var document, window; // mask these
-	document = jsdom("<html><head>" + (headStuffPreHitch || '') + '<script type="text/javascript" src="../../dist/hitch-interpret.js"></script>' + (headStuffPostHitch || '') + '<title>Hitch Test Fixture</title>' + '</head>' + '<body><div id="test-fixture">' + (fixtureCode || '') + '</div></body> </html>', null, {
+	document = jsdom("<html><head>" + (headStuffPreHitch || '') + '<script type="text/javascript" src="../../dist/hitch.js"></script>' + (headStuffPostHitch || '') + '<title>Hitch Test Fixture</title>' + '</head>' + '<body><div id="test-fixture">' + (fixtureCode || '') + '</div></body> </html>', null, {
 		features: {
 			ProcessExternalResources: ['script'],
 			FetchExternalResources: ['script', 'img', 'css', 'frame', 'link'],

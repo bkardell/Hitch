@@ -30,8 +30,8 @@ asyncTest("plugins contain default set", function(){
 		
 		var any = g.window.Hitch.getHitches()[0],
 	        has = g.window.Hitch.getHitches()[1];
-		equals(any.name, "-hitch-any", "-hitch-any name");
-		equals(any.base, '', "-hitch-any has an empty base");
+		equals(any.name, "-hitch-is", "-hitch-any name");
+		equals(any.base, '', "-hitch-is has an empty base");
 		// TODO: Work up fixtures for these and make sure they really work...
 		equals(has.name, "-hitch-has", "-hitch-has name");
 		equals(has.base, '', "-hitch-has has an empty base");
