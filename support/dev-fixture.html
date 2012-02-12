@@ -44,7 +44,7 @@
 		<link href="dev-css.css" x-hitch-interpret="true" type="text/css" rel="stylesheet"></link>
 		
 		<style x-hitch-interpret="true">
-			.cars div:-hitch-oneof(.used, .cheap){
+			.cars div:-hitch-allof(.new > div, .fast) p{
 				color: green;
 			}
 		</style>
@@ -74,18 +74,17 @@
 		</div>
 
 		<h4>Wiki Demo</h4>
-
 		<div class="cars">
 			<div class="domestic">
 				<div class="new">
-					<div class="cheap"><p class="car">2012 Ford Fiesta</p></div>
-					<div class="quality"><p class="car">2012 Chrysler 300</p></div>
-					<div class="quality"><p class="car">2012 Dodge Charger</p></div>
+					<div class="cheap small efficient"><p class="car">2012 Ford Fiesta</p></div>
+					<div class="quality efficient"><p class="car">2012 Chrysler 300</p></div>
+					<div class="quality fast"><p class="car">2012 Dodge Charger</p></div>
 				</div>
 				<div class="used">
-					<div class="cheap"><p class="car">2009 Ford Fiesta</p></div>
+					<div class="cheap small efficient"><p class="car">2009 Ford Fiesta</p></div>
 					<div class="cheap"><p class="car">2004 Chevy Malibu</p></div>
-					<div class="quality"><p class="car">2010 Dodge Charger</p></div>
+					<div class="quality fast"><p class="car">2010 Dodge Charger</p></div>
 				</div>
 			</div>
 			<div class="foreign">
@@ -95,7 +94,7 @@
 				</div>
 				<div class="used">
 					<div class="cheap"><p class="car">2009 Kia Forte</p></div>
-					<div class="cheap"><p class="car">2005 Toyota Camry</p></div>
+					<div class="cheap efficient"><p class="car">2005 Toyota Camry</p></div>
 					<div class="quality"><p class="car">2009 Audi R5</p></div>
 				</div>
 			</div>
