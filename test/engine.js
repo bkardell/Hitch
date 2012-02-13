@@ -16,7 +16,7 @@ asyncTest("rules and plugins exposed", function(){
 		ok(g.window.Hitch.getRules(), "Rules are exposed");
 		equals(g.window.Hitch.getRules().length, 0, "Rule count is 0 on initialization");
 		ok(g.window.Hitch.getHitches(), "Plugins are exposed");
-		equals(g.window.Hitch.getHitches().length, 2, "Plugin count is 2 on initialization");
+		equals(g.window.Hitch.getHitches().length, 5, "Plugin count is 5 on initialization");
 		start();
 	},200);
 });
@@ -25,13 +25,28 @@ asyncTest("plugins contain default set", function(){
 	// TODO: Maybe the data structure should be a hash instead of array 
 	// to allow for named indexing?
 	var g = helper();
-	expect(4);
+	expect(10);
 	setTimeout(function(){
 		
-		var any = g.window.Hitch.getHitches()[0],
-	        has = g.window.Hitch.getHitches()[1];
-		equals(any.name, "-hitch-is", "-hitch-any name");
-		equals(any.base, '', "-hitch-is has an empty base");
+		var hitches = g.window.Hitch.getHitches(),
+		    any = hitches[0],
+			none = hitches[1],
+			one = hitches[2],
+			all = hitches[3],
+	        has = hitches[4];
+	        
+		equals(any.name, "-hitch-anyof", "-hitch-anyof name");
+		equals(any.base, '', "-hitch-anyof has an empty base");
+		
+		equals(none.name, "-hitch-noneof", "-hitch-noneof name");
+		equals(none.base, '', "-hitch-noneof has an empty base");
+		
+		equals(all.name, "-hitch-allof", "-hitch-allof name");
+		equals(all.base, '', "-hitch-allof has an empty base");
+		
+		equals(one.name, "-hitch-oneof", "-hitch-oneof name");
+		equals(one.base, '', "-hitch-oneof has an empty base");
+		
 		// TODO: Work up fixtures for these and make sure they really work...
 		equals(has.name, "-hitch-has", "-hitch-has name");
 		equals(has.base, '', "-hitch-has has an empty base");
@@ -50,7 +65,7 @@ asyncTest("plugins addition", function(){
 		badPlugin = { name: '' },
 		pluginsCount = g.window.Hitch.list().length;
 		g.window.Hitch.add(testPlugin);
-		equals(pluginsCount + 1, 3, "test plugin added");
+		equals(pluginsCount + 1, 6, "test plugin added");
 		raises(function(){
 			Hitch.add(badPlugin);
 		},"must not allow plugins without names");
