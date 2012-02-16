@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<link href="http://www.hitchjs.com/describe.css" type="text/css" rel="stylesheet"></link>
+	</head>
+	<body>
+	<div class="hitch-info"><div>Hitch "Native" - out of the box:<br/>Version 0.5<br /></div></div>
+	
+	<h2>Hitch Native Docs</h2>
+
+	<p>This document describes additional expressive capabilities that come with the hitch library
+	itself and are gained by the inclusion of hitch.js.</p>
+	
+	<h2>Table of Contents</h2>
+	<ol class="manual toc">
+		<li>1. <a href="#css">CSS</a>
+			<ol>
+				<li>1.1 <a href="#atRules">@ Rules</a>
+					<ol>
+						<li>1.1.2 <a href="#requires">@-hitch-requires</a></li>
+						<li>1.1.1 <a href="#consts">@-hitch-const</a>
+							<ol>
+								<li>1.1.1.1 <a href="#args">:-hitch-args</a></li>
+								<li>1.1.1.2 <a href="#beta">-hitch-beta-</a></li>
+							</ol>
+						</li>
+					</ol>
+				</li>
+				<li>1.2 <a href="#pseudos">Pseduo Selectors</a>
+					<ol>
+						<li>1.1.2 <a href="#logical">Logical</a>
+							<ol>
+								<li>1.1.2.1 <a href="#anyof">:-hitch-anyof</a></li>
+								<li>1.1.2.2 <a href="#allof">:-hitch-allof</a></li>
+								<li>1.1.2.3 <a href="#noneof">:-hitch-noneof</a></li>
+								<li>1.1.2.4 <a href="#oneof">:-hitch-oneof</a></li>	
+							</ol>
+						</li>
+						<li>1.1.3 <a href="#structural">Structural</a>
+							<ol>
+								<li>1.1.3.1 <a href="#anyof">:-hitch-has</a></li>
+							</ol>
+						</li>
+					</ol>
+				</li>
+			</ol>
+		</li>
+		<li>2. <a href="#html">HTML</a>
+			<ol>
+				<li>2.1 <a href="interpret">x-hitch-interpret attribute</a></li>
+				<li>2.2 <a href="widget">x-hitch-widget attribute</a></li>
+			</ol>
+		</li>
+	</ol>
+	
+	
+	<h3 class="sectionnumber"><a name="css">1.  CSS</a></h3>
+	<p>Hitch adds numerous expressive capabilities to CSS (when the stylesheet is appropriately tagged - see <a href="#interpret">x-hitch-interpret</a>) immediately, 
+	these are listed and described below.  Note that all of these extensions use the vendor prefix 
+	-hitch- in accordance with CSS's <a href="http://www.w3.org/TR/CSS2/syndata.html#vendor-keywords">Vendor Specific Extensions</a>
+	and conform to CSS's <a href="http://www.w3.org/TR/CSS2/syndata.html#syntax">Forward Compatible Parsing Rules</a>, 
+	as, though they are currently pre-processed, at least parts of the hitch approach could be 
+	adopted in a more native fasion.  Hitch is designed with this in mind.
+	</p>
+	
+	<h4 class="sectionnumber"><a name="css">1.1  @ Rules</a></h4>
+	<p>Hitch adds two new preprocessor at-rules.  Like other pre-processor rules, they should appear
+	at the top of your sheet by convention:</p>
+
+	<h5 class="sectionnumber"><a name="css">1.1.1  @-hitch-requires</a></h5>
+	<p>The requires at-rule begins with the @ symbol, followed by "-hitch-requires" followed by whitespace, 
+	followed by a url or "package url" (described below) and is terminated with a semi-colon.  
+	This rule allows the author of CSS to 
+	require new selector hitches for use within the sheet.  These are downloaded and 'hitched' on 
+	providing new expressive capabilities.  
+	</p>
+	<p>The @-hitch-requires rule is not bound by the same origin policy.</p>
+	<p>A number of hitches publicly available for use can be found in the <a href="http://www.hitchjs.com/list">Public Hitch Repo</a>.
+	The Repository also allows registration of short, memorable names of modules which are well documented, 
+	versioned and available in a public version control system.  Registration allows use of package urls 
+	in requires as well as browseability and automatic caching / placement into a CDN.
+	</p>
+	
+	<div class="example">
+		<p>Given the rules:</p>
+	   <pre>@-hitch-requires  http://www.foo.com/myHitch.js;
+@-hitch-requires  package:bkardell.math/1;</pre>
+		<p>Before processing, the hitch engine will fetch the hitches above and make the capabilites 
+		that they describe available for use within the CSS. (See the <a href="http://www.hitchjs.com/describe/bkardell.math/1">documentation for bkardell.math/1 </a> for 
+		for an example of the expressive capabilities that would be added by requiring that.</a> 
+		</p>
+	</div>
+	</body>
+</html>

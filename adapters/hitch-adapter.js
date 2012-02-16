@@ -25,15 +25,17 @@ Hitch.useManualInit();
 Hitch.events.ready(function(){
 	var loads = [], 
 		cache, 
-		resources = document.querySelectorAll('[x-hitch-widget]'),
+		resources = document.querySelectorAll('[x-hitch-widget],[data-hitch-widget]'),
 		i,
 		requires = [],
 		href,
 		initer = function(c){ Hitch.addCompiledRules(c); }, 
-		url;
+		url, 
+		r;
 
 	for(i=0;i<resources.length;i++){
-		url = resources[i].getAttribute('x-hitch-widget');
+		r = resources[i];
+		url = r.getAttribute('x-hitch-widget') || r.getAttribute('data-hitch-widget');
 		if(url.indexOf('package:')===0){
 			requires.push("http://www.hitchjs.com/use/" + url.substring(8) + ".js");
 		}else{
@@ -42,7 +44,7 @@ Hitch.events.ready(function(){
 	}
 
 	Hitch.resource.load(requires,null,'script',null,function(){
-		resources = document.querySelectorAll('[x-hitch-interpret]');
+		resources = document.querySelectorAll('[x-hitch-interpret],[data-hitch-interpret]');
 		for(i=0;i<resources.length;i++){
 			if(resources[i].tagName === 'STYLE'){
 				loads.push({"inline": resources[i].innerHTML});
