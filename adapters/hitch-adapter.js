@@ -1,5 +1,3 @@
-Hitch = window.Hitch || { useManualInit: function(){}}; // for unit testing..
-
 /*
 	Hitch Pre-compiled loader
 	Inspects the document head for compiled rules and loads them
@@ -16,8 +14,6 @@ Hitch = window.Hitch || { useManualInit: function(){}}; // for unit testing..
 	Hitch.resource.load(precompileds,null,'script',null,function(){});
 })();
 
-Hitch.useManualInit();
-
 /*
 	Hitch Main Entry
 	This is the official "start" of Hitch in interpreted mode.
@@ -29,7 +25,6 @@ Hitch.events.ready(function(){
 		i,
 		requires = [],
 		href,
-		initer = function(c){ Hitch.addCompiledRules(c); }, 
 		url, 
 		r;
 
