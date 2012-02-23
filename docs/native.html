@@ -17,27 +17,28 @@
 				<li>1.1 <a href="#atRules">@ Rules</a>
 					<ol>
 						<li>1.1.2 <a href="#requires">@-hitch-requires</a></li>
-						<li>1.1.1 <a href="#consts">@-hitch-const</a>
-							<ol>
-								<li>1.1.1.1 <a href="#args">:-hitch-args</a></li>
-								<li>1.1.1.2 <a href="#beta">-hitch-beta-</a></li>
-							</ol>
-						</li>
+						<li>1.1.1 <a href="#consts">@-hitch-const</a></li>
 					</ol>
 				</li>
-				<li>1.2 <a href="#pseudos">Pseduo Selectors</a>
+				<li>1.2 <a href="#predefinedconsts">Predefined Constants/Variables</a>			
 					<ol>
-						<li>1.1.2 <a href="#logical">Logical</a>
+						<li>1.2.1 <a href="#beta">-hitch-beta</a></li>
+						<li>1.2.2 <a href="#args">:-hitch-args</a></li>
+					</ol>
+				</li>
+				<li>1.3 <a href="#pseudos">Pseduo Selectors</a>
+					<ol>
+						<li>1.3.1 <a href="#logical">Logical</a>
 							<ol>
-								<li>1.1.2.1 <a href="#anyof">:-hitch-anyof</a></li>
-								<li>1.1.2.2 <a href="#allof">:-hitch-allof</a></li>
-								<li>1.1.2.3 <a href="#noneof">:-hitch-noneof</a></li>
-								<li>1.1.2.4 <a href="#oneof">:-hitch-oneof</a></li>	
+								<li>1.3.1.1 <a href="#anyof">:-hitch-anyof</a></li>
+								<li>1.3.1.2 <a href="#allof">:-hitch-allof</a></li>
+								<li>1.3.1.3 <a href="#noneof">:-hitch-noneof</a></li>
+								<li>1.3.1.4 <a href="#oneof">:-hitch-oneof</a></li>	
 							</ol>
 						</li>
-						<li>1.1.3 <a href="#structural">Structural</a>
+						<li>1.3.2 <a href="#structural">Structural</a>
 							<ol>
-								<li>1.1.3.1 <a href="#anyof">:-hitch-has</a></li>
+								<li>1.3.2.1 <a href="#has">:-hitch-has</a></li>
 							</ol>
 						</li>
 					</ol>
@@ -62,11 +63,11 @@
 	adopted in a more native fasion.  Hitch is designed with this in mind.
 	</p>
 	
-	<h4 class="sectionnumber"><a name="css">1.1  @ Rules</a></h4>
+	<h4 class="sectionnumber"><a name="atRules">1.1  @ Rules</a></h4>
 	<p>Hitch adds two new preprocessor at-rules.  Like other pre-processor rules, they should appear
 	at the top of your sheet by convention:</p>
 
-	<h5 class="sectionnumber"><a name="css">1.1.1  @-hitch-requires</a></h5>
+	<h5 class="sectionnumber"><a name="requires">1.1.1  @-hitch-requires</a></h5>
 	<p>The requires at-rule begins with the @ symbol, followed by "-hitch-requires" followed by whitespace, 
 	followed by a url or "package url" (described below) and is terminated with a semi-colon.  
 	This rule allows the author of CSS to 
@@ -88,6 +89,225 @@
 		that they describe available for use within the CSS. (See the <a href="http://www.hitchjs.com/describe/bkardell.math/1">documentation for bkardell.math/1 </a> for 
 		for an example of the expressive capabilities that would be added by requiring that.</a> 
 		</p>
+	</div>
+	
+	
+	<h5 class="sectionnumber"><a name="consts">1.1.2  @-hitch-const</a></h5>
+	<p>The const at-rule begins with the @ symbol, followed by "-hitch-const" followed by whitespace, 
+	followed by a token identifier (whitespace and ';' are explicitly disallowed) identifying some 
+	text to be replaced followed by whitespace, followed by text to replace it with (';' is explicitly 
+	disallowed) and terminated with ';'.
+	</p>
+	<p>Note that pre-processing like this can only remain conformant to forward compatiable syntax
+	if you make an effort to limit your tokens to compatible values.  It may be worthwhile to use
+	traditional programming practice to uppercase constanants, it may be useful to purposely 
+	break the syntax in order to "stand out in the code".  Hitch makse no such value judgement, it
+	merely provides a text-replacement capability.  Use it as you will.
+	</p>
+	
+	<div class="example">
+		<p>Given the rules:</p>
+	   <pre>@-hitch-const  -MAIN-COLOR  #f56789;
+@-hitch-const -SECONDARY-COLOR  #8989f6;
+
+div{ background-color: -MAIN-COLOR; border: 1px solid -SECONDARY-COLOR; }
+span.title{ color: -SECONDARY-COLOR; }
+
+</pre>
+		<p>Before processing, the hitch engine will perform the text replacements so that the 
+browser will see the rules as:</p>
+	   <pre>
+div{ background-color: #f56789; border: 1px solid #8989f6; }
+span.title{ color: #8989f6; }
+
+</pre>
+		<p>Note that the example above uses a prefixed dash and traditional uppercase format for
+		constants, however the tokens could just have easily been defined as "@main.color" or
+		"$main_color".  It's merely preference.
+		</p>
+	</div>
+	
+
+	
+	
+	<h4 class="sectionnumber"><a name="predefinedconsts">1.2  Predefined Constants/Variables</a></h4>
+	<p>Hitch pre-defines potentially useful "constants" which perform simple text replacements.</p>
+	
+	<h5 class="sectionnumber"><a name="beta">1.2.1  @-hitch-beta</a></h5>
+	<p>The beta constant is "-hitch-beta".Its purpose is to allow the author 
+	to selectively "un-prefix" features which are "compatible enough" across implementations for 
+	their purposesand nearing approval but have not yet been finalized by W3C and are therefore 
+	currently vendor prefixed.  As the name implies, authors should use this rule with caution.
+	It has the multiple advantages of working with the current system of prefixing, 
+	making it easier for authors to write and simultaneously not creating a necessary "break point"
+	by not making the assumption that the final version will fully match the currently prefixed versions.
+	</p>
+	
+	<div class="example">
+		<p>Given the rules:</p>
+	   <pre>div:-hitch-beta-any(.foo, .bar, .bat) span{  background-color: red;  }
+
+.x:hover{
+	-hitch-beta-transition-property:  background-color;
+	-hitch-beta-transition-duration: 1.5s;
+}
+	   </pre>
+		<p>Hitch will perform a text replacement where -hitch-beta is replaced by the viewer's 
+		browser's vendor prefix.  For example, if the user is currently using Firefox, the rules
+		would become:</p>
+		<pre>div:-moz-any(.foo, .bar, .bat) span{  background-color: red;  }
+
+.x:hover{
+	-moz-transition-property:  background-color;
+	-moz-transition-duration: 1.5s;
+}
+	   </pre>
+	</div>
+	
+	<h5 class="sectionnumber"><a name="args">1.2.2  :-hitch-args</a></h5>
+	<p>The args constant is ":-hitch-args".  It can only be used inside another constant and 
+	its purpose is to allow "wrapping" replacements that capture values that they wrap (in parenthesis).
+	</p>
+	
+	<div class="example">
+		<p>Given the rules:</p>
+	   <pre>@-hitch-const -tab  .tabcontainer .tabpanel:nth-child(:-hitch-args);
+	   
+-tab(1){ background-color: red; }
+-tab(2){ background-color: white; }
+-tab(3){ background-color: blue; }
+
+	   
+	   </pre>
+		<p>Hitch will perform a text replacement where :-hitch-args is replaced by the value
+		captured in parenthesis at point of use, to create:</p>
+		<pre>.tabcontainer .tabpanel:nth-child(1){ background-color: red; }
+.tabcontainer .tabpanel:nth-child(2){ background-color: white; }
+.tabcontainer .tabpanel:nth-child(3){ background-color: blue;  }
+
+</pre>
+	</div>	
+	
+	
+	
+	
+	
+	
+	
+	
+	<h4 class="sectionnumber"><a name="logical">1.3  Pseudo Selectors</a></h4>
+	<p>Hitch pre-defines a few potentially useful selector hitches "out of the box".</p>
+	
+	<h5 class="sectionnumber"><a name="logical">1.3.1  Logical</a></h5>
+	<p>Logical selector hitches provide set and logic gate operations to add very powerful selectors.</p>
+	<p>All of the examples regarding Logical selectors are based on the following markup:
+	<script src="https://gist.github.com/1885317.js?file=carsmarkup.html"></script>
+	
+	<h5 class="sectionnumber"><a name="anyof">1.3.1.1  :-hitch-anyof</a></h5>
+	<p>The "any of" hitch provides a way to filter elements based on whether they match ANY of the provided selector(s) (that is, selectors are OR'ed together) which may express different paths in the same tree. </p>
+	<div class="example">
+	   <p>Given the markup introduced at the top of <a href="#logical">section 1.3.1:</a></p>
+	   <pre>.cars div:-hitch-anyof(.foreign .used, .domestic .new) .cheap p{  background-color: red;  }</pre>
+		<p>The following elements would have a red background:</p>
+<pre>&lt;p class="car"&gt;2012 Ford Fiesta&lt;/p&gt;
+&lt;p class="car"&gt;2009 Kia Forte&lt;/p&gt;
+&lt;p class="car"&gt;2005 Toyota Camry&lt;/p&gt;
+</pre>
+		<p>Because each meets at least one of the criteria of being a descendant of .foreign that is .used OR a descendant of .domestic which is .new.</p>
+	</div>
+	
+	
+	<h5 class="sectionnumber"><a name="allof">1.3.1.2  :-hitch-allof</a></h5>
+	<p>The "all of" hitch provides a way to filter elements based on whether they match ALL of the provided selector(s) (that is, selectors are AND'ed together) which may express different paths in the same tree.</p>
+	<div class="example">
+	   <p>Given the markup introduced at the top of <a href="#logical">section 1.3.1:</a></p>
+	   <pre>.cars div:-hitch-allof(.new > div, .domestic .fast) p{ background-color: blue; }</pre>
+		<p>The following elements would have a blue background:</p>
+<pre>&lt;p class="car"&gt;2010 Dodge Charger&lt;/p&gt;
+</pre>
+		<p>Because it is both a &lt;div&gt; that is a child of .new AND is a descendant of .domestic and has the class .fast. </p>
+	</div>
+	
+	<h5 class="sectionnumber"><a name="noneof">1.3.1.3  :-hitch-noneof</a></h5>
+	<p>The "none of" hitch provides a way to filter elements based on whether they match NONE of the provided selector(s) (that is, selectors are NOR'ed together) which may express different paths in the same tree. </p>
+	<div class="example">
+	   <p>Given the markup introduced at the top of <a href="#logical">section 1.3.1:</a></p>
+	   <pre>.efficient:-hitch-noneof(.domestic .used, .foreign .new) p{  color: orange; }</pre>
+		<p>The following elements would have orange text:</p>
+<pre>&lt;p class="car"&gt;2012 Ford Fiesta&lt;/p&gt;
+&lt;p class="car"&gt;2012 Chrysler 300&lt;/p&gt;
+&lt;p class="car"&gt;2005 Toyota Camry&lt;/p&gt;
+</pre>
+		<p>Because they are neither descendants of .domestic which are .used NOR descendants of .foreign which are .new. </p>
+	</div>
+	
+	
+	<h5 class="sectionnumber"><a name="oneof">1.3.1.4  :-hitch-oneof</a></h5>
+	<p>The "none of" hitch provides a way to filter elements based on whether they match EXACTLY ONE of the provided selector(s) (that is, selectors are XOR'ed together) which may express different paths in the same tree. </p>
+	<div class="example">
+	   <p>Given the markup introduced at the top of <a href="#logical">section 1.3.1:</a></p>
+	   <pre>.cars div:-hitch-oneof(.cheap, .small) p{  border: 1px solid green; }</pre>
+		<p>The following elements would have a 1px solid green border:</p>
+<pre>&lt;p class="car"&gt;2004 Chevy Malibu&lt;/p&gt;
+&lt;p class="car"&gt;2012 Kia Forte&lt;/p&gt;
+&lt;p class="car"&gt;2005 Toyota Camry&lt;/p&gt;
+</pre>
+		<p>Because they are .cheap OR .small exclusively (not both). </p>
+	</div>
+	
+	
+		<h5 class="sectionnumber"><a name="structural">1.3.2  Structural</a></h5>
+	<p>Structural selector hitches provide abilities to select based on structural criteria.</p>
+	
+	<h5 class="sectionnumber"><a name="has">1.3.2.1  :-hitch-has</a></h5>
+	<p>The "has" hitch provides a way to filter elements based on whether their descendants match any of the provided selector(s).
+	Provided selectors may begin with a combinator, implying 'the element on which the has filter is being applied'</p>
+	<div class="example">
+	   <p>Given the markup introduced at the top of <a href="#logical">section 1.3.1:</a></p>
+	   <pre> div:-hitch-has(>.fast){  background-color: red;  }</pre>
+		<p>The following elements would have a red background:</p>
+<pre>&lt;p class="car"&gt;2012 Ford Fiesta&lt;/p&gt;
+&lt;div class="new" id="a" &gt;...&lt;/div&gt;
+&lt;div class="used" id="b" &gt;...&lt;/div&gt;
+</pre>
+       <p>Because because they meet the criteria that they contain (has) a child which is .fast.</p>
+	</div>
+	
+	
+	
+	
+	<h3 class="sectionnumber"><a name="css">2.  HTML</a></h3>
+	<p>Hitch adds a small set of expressive capabilities to HTML by way of micro-data. All hitch
+	html attributes follow the forward compatible parsing / vendor extension model of being
+	prefixed with x-hitch-*.</p>
+	
+	<h4 class="sectionnumber"><a name="interpret">2.1  x-hitch-interpret attribute</a></h4>
+	<p>The x-hitch-interpret attribute is a boolean attribute which can be placed on &lt;link&gt;
+	and &lt;style&gt; tags indicating that they require Hitch.
+	</p>
+	<div class="example">
+	   <pre>&lt;style type="text/css" x-hitch-interpret &gt; 
+    ... anything in here can use hitch ...
+&lt;/style&gt;
+</pre>
+	</div>
+
+
+	<h4 class="sectionnumber"><a name="interpret">2.2  x-hitch-widget attribute</a></h4>
+	<p>The x-hitch-widget attribute provides a means to indicate a binding with a micro-data 
+	based hitch, allowing the element to be decorated or replaced accordingly.  
+	This is done by providing a URL or package: URI describing where the hitch
+	definitions can be found and which hitch specifically to use here.  The x-hitch-widget URL 
+	is not bound by the Same Origin Policy.  Hitch takes care of ensuring that these files are 
+	requested only once.</p>
+	<div class="example">
+	   <pre>&lt;div x-hitch-widget="http://www.hitchjs.com/use/bkardell.paypal/1#simple-donate" 
+	                data-paypal-email="myemail@mycompany.com"
+                    data-paypal-org="mycompany.com"&gt; ... hitch will stick your paypal donation button here... &lt;/div&gt;
+
+</pre>
+	<p>See <a href="http://www.hitchjs.com/describe/bkardell.paypal/1"> the describe documentation 
+	on this hitch</a> for more information on the bkardell.paypal package version 1.</p>
 	</div>
 	</body>
 </html>
