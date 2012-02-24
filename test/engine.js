@@ -16,7 +16,7 @@ asyncTest("rules and plugins exposed", function(){
 		ok(g.window.Hitch.getRules(), "Rules are exposed");
 		equals(g.window.Hitch.getRules().length, 0, "Rule count is 0 on initialization");
 		ok(g.window.Hitch.getHitches(), "Plugins are exposed");
-		equals(g.window.Hitch.getHitches().length, 5, "Plugin count is 5 on initialization");
+		equals(g.window.Hitch.getHitches().length, 6, "Plugin count is 5 on initialization");
 		start();
 	},200);
 });
@@ -65,7 +65,7 @@ asyncTest("plugins addition", function(){
 		badPlugin = { name: '' },
 		pluginsCount = g.window.Hitch.list().length;
 		g.window.Hitch.add(testPlugin);
-		equals(pluginsCount + 1, 6, "test plugin added");
+		equals(pluginsCount + 1, 7, "test plugin added");
 		raises(function(){
 			Hitch.add(badPlugin);
 		},"must not allow plugins without names");
