@@ -4,7 +4,7 @@ Hitch.add(
 		base: '.dev-widget',
 		type: 'html',
 		init: function(match){
-			match[0].innerHTML = "Should be written in";
+			if(match && match.length > 0)match[0].innerHTML = "Should be written in";
 		}
 	}
 );

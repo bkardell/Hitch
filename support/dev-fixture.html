@@ -26,6 +26,12 @@
 			span:-hitch-anyof(.any){
 				color: purple;
 			}
+			span:-hitch-contains(Should be Yellow){
+				color: yellow;
+			}
+			span:-hitch-contains(/#\d/){
+				color: #336699;
+			}
 			:-dev-js-api(){
 				color: green;
 			}
@@ -56,6 +62,8 @@
 		<div>
 			<p><b>-hitch-has:</b>&nbsp;<span><span class="has"></span>Should be Red</span></p>
 			<p><b>-hitch-any:</b>&nbsp;<span class="any">Should be Purple</span></p>
+			<p><b>-hitch-contains:</b>&nbsp;<span class="contains">Should be Yellow</span></p>
+			<p><b>-hitch-contains (regexp):</b>&nbsp;<span class="contains">Should be #36699</span></p>
 		</div>
 		<h4>JS API Demo</h4>
 		<div>
