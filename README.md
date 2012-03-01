@@ -10,6 +10,9 @@ A lightweight JavaScript library that provides a mechanism that allows others to
 * [Why](Hitch/wiki/Why-Hitch)
 * [FAQ](Hitch/wiki/FAQ)
 
+### Version
+Current 0.5.0
+
 ### Authors
 * [Brian Kardell](mailto:bkardell@gmail.com?subject=Hitch)
 * [Clint Hill](mailto:clint.hill@gmail.com?subject=Hitch)
