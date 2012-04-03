@@ -20,16 +20,18 @@
 		
 		<!-- Example with STYLE tag interpreted -->
 		<style x-hitch-interpret="true">
+			@-hitch-requires package:chill.text/1;
+
 			span:-hitch-has(span.has){
 				color: red;
 			}
 			span:-hitch-anyof(.any){
 				color: purple;
 			}
-			span:-hitch-contains(Should be Yellow){
+			span:-text-contains(Should be Yellow){
 				color: yellow;
 			}
-			span:-hitch-contains(/#\d./){
+			span:-text-contains(#\d.){
 				color: #336699;
 			}
 			:-dev-js-api(){
