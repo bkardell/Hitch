@@ -21,8 +21,11 @@ checker = function(cb){
 	cb();
 };
 
-//setup some global shit to make this work / pretend we are a browser 'just enough'   
+//setup some global shit to make this work...
+//this means we have to pretend we are a browser 'just enough'   
 $ = {
+
+	// as need a means of fetching scripts off the file path as if they were ajax
 	getScript: function(x){
 		var cssRealPath;
 		if(x.indexOf('http:') === 0){

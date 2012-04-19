@@ -78,17 +78,18 @@ asyncTest("plugins addition", function(){
 QUnit.module("mods registered ok with link and @ rule requires...");
 asyncTest("false-return registered with link", function(){
 	var g = helper(
-		'<link type="text/css" href="support/libs/fake.css" rel="stylesheet" x-hitch-interpret="true"></link>'
+		'<link type="text/css" href="support/libs/fake.css" rel="stylesheet" data-hitch-interpret="true"></link>',
+		'',
+		'<div>Testing...</div>'
 	);
 	setTimeout(function(){
-		setTimeout(function(){
-			ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
-			ok(g.window['false-return'], "false-return global should be set");
-			ok(g.window['false-return-inited'], "init should have been called");
-			ok(g.document.querySelectorAll('._0').length===0, 'The filter should not affect the test-fixture node');
-			start();
-		},200);
-	},200);
+		ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
+		ok(g.window['false-return'], "false-return global should be set");
+		// see notes on false-return registered via data-hitch-widget url as to why this is commented out - same problem
+		// ok(g.window['false-return-inited'], "init should have been called");
+		ok(g.document.querySelectorAll('._0').length===0, 'The filter should not affect the test-fixture node');
+		start();
+	},500);
 	
 });
 
@@ -96,23 +97,24 @@ asyncTest("false-return registered with link", function(){
 QUnit.module("mods registered ok with inline style and JS API");
 asyncTest("false-return registered with JS API", function(){
 	var g = helper(
-		'<style x-hitch-interpret="true"> div:-false-return() { color: red; } </style>',
-		'<script type="text/javascript">  window.added=true; Hitch.add({name: "-false-return",base: "",filter: function(match, args){ '
-			 + 'window["false-return"] = true; return true;}});  </script>'
+		'<style data-hitch-interpret="true"> div:-false-return() { color: red; } </style>',
+		'<script type="text/javascript" data-hitch-manual>  window.added=true; Hitch.add({name: "-false-return",base: "",filter: function(match, args){ '
+			 + 'window["false-return"] = true; return true;}}); Hitch.go();</script>'
 	);
 	setTimeout(function(){
 		ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
 		ok(g.window['false-return'], "false-return global should be set");
+
 		ok(g.document.querySelectorAll('._0').length===1, 'The filter should affect the test-fixture node');
 		start();
-	},200);
+	},500);
 	
 });
 
 
 QUnit.module("Unrequired/Unprovided modules should be left 'as is' and not registered...");
 asyncTest("false-return unregistered no breaking", function(){
-	var g = helper('<style x-hitch-interpret="true"> div:-false-return() { color: red; } </style>');
+	var g = helper('<style data-hitch-interpret="true"> div:-false-return() { color: red; } </style>');
 	setTimeout(function(){		
 		ok(g.window.Hitch.list().indexOf('-false-return')===-1,'no module should be defined');
 		ok(!g.window['false-return'], "false-return global should be set");
@@ -125,36 +127,45 @@ asyncTest("false-return unregistered no breaking", function(){
 
 
 
-QUnit.module("Hitch HTML hitch-widget attribute registers correctly...");
-asyncTest("false-return registered via x-hitch-widget url", function(){
+/**
+This test needs review, it might not be any good for reasons pointed out by our test fixture...
+Essentially the system today uses the 'default empty rule' to make this widget matter --
+essentially something like :-foo-bar{} 
+
+The questionable bit is that those are currently only generated for something that has an init and is
+of type: "html".  This test is not that - I realize that the hitch itself is nonsense,  but it is 
+also invalid - or is there some rationale use-case for these features to be used all together
+like that)...
+
+
+QUnit.module("Hitch HTML hitch-widget attribute registers correctly... ");
+asyncTest("false-return registered via data-hitch-widget url", function(){
 	var g = helper(
-		'<style x-hitch-interpret="true"> div:-false-return() { color: red; } </style>',
-		'<span x-hitch-widget="fake-hitch.js"> </span>',
+		'',
+		'<span data-hitch-widget="fake-hitch.js"> </span>',
 		''
 	);	
 	setTimeout(function(){		
 		ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
 		ok(g.window['false-return'], "false-return global should be set");
-		g.window.console.log("......." + g.window['added'] );
-		g.window.console.log("......." + g.window['false-return'] );
 		ok(g.document.querySelectorAll('._0').length===0, 'Filter should not affect the test-fixture node');
 		start();
 	},200);
 });
+*/
 
-
-QUnit.module("Hitch HTML hittch-widget attribute accepts package: correctly...");
-asyncTest("bkardell.math via x-hitch-widget package", function(){
+QUnit.module("Hitch HTML hitch-widget attribute accepts package: correctly...");
+asyncTest("bkardell.social via data-hitch-widget package", function(){
 	var g = helper(
-		'<style x-hitch-interpret="true"> div:-math-greaterthan("data-val",10){ color: red; } </style>',
-		'<span x-hitch-widget="package:bkardell.math/1"> </span>',
-		'<div data-val="0"> </div> <div data-val="11"> </div> <div> </div> '
+		'',
+		'',
+		'<div data-hitch-widget="package:bkardell.social#g-plusone"><div>'
 	);	
 	setTimeout(function(){		
 		// All we can really do in this env (I think) is verify the url of the script tag
 		ok(
 			g.window.document.head.innerHTML.indexOf(
-				'src="http://www.hitchjs.com/use/bkardell.math/1.js"'
+				'src="http://www.hitchjs.com/use/bkardell.social'
 			) !== -1
 		);
 		start();
@@ -162,31 +173,10 @@ asyncTest("bkardell.math via x-hitch-widget package", function(){
 	
 });
 
-
-QUnit.module("Adding Precompiled rules...");
-asyncTest("precompiled rules can be added", function(){
-	// Note the fact that \n's in the object create a problem for our test...
-	var g = helper(
-		'',
-		'<script type="text/javascript" src="fake-hitch.js"></script>'
-		+ '<script type="text/javascript">'
-		+ '\nvar xx = {"rules":["/* was: div:-false-return() */div._0 { color: red; }"],"segIndex":{"div":{"hitches":{":-false-return":[{"sid":0,"rid":0,"cid":0,"args":"","base":"*"}]},"orig":"/* was: div:-false-return() */div._0 "}},"plugins":[]};'
-		+ '\nHitch.addCompiledRules(xx);'
-		+ '\n</script>',
-		''
-	);	
-	expect(5);
-	setTimeout(function(){		
-		ok(g.window.added, "the window.added property should have been set when hitch was fetched/loaded");
-		//g.window.console.log("rulez: " + JSON.stringify(g.window.Hitch.getRules(),null,4));
-		equals(g.window.Hitch.getRules().length, 1, g.window.Hitch.getRules().length + " expected 1");
-		ok(g.window['false-return-inited'], "false-return-inited global should be set");
-		ok(g.window['false-return'], "false-return global should be set");
-		ok(g.document.querySelectorAll('._0').length===0, 'Filter should not affect the test-fixture node');
-		start();
-	},200);
-	
-});
+/* There used to be a test here about adding precompiled rules... We dont have that setup
+   yet anyway and we've drastically changed how the method that it was testing worked...
+   Use git history if you need to see how it worked - I think it was just wrong :) 
+*/
 
 
 

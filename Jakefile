@@ -130,8 +130,8 @@ task("test", ['lint','compile'], function(){
 	var qunit = require('qunit'), 
 		source, 
 		test,
-		context = [];
-	qunit.options.assertions = false;
+		context = []; // testFiles = ['./test/oneoff.js'];
+	qunit.options.assertions = true;
 	for(var i = 0; i < testFiles.length; i++){
 		test = testFiles[i];
 		context.push({
