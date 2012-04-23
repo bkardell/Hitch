@@ -4,9 +4,15 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>dev-fixture</title>
-		<script src="../dist/hitch.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../dist/hitch.js" type="text/javascript" charset="utf-8" data-hitch-manual></script>
 		<!-- Example with JavaScript API -->
-		<script type="text/javascript">
+		<script type="text/javascript" >
+		
+			// Hitch interpreter is greedy... It wants to start ASAP.  
+			// if we want to add hitches inline as opposed to with a requires, 
+			// Hitch can accomodate that... we mark the hitch tag with data-hitch-manual
+			// to signify that we are taking control of saying when it is safe to apply...
+			
 			Hitch.add(
 				{
 					name: '-dev-js-api',
@@ -16,10 +22,11 @@
 					}
 				}
 			);
+			
 		</script>
 		
 		<!-- Example with STYLE tag interpreted -->
-		<style x-hitch-interpret="true">
+		<style data-hitch-interpret="true">
 			@-hitch-requires package:chill.text/1;
 
 			span:-hitch-has(span.has){
@@ -40,7 +47,7 @@
 		</style>
 		
 		<!-- Example with STYLE tag interpreted with @ rule -->
-		<style x-hitch-interpret="true">
+		<style data-hitch-interpret="true">
 			@-hitch-requires dev-css-require.js;
 			
 			:-dev-css-require(){
@@ -49,9 +56,9 @@
 		</style>
 		
 		<!-- Example with LINK tag interpreted -->
-		<link href="dev-css.css" x-hitch-interpret="true" type="text/css" rel="stylesheet"></link>
+		<link href="dev-css.css" data-hitch-interpret="true" type="text/css" rel="stylesheet"></link>
 		
-		<style x-hitch-interpret="true">
+		<style data-hitch-interpret="true">
 			.cars div:-hitch-anyof(.foreign .used, .domestic .new) .cheap p{
 				color: green;
 			}
