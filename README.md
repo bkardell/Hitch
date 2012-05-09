@@ -11,7 +11,7 @@ A lightweight JavaScript library that provides a mechanism that allows others to
 * [FAQ](Hitch/wiki/FAQ)
 
 ### Version
-Current 0.5.0
+Current 0.5.3
 
 ### Authors
 * [Brian Kardell](mailto:bkardell@gmail.com?subject=Hitch)
