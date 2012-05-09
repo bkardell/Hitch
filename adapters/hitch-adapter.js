@@ -24,9 +24,7 @@
 		This is the official "start" of Hitch in interpreted mode.
 	*/
 	Hitch.go = function(){
-		Hitch.scanCSS(document.getElementsByTagName('head')[0],function(){});
-			
-		Hitch.events.ready(function(){
+		Hitch.scanCSS(document.getElementsByTagName('head')[0],function(){
 			var bod = document.getElementsByTagName('body')[0];
 			Hitch.init();
 			Hitch.scan(bod,function(){
