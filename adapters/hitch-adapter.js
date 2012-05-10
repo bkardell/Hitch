@@ -32,9 +32,8 @@
 			});	
 		});
 	};
+	
 	if(Hitch.query(h,'script[data-hitch-manual]').length===0){ 
-		Hitch.go(); 
-	}else{
 		Hitch.events.ready(Hitch.go);
 	}
 })();
