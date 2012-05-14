@@ -12,13 +12,13 @@ and helps keep presentation related rules in CSS.
 
 
 ### Useful Links
-* [Getting Started](Hitch/wiki/Getting-Started)
-* [Using Hitches](Hitch/wiki/Using-Hitches)
-* [Writing Hitches](Hitch/wiki/Writing-Hitches)
-* [Hitch Constants](Hitch/wiki/Hitch-Constants)
-* [Hitch "Out of the box"](Hitch/wiki/Out-of-the-Box)
-* [Why](Hitch/wiki/Why-Hitch)
-* [FAQ](Hitch/wiki/FAQ)
+* [Getting Started](https://github.com/bkardell/Hitch/wiki/Getting-Started)
+* [Using Hitches](https://github.com/bkardell/Hitch/wiki/Using-Hitches)
+* [Writing Hitches](https://github.com/bkardell/Hitch/wiki/Writing-Hitches)
+* [Hitch Constants](https://github.com/bkardell/Hitch/wiki/Hitch-Constants)
+* [Hitch "Out of the box"](https://github.com/bkardell/Hitch/wiki/Out-of-the-Box)
+* [Why](https://github.com/bkardell/Hitch/wiki/Why-Hitch)
+* [FAQ](https://github.com/bkardell/Hitch/wiki/FAQ)
 
 
 ### Version
