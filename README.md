@@ -7,8 +7,8 @@ simply attaches and detaches vanilla CSS classes (the rule's hash) as they gain 
 thereby allowing a common usage pattern which provides authors greater expressive abilities 
 and helps keep presentation related rules in CSS.
 
-* Website: [http://www.hitchjs.com]
-* Blog:    [http://hitchjs.wordpress.com/]
+* Website: http://www.hitchjs.com
+* Blog:    http://hitchjs.wordpress.com/
 
 
 ### Useful Links
