@@ -1,6 +1,12 @@
 Hitch
 =========
-A lightweight JavaScript library that provides a mechanism that allows others to easily develop and use additional extensions.
+A lightweight JavaScript engine that allows definition and use of new CSS selectors.  
+
+Rules using these selectors selectors are hashed and managed by the engine (live) which 
+simply attaches and detaches vanilla CSS classes (the rule's hash) as they gain or lose relevance, 
+thereby allowing a common usage pattern which provides authors greater expressive abilities 
+and helps keep presentation related rules in CSS.
+
 
 * [Getting Started](Hitch/wiki/Getting-Started)
 * [Using Hitches](Hitch/wiki/Using-Hitches)
@@ -10,8 +16,11 @@ A lightweight JavaScript library that provides a mechanism that allows others to
 * [Why](Hitch/wiki/Why-Hitch)
 * [FAQ](Hitch/wiki/FAQ)
 
+Website: [http://www.hitchjs.com]
+Blog:    [hitchjs.wordpress.com/]
+
 ### Version
-Current 0.5.3
+Current 0.5.4
 
 ### Authors
 * [Brian Kardell](mailto:bkardell@gmail.com?subject=Hitch)
