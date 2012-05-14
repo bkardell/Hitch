@@ -2,7 +2,7 @@ Hitch
 =========
 A lightweight JavaScript engine that allows definition and use of new CSS selectors.  
 
-Rules using these selectors selectors are hashed and managed by the engine (live) which 
+Rules using these selectors are hashed and managed by the engine (live) which 
 simply attaches and detaches vanilla CSS classes (the rule's hash) as they gain or lose relevance, 
 thereby allowing a common usage pattern which provides authors greater expressive abilities 
 and helps keep presentation related rules in CSS.
