@@ -1,0 +1,36 @@
+{
+	"name": "hitch",
+	"description": "",
+	"version": "0.6.0",
+	"prefersGlobal": "true",
+	"author": "Brian Kardell <bkardell@gmail.com>",
+	"contributors": [
+		{
+			"name": "Brian Kardell",
+			"email": "bkardell@gmail.com"
+		},
+		{
+			"name": "Clint Hill",
+			"email": "clint.hill@gmail.com"
+		}
+	],
+	"homepage": "http://www.hitchjs.com",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/bkardell/Hitch.git"
+	},
+	"main": "",
+	"bin": {
+		"hitch": "./bin/hitch"
+	},
+	"scripts": {
+		"test": "grunt test"
+	},
+	"devDependencies": {
+		"grunt": ">=0.3.12"
+	},
+	"dependenies": {},
+	"engine": {
+		"node": ">=0.6"
+	}
+}

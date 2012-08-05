@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+	<title>HitchJS tests - full suite</title>
+
+	<!-- UTILITIES -->
+	<link rel="stylesheet" type="text/css" href="lib/qunit.css">
+	<script type="text/javascript" src="lib/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="lib/qunit.js"></script>
+
+	<!-- HITCH -->
+	<!-- Represents the order the files need to exist for runtime -->
+	<script type="text/javascript" src="../lib/engine.js"></script>
+	<script type="text/javascript" src="../lib/dom.js"></script>
+	<script type="text/javascript" src="../lib/plugins.js"></script>
+	<script type="text/javascript" src="../lib/resource.js"></script>
+	<script type="text/javascript" src="../lib/events.js"></script>
+	<script type="text/javascript" src="../lib/compiler.js"></script>
+	<script type="text/javascript" src="../lib/adapter.js"></script>
+
+	<!-- FIXTURES -->
+	<link type="text/css" href="fixtures.css" rel="stylesheet" data-hitch-interpret="true"></link>
+	<script type="text/javascript" src="js-fixture.js"></script>
+
+	<!-- TESTS -->
+	<script type="text/javascript" src="compiler-tests.js"></script>
+	<script type="text/javascript" src="engine-tests.js"></script>
+	<script type="text/javascript" src="requires-tests.js"></script>
+	<script type="text/javascript" src="js-tests.js"></script>
+
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+</body>
+</html>
