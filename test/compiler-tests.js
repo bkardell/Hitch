@@ -13,7 +13,7 @@ asyncTest("Simple constants replacement", function(){
 			equal(comp.rules[2].trim(), 'span{ color: green; }', 'should be unchanged');
 			start();
 		});
-	}, 100);
+	}, 50);
 });
 
 asyncTest("Simple constants replacement - all replaced", function(){
@@ -25,7 +25,7 @@ asyncTest("Simple constants replacement - all replaced", function(){
 			equal(comp.rules[2].trim(), 'span div, .x { color: green; }','the rule should contain swapped constant values');
 			start();
 		});
-	}, 100);
+	}, 50);
 });
 
 test("Constant replaced on whole string match", function(){
@@ -45,7 +45,7 @@ asyncTest("Constant replaced with @hitch-requires statement", function(){
 			equal(comp.rules[0].trim(), 'span.apple{ color: green; }','the rule should contain swapped constant values');
 			start();
 		});
-	}, 100);
+	}, 50);
 });
 
 asyncTest("Simple rule inspection", function(){
@@ -60,7 +60,7 @@ asyncTest("Simple rule inspection", function(){
 			equal(hitches.length, 1, 'There should be only 1 applicable hitch');
 			start();
 		});
-	},100);
+	},50);
 });
 
 asyncTest("Simple rule inspection with irrelevant trailing segment", function(){
@@ -72,7 +72,7 @@ asyncTest("Simple rule inspection with irrelevant trailing segment", function(){
 			ok(!comp.segIndex.span, 'there should not be a span entry in segIndex');
 			start();
 		});
-	},100);
+	},50);
 });
 
 asyncTest("Simple rule inspection with multiple segments", function(){
@@ -84,7 +84,7 @@ asyncTest("Simple rule inspection with multiple segments", function(){
 			ok(comp.segIndex.li, 'there should be a li entry in segIndex');
 			start();
 		});
-	},100);
+	},50);
 });
 
 asyncTest("Simple rule inspection with relevant trailing segment", function(){
@@ -98,7 +98,7 @@ asyncTest("Simple rule inspection with relevant trailing segment", function(){
 			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');
 			start();
 		});
-	},100);
+	},50);
 });
 
 asyncTest("A inside B", function(){
@@ -111,7 +111,7 @@ asyncTest("A inside B", function(){
 			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');			
 			start();
 		});
-	});
+	}, 50);
 });
 
 asyncTest("Single line comment", function(){
@@ -161,5 +161,5 @@ asyncTest("@media statement", function(){
 			equal(comp.rules.length, 1, "there should be 1 rule");
 			start();
 		});
-	}, 100);
+	}, 50);
 });

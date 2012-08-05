@@ -36,4 +36,6 @@ module.exports = function(grunt){
 
 	grunt.registerTask("test", "server qunit");
 
+	grunt.registerTask("default", "lint concat min test");
+
 };

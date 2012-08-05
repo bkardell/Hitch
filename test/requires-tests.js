@@ -7,6 +7,6 @@ asyncTest("Test @hitch-requires", function(){
 		ok(window['requires-hitch-added'], "@hitch-require statement loaded proper JS.");
 		ok(window['requires-hitch'], "requires-hitch ran in fixtures.css");
 		start();
-	},100);
+	}, 200);
 
 });
