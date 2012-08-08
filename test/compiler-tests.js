@@ -163,3 +163,25 @@ asyncTest("@media statement", function(){
 		});
 	}, 50);
 });
+
+// Doesn't work
+// :-media-time(99,4350) ~ a[data-time=0:00:00.099,0:00:04.350]
+// Works
+// :-media-time(99,4350) ~ a[data-time]
+asyncTest("media-time pseudo-class parsing", function(){
+	setTimeout(function(){
+		var good = "div:-media-time(99,4350) ~ a[data-time] { color: green; }";
+		var bad = "div:-media-time(99,4350) ~ a[data-time=0:00:00.099,0:00:04.350] { color: red; }";
+		compiler(good, function(comp){
+			equal(comp.rules.length, 1, "there should be 1 rule");
+			ok(comp.rule.segIndex.div, "there should be div in segIndex");
+			console.log('Good', comp);
+		});
+		compiler(bad, function(comp){
+			equal(comp.rules.length, 1, "there should be 1 rule");
+			ok(comp.rule.segIndex.div, "there should be div in segIndex");
+			console.log('Bad', comp);
+		});
+		start();
+	}, 50);
+});
