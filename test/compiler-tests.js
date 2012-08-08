@@ -13,7 +13,7 @@ asyncTest("Simple constants replacement", function(){
 			equal(comp.rules[2].trim(), 'span{ color: green; }', 'should be unchanged');
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("Simple constants replacement - all replaced", function(){
@@ -25,7 +25,7 @@ asyncTest("Simple constants replacement - all replaced", function(){
 			equal(comp.rules[2].trim(), 'span div, .x { color: green; }','the rule should contain swapped constant values');
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 test("Constant replaced on whole string match", function(){
@@ -45,7 +45,7 @@ asyncTest("Constant replaced with @hitch-requires statement", function(){
 			equal(comp.rules[0].trim(), 'span.apple{ color: green; }','the rule should contain swapped constant values');
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("Simple rule inspection", function(){
@@ -60,7 +60,7 @@ asyncTest("Simple rule inspection", function(){
 			equal(hitches.length, 1, 'There should be only 1 applicable hitch');
 			start();
 		});
-	},50);
+	}, 150);
 });
 
 asyncTest("Simple rule inspection with irrelevant trailing segment", function(){
@@ -84,7 +84,7 @@ asyncTest("Simple rule inspection with multiple segments", function(){
 			ok(comp.segIndex.li, 'there should be a li entry in segIndex');
 			start();
 		});
-	},50);
+	}, 150);
 });
 
 asyncTest("Simple rule inspection with relevant trailing segment", function(){
@@ -98,7 +98,7 @@ asyncTest("Simple rule inspection with relevant trailing segment", function(){
 			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');
 			start();
 		});
-	},50);
+	}, 150);
 });
 
 asyncTest("A inside B", function(){
@@ -111,7 +111,7 @@ asyncTest("A inside B", function(){
 			ok(comp.segIndex['div span'], 'there should be a div span entry in segIndex');			
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("Single line comment", function(){
@@ -121,7 +121,7 @@ asyncTest("Single line comment", function(){
 			equal(comp.rules.length, 1, "there should be 1 rule");
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("Multi line comment", function(){
@@ -131,7 +131,7 @@ asyncTest("Multi line comment", function(){
 			equal(comp.rules.length, 1, "there should be 1 rule");
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("@import statement", function(){
@@ -141,7 +141,7 @@ asyncTest("@import statement", function(){
 			equal(comp.rules.length, 1, "there should be 1 rule");
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("@page statement", function(){
@@ -151,7 +151,7 @@ asyncTest("@page statement", function(){
 			equal(comp.rules.length, 1, "there should be 1 rule");
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 asyncTest("@media statement", function(){
@@ -161,27 +161,25 @@ asyncTest("@media statement", function(){
 			equal(comp.rules.length, 1, "there should be 1 rule");
 			start();
 		});
-	}, 50);
+	}, 150);
 });
 
 // Doesn't work
 // :-media-time(99,4350) ~ a[data-time=0:00:00.099,0:00:04.350]
 // Works
 // :-media-time(99,4350) ~ a[data-time]
+/* commenting this out for now as a known issue with attribute values containing commas being treated as groups
+   turn the comma into a dash and all is well, but that is potentially problematic for media fragments */ 
 asyncTest("media-time pseudo-class parsing", function(){
 	setTimeout(function(){
-		var good = "div:-media-time(99,4350) ~ a[data-time] { color: green; }";
 		var bad = "div:-media-time(99,4350) ~ a[data-time=0:00:00.099,0:00:04.350] { color: red; }";
-		compiler(good, function(comp){
-			equal(comp.rules.length, 1, "there should be 1 rule");
-			ok(comp.rule.segIndex.div, "there should be div in segIndex");
-			console.log('Good', comp);
-		});
+		expect(2);
+		Hitch.add({name: "-media-time" });
 		compiler(bad, function(comp){
 			equal(comp.rules.length, 1, "there should be 1 rule");
-			ok(comp.rule.segIndex.div, "there should be div in segIndex");
-			console.log('Bad', comp);
+			ok(comp.segIndex.div, "there should be div in segIndex");
+			console.log('Bad', JSON.stringify(comp));
+			start();
 		});
-		start();
-	}, 50);
-});
+	}, 150);
+}); 

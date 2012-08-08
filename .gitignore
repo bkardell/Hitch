@@ -1,3 +1,17 @@
 dist
 .DS_Store
 *.swp
+
+node_modules/contextify/.lock-wscript
+
+node_modules/contextify/build/.wafpickle-7
+
+node_modules/contextify/build/Release/src/contextify_1.o
+
+node_modules/contextify/build/Release/contextify.node
+
+node_modules/contextify/build/c4che/build.config.py
+
+node_modules/contextify/build/c4che/Release.cache.py
+
+node_modules/contextify/build/config.log
