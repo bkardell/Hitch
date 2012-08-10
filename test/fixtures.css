@@ -1,0 +1,11 @@
+@-hitch-requires requires-fixture.js;
+@-hitch-requires constant-fixture.js;
+@-hitch-const :-foo-bar div, .x; 
+
+div:-requires-hitch(){
+	background-color: blue;
+}
+
+div:-js-hitch(){
+	color: blue;
+}
