@@ -1,7 +1,7 @@
 {
 	"name": "hitch",
 	"description": "",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"prefersGlobal": "true",
 	"author": "Brian Kardell <bkardell@gmail.com>",
 	"contributors": [
