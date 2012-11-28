@@ -25,5 +25,5 @@ and helps keep presentation related rules in CSS.
 Current 0.6
 
 ### Authors
-* [Brian Kardell](mailto:bkardell@gmail.com?subject=Hitch) | [briankardell.wordpress.com] | [http://twitter.com/bkardell]
+* [Brian Kardell](mailto:bkardell@gmail.com?subject=Hitch) | [briankardell.wordpress.com] | [https://twitter.com/briankardell]
 * [Clint Hill](mailto:clint.hill@gmail.com?subject=Hitch) | [http://clint-hill.com/] | [http://twitter.com/clintjhill] 
