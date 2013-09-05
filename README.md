@@ -9,6 +9,7 @@ and helps keep presentation related rules in CSS.
 
 * Website: http://www.hitchjs.com
 * Blog:    http://hitchjs.wordpress.com/
+* Download: http://www.hitchjs.com/dist/hitch-0.6.3.min.js
 
 
 ### Useful Links
