@@ -1,36 +1,41 @@
 {
-	"name": "hitch",
-	"description": "",
-	"version": "0.6.3",
-	"prefersGlobal": "true",
-	"author": "Brian Kardell <bkardell@gmail.com>",
-	"contributors": [
-		{
-			"name": "Brian Kardell",
-			"email": "bkardell@gmail.com"
-		},
-		{
-			"name": "Clint Hill",
-			"email": "clint.hill@gmail.com"
-		}
-	],
-	"homepage": "http://www.hitchjs.com",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/bkardell/Hitch.git"
-	},
-	"main": "",
-	"bin": {
-		"hitch": "./bin/hitch"
-	},
-	"scripts": {
-		"test": "grunt test"
-	},
-	"devDependencies": {
-		"grunt": ">=0.3.12"
-	},
-	"dependenies": {},
-	"engine": {
-		"node": ">=0.6"
-	}
+  "name": "hitch",
+  "description": "",
+  "version": "0.7.0",
+  "prefersGlobal": "true",
+  "author": "Brian Kardell <bkardell@gmail.com>",
+  "contributors": [
+    {
+      "name": "Brian Kardell",
+      "email": "bkardell@gmail.com"
+    },
+    {
+      "name": "Clint Hill",
+      "email": "clint.hill@gmail.com"
+    }
+  ],
+  "homepage": "http://www.hitchjs.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bkardell/Hitch.git"
+  },
+  "main": "",
+  "bin": {
+    "hitch": "./bin/hitch"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.9.2",
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-qunit": "~0.4.0",
+    "grunt-contrib-concat": "~0.3.0"
+  },
+  "dependenies": {},
+  "engine": {
+    "node": ">=0.8"
+  }
 }
