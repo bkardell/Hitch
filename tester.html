@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example Hitch.next</title>
+    <link rel="stylesheet" href="test-hitched.css"></link>
+    
+
+    <script src="hitch-next.js"></script>
+    <script>
+      /* Ok, let's pretend we add these concepts...*/
+
+
+
+      Hitch.customSelector.set("math_lessthan", {
+            parseArgs: function (argsString) {
+                  var args = argsString.split(",");
+                  return [args[0], parseInt(args[1], 10)];
+            },
+            matches: function (attributeName) {
+                  return "[" + attributeName + "]";
+            },
+            predicate: function (el, attributeName, expectedValue) {
+                  var realValue = parseInt(el.getAttribute(attributeName), 10);
+                  return realValue < expectedValue;
+            }
+      });
+
+      Hitch.customSelector.set("math_greaterthan", {
+            parseArgs: function (argsString) {
+                  var args = argsString.split(",");
+                  return [args[0], parseInt(args[1], 10)];
+            },
+            matches: function (attributeName) {
+                  return "[" + attributeName + "]";
+            },
+            predicate: function (el, attributeName, expectedValue) {
+                  var realValue = parseInt(el.getAttribute(attributeName), 10);
+                  return realValue > expectedValue;
+            }
+      });   
+
+
+      /*
+            When we're doing dynamic changes we really want to just lookup rules 
+            containing what's changed and test them... 
+
+            When the page is loading, we have to test all        
+      */
+      Hitch.selectors.load([{
+        selector: "p .foo:math_lessthan(data-score, 1000)[bar]",
+        declaration: "background-color: yellow;"
+      }, {
+        selector: "#content :math_greaterthan(data-score, 1000)",
+        declaration: "background-color: blue;"
+      }]);
+
+    </script>
+
+    <!-- <script src="compiled-rules.js"></script> -->
+      <script>
+      // This is the beginning of it all.
+      Hitch.observe();
+    </script>
+
+  </head>
+  <body>
+
+
+
+    <h1>Hitch.next</h1>
+    
+    <div id="content">
+      <p data-score="100">100</p>
+
+      <p data-score="1000">1000</p>
+
+      <p data-score="10000">10000</p>
+    </div>
+
+    <div> 
+      These shouldn't match
+      <span data-score="100">100</span>
+
+      <span data-score="1000">1000</span>
+
+      <span data-score="10000">10000</span>
+   </div>
+
+   <button>Add a matching el</button>
+   <script>
+      document.querySelector('button').addEventListener("click", function  () {
+            var el = document.createElement("div");
+            el.setAttribute("data-score", 10000);
+            el.innerHTML = "wheeeee";
+            document.body.appendChild(el);
+            document.querySelector("#content").appendChild(el.cloneNode(true));
+
+      });
+   </script>
+
+  </body>
+</html>
+
