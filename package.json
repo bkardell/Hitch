@@ -4,6 +4,7 @@
   "version": "0.7.0",
   "prefersGlobal": "true",
   "author": "Brian Kardell <bkardell@gmail.com>",
+  "hitch-watch-dir": "test/sources",
   "contributors": [
     {
       "name": "Brian Kardell",
@@ -32,7 +33,11 @@
     "grunt-contrib-nodeunit": "~0.3.3",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-qunit": "~0.4.0",
-    "grunt-contrib-concat": "~0.3.0"
+    "grunt-contrib-concat": "~0.3.0",
+    "css-parse": "~1.7.0",
+    "css-stringify": "~1.4.1",
+    "grunt-shell": "~0.6.4",
+    "grunt-contrib-watch": "~0.6.1"
   },
   "dependenies": {},
   "engine": {

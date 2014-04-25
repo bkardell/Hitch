@@ -41,8 +41,20 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint', 'qunit']
+      files: ['**/*.--js', '**/*.--css'],
+      tasks: ['shell:precompile'],
+      options: {
+        debounceDelay: 3000
+      }
+    },
+  
+    shell: {
+        precompile: {
+            command: 'node ./bin/compiler.js <%=pkg["hitch-watch-dir"]%>',
+            options: {
+                stdout: true
+            }
+        }
     }
   });
 
@@ -51,10 +63,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-shell');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
 
   grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
-  //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 
+  grunt.registerTask('precompile', ['shell:precompile']);
+
+  //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+  grunt.event.on('watch', function(action, filepath, target) {
+    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+  });
 };

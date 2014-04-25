@@ -51,7 +51,14 @@ var Hitch = (function(){
                                           storeInBikeshed(matchesToken, selector);
                                     });
                               });
-                              out.push("." + Hitch.hashCode(tok.matches[0] + tok.matches[1]));
+
+                              // TODO: tok.matches[1] craziness below it due to something about the parser
+                              //       we are using on the precompile, it seems to deem whitespace irrelevant
+                              //       there and it gets entirely lost.  In fact, it is irrelevant in this case, 
+                              //       but I'm not entirely positive it would be in all cases.  Seems that in 
+                              //       every case I can think of, it wouldn't matter as long as they yield the 
+                              //       same hash, so for now this is probably ok.
+                              out.push("." + Hitch.hashCode(tok.matches[0] + tok.matches[1].replace(', ', ',')));
                         } else {
                           out.push(tok.value);
                         }
@@ -63,7 +70,8 @@ var Hitch = (function(){
 
 
   return {
-    selectors: { 
+    selectors: {
+      /* I dont think we need this 
       load: function (arr) {
         var buff = [], ns = document.createElement('style');
         arr.forEach(function (data) {
@@ -76,6 +84,10 @@ var Hitch = (function(){
         ns.innerHTML = buff.join("\n"); 
         document.head.appendChild(ns); 
       }, 
+      */
+      register: function (arr) {
+        arr.forEach(registerSelector);
+      },
       unique: uniqueSelectors, 
       map: bikeshed,
     },

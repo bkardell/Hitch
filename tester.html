@@ -2,66 +2,9 @@
 <html>
   <head>
     <title>Example Hitch.next</title>
-    <link rel="stylesheet" href="test-hitched.css"></link>
-    
-
-    <script src="hitch-next.js"></script>
-    <script>
-      /* Ok, let's pretend we add these concepts...*/
-
-
-
-      Hitch.customSelector.set("math_lessthan", {
-            parseArgs: function (argsString) {
-                  var args = argsString.split(",");
-                  return [args[0], parseInt(args[1], 10)];
-            },
-            matches: function (attributeName) {
-                  return "[" + attributeName + "]";
-            },
-            predicate: function (el, attributeName, expectedValue) {
-                  var realValue = parseInt(el.getAttribute(attributeName), 10);
-                  return realValue < expectedValue;
-            }
-      });
-
-      Hitch.customSelector.set("math_greaterthan", {
-            parseArgs: function (argsString) {
-                  var args = argsString.split(",");
-                  return [args[0], parseInt(args[1], 10)];
-            },
-            matches: function (attributeName) {
-                  return "[" + attributeName + "]";
-            },
-            predicate: function (el, attributeName, expectedValue) {
-                  var realValue = parseInt(el.getAttribute(attributeName), 10);
-                  return realValue > expectedValue;
-            }
-      });   
-
-
-      /*
-            When we're doing dynamic changes we really want to just lookup rules 
-            containing what's changed and test them... 
-
-            When the page is loading, we have to test all        
-      */
-      Hitch.selectors.load([{
-        selector: "p .foo:math_lessthan(data-score, 1000)[bar]",
-        declaration: "background-color: yellow;"
-      }, {
-        selector: "#content :math_greaterthan(data-score, 1000)",
-        declaration: "background-color: blue;"
-      }]);
-
-    </script>
-
-    <!-- <script src="compiled-rules.js"></script> -->
-      <script>
-      // This is the beginning of it all.
-      Hitch.observe();
-    </script>
-
+    <link rel="stylesheet" href="test/sources/sample.hitched.css"></link>
+    <script src="dist/hitch-next.js"></script>
+    <script src="test/sources/sample.hitched.js"></script>
   </head>
   <body>
 

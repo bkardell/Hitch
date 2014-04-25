@@ -1,0 +1,27 @@
+Hitch.customSelector.set("--math-lessthan", {
+      parseArgs: function (argsString) {
+            var args = argsString.split(",");
+            return [args[0], parseInt(args[1], 10)];
+      },
+      matches: function (attributeName) {
+            return "[" + attributeName + "]";
+      },
+      predicate: function (el, attributeName, expectedValue) {
+            var realValue = parseInt(el.getAttribute(attributeName), 10);
+            return realValue < expectedValue;
+      }
+});
+
+Hitch.customSelector.set("--math-greaterthan", {
+      parseArgs: function (argsString) {
+            var args = argsString.split(",");
+            return [args[0], parseInt(args[1], 10)];
+      },
+      matches: function (attributeName) {
+            return "[" + attributeName + "]";
+      },
+      predicate: function (el, attributeName, expectedValue) {
+            var realValue = parseInt(el.getAttribute(attributeName), 10);
+            return realValue > expectedValue;
+      }
+});
