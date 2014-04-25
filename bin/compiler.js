@@ -29,6 +29,7 @@ var beginsHashableFunction = function (tokens, token, i) {
     }
 };
 
+var comments = {};
 var watchDir = process.argv[2];
 var files = fs.readdirSync(watchDir).filter(function (filename) {
     console.log(filename);
@@ -44,7 +45,7 @@ files.forEach(function (filename) {
         parsedCss = parse(file.toString());
 
         //console.log(JSON.stringify(parsedCss, null, 4));
-        parsedCss.stylesheet.rules.forEach(function (rule) {
+        parsedCss.stylesheet.rules.forEach(function (rule, ruleIndex) {
             //console.log("............. " + JSON.stringify(rule));
             if (rule.type === "import") {
                 importPath = rule.import.replace(/[\(|\)]/g, "").replace("custom-pseudos", "");
@@ -122,16 +123,21 @@ files.forEach(function (filename) {
                     }
 
                 });
-        
 
-               generatedScript.push(item);
+                rule.declarations.unshift({ 
+                    type: 'declaration', 
+                    property: 'selector-was',
+                    value: item }
+                );
                 // Finally, we have the final end-state/selector
-               rule.selectors = [selectorBuffer.join("")];           
+                generatedScript.push(item);
+                rule.selectors = [selectorBuffer.join("")];  
+                         
+            } else {
+                console.log(rule);
             }
         });
 
-
-            
         fs.writeFile(watchDir + "/" + filename.replace(".--css", ".hitched.css"), cssify(parsedCss));
         
         // TODO: Determine if Hitch.observe could be problematic here - what if I have N CSS files?

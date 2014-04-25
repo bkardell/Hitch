@@ -1,25 +1,30 @@
 @import custom-pseudos(my_custom_predicates.--js);
 
 p._1278370077  {
+  selector-was: p:--math-lessthan(data-score,1000);
   background-color: orange;
 }
 
 p .foo._1278370077[bar]  {
+  selector-was: p .foo:--math-lessthan(data-score,1000)[bar];
   background-color: yellow;
 }
 
 /* same as rule above but whitespace before filter */
 
 p .foo ._1278370077[bar]  {
+  selector-was: p .foo :--math-lessthan(data-score,1000)[bar];
   background-color: yellow;
 }
 
 /* same as rule above but whitespace after filter */
 
 p .foo._1278370077 [bar]  {
+  selector-was: p .foo:--math-lessthan(data-score,1000) [bar];
   background-color: yellow;
 }
 
 #content ._-833897594  {
+  selector-was: #content :--math-greaterthan(data-score,1000);
   background-color: blue;
 }
