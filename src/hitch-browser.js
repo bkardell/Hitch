@@ -42,10 +42,11 @@
      */
     var mutationObserver;
 
+    // TODO: No way I can think of offhand to say `a browser that supports
+    var supportParseMutations = !navigator.mozGetUserMedia;
+
     // This is where we wire up new nodes, it's really all you call...
     Hitch.observe = function () {
-        // TODO: No way I can think of offhand to say `a browser that supports
-        var supportParseMutations = !navigator.mozGetUserMedia;
         // connect is actually the thing that wires things up, it is geared to 
         // happen as soon as possible
         if (supportParseMutations && !mutationObserver) {
@@ -111,7 +112,8 @@
                         el.Hitch().matchesSelector(selector, true);
                     });
                 });
-                
+                supportParseMutations = true; // TODO: yick, that was a bad name.
+                Hitch.observe();
             });
         }
     };
