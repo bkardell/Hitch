@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example Hitch.next</title>
+    <link rel="stylesheet" href="test/sources/sample.hitched.css"></link>
+    <script src="dist/hitch-next.js"></script>
+    <script src="test/sources/sample.hitched.js"></script>
+  </head>
+  <body>
+
+
+
+    <h1>Hitch.next</h1>
+    
+    <div id="content">
+      <p data-score="100">100</p>
+
+      <p data-score="1000">1000</p>
+
+      <p data-score="10000">10000</p>
+    </div>
+
+    <div> 
+      These shouldn't match
+      <span data-score="100">100</span>
+
+      <span data-score="1000">1000</span>
+
+      <span data-score="10000">10000</span>
+   </div>
+
+   <button>Add a matching el</button>
+   <script>
+      document.querySelector('button').addEventListener("click", function  () {
+            var el = document.createElement("div");
+            el.setAttribute("data-score", 10000);
+            el.innerHTML = "wheeeee";
+            document.body.appendChild(el);
+            document.querySelector("#content").appendChild(el.cloneNode(true));
+
+      });
+   </script>
+
+  </body>
+</html>
+

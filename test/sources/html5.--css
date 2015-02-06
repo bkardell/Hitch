@@ -1,0 +1,35 @@
+@import custom-pseudos(my_custom_predicates.--js);
+
+h1:--math-lessthan(data-x, 2) {
+	background-color: orange;
+}
+
+h2:--math-lessthan(data-x,  10) {
+	background-color: yellow;
+}
+
+ul:--math-lessthan(data-x, 10) li  {
+	border: 1px solid green;
+} 
+
+p:--math-lessthan(data-score,  1000) {
+	background-color: orange;
+}
+
+p .foo:--math-lessthan(data-score,  1000)[bar] {
+	background-color: yellow;
+}
+
+/* same as rule above but whitespace before filter */
+p .foo :--math-lessthan(data-score,  1000)[bar] {
+	background-color: yellow;
+}
+
+/* same as rule above but whitespace after filter */
+p .foo:--math-lessthan(data-score,  1000) [bar] {
+	background-color: yellow;
+}
+
+#content :--math-greaterthan(data-score, 1000) {
+	background-color: blue;
+}
